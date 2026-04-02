@@ -2,6 +2,9 @@ export const GAME_CONTENT = {
   "meta": {
     "appId": "city-clicker",
     "id": "patchwork-borough-v1",
+    "appVersion": "1.0.0",
+    "saveVersion": 1,
+    "balanceVersion": "1.0.0",
     "areaId": "patchwork-borough",
     "eyebrow": "HTML5 City Clicker",
     "name": "Patchwork Borough",

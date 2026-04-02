@@ -3,6 +3,7 @@ export function getElements(documentRef = document) {
     eyebrow: documentRef.getElementById("eyebrow"),
     title: documentRef.getElementById("game-title"),
     goalLine: documentRef.getElementById("goal-line"),
+    versionLine: documentRef.getElementById("version-line"),
     statsGrid: documentRef.getElementById("stats-grid"),
     contentGrid: documentRef.getElementById("content-grid"),
     manualActions: documentRef.getElementById("manual-actions"),

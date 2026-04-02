@@ -2,6 +2,7 @@ import GAME_CONTENT from "./content-runtime/generated-content.js";
 import { MAX_FRAME_MS, RENDER_INTERVAL_MS } from "./core/config.js";
 import { buildStateSnapshot, createInitialState, normalizeState, snapshotCurrencies } from "./core/state.js";
 import { formatNumber } from "./core/format.js";
+import { buildSaveEnvelope } from "./core/save-migrations.js";
 import { calculateDerivedState, canAfford, getBuildingCost, spendCost } from "./systems/economy.js";
 import {
   applyUpgradeSystemUnlocks,
@@ -53,6 +54,7 @@ function hydrateStaticCopy() {
   elements.eyebrow.textContent = content.meta.eyebrow;
   elements.title.textContent = content.meta.name;
   elements.goalLine.textContent = content.meta.goalText;
+  elements.versionLine.textContent = `v${content.meta.appVersion} · save ${content.meta.saveVersion} · balance ${content.meta.balanceVersion}`;
 }
 
 function bindEvents() {
@@ -96,8 +98,8 @@ function loadState() {
 
 function saveState(customMessage) {
   try {
-    const snapshot = buildStateSnapshot(state);
-    window.localStorage.setItem(storageKey, JSON.stringify(snapshot));
+    const record = buildSaveEnvelope(content, buildStateSnapshot(state));
+    window.localStorage.setItem(storageKey, JSON.stringify(record));
     if (typeof customMessage === "string") {
       statusMessage = customMessage;
     }
@@ -111,10 +113,9 @@ function saveState(customMessage) {
 
 function buildExportPayload() {
   return {
-    version: 1,
-    gameId: content.meta.id,
+    exportVersion: 2,
     exportedAt: new Date().toISOString(),
-    state: buildStateSnapshot(state)
+    ...buildSaveEnvelope(content, buildStateSnapshot(state))
   };
 }
 
@@ -134,7 +135,7 @@ function exportSave() {
     anchor.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 0);
 
-    window.localStorage.setItem(storageKey, JSON.stringify(payload.state));
+    window.localStorage.setItem(storageKey, JSON.stringify(buildSaveEnvelope(content, buildStateSnapshot(state))));
     statusMessage = "Save exported to a JSON file.";
     pushLog("Save exported.", "A portable borough save file was downloaded.");
     render(true);

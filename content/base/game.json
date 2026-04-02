@@ -1,5 +1,8 @@
 {
   "appId": "city-clicker",
+  "appVersion": "1.0.0",
+  "saveVersion": 1,
+  "balanceVersion": "1.0.0",
   "eyebrow": "HTML5 City Clicker",
   "activeAreaId": "patchwork-borough"
 }

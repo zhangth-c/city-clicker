@@ -61,7 +61,7 @@ city-clicker/
 ## Content Model
 
 - `content/base/game.json`
-  Selects the active area and stores app-level metadata.
+  Selects the active area and stores app-level metadata, including `appVersion`, `saveVersion`, and `balanceVersion`.
 - `content/base/resources.json`
   Global resource definitions.
 - `content/base/policies.json`
@@ -87,6 +87,17 @@ The browser does not read those JSON files directly. Instead, `scripts/build-con
   The app entry point and frame loop.
 
 This split is meant to scale to many areas, districts, resources, and events by keeping gameplay data declarative and the engine generic.
+
+## Versioning
+
+- `appVersion`
+  The player-facing release version. Use semantic versioning such as `1.0.0`, `1.1.0`, or `2.0.0`.
+- `saveVersion`
+  The save-schema version used by the migration pipeline. Increment this when save structure changes.
+- `balanceVersion`
+  The economy/content tuning version. Increment this when costs, pacing, or formulas change substantially without necessarily breaking saves.
+
+New saves are written as versioned envelopes, and older raw saves are migrated forward through [`src/core/save-migrations.js`](/Users/tianhao/Documents/New%20project/city-clicker/src/core/save-migrations.js).
 
 ## Commands
 

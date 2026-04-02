@@ -54,6 +54,16 @@ export function validateContent(content) {
   const policyIds = new Set();
   const manualActionIds = new Set();
 
+  if (!content.game.appVersion) {
+    errors.push("Game metadata is missing appVersion.");
+  }
+  if (!Number.isInteger(Number(content.game.saveVersion))) {
+    errors.push("Game metadata is missing an integer saveVersion.");
+  }
+  if (!content.game.balanceVersion) {
+    errors.push("Game metadata is missing balanceVersion.");
+  }
+
   content.areas.forEach((area) => {
     if (areaIds.has(area.manifest.id)) {
       errors.push(`Duplicate area id "${area.manifest.id}".`);
@@ -195,6 +205,9 @@ export function buildRuntimeContent(content) {
     meta: {
       appId: content.game.appId,
       id: activeArea.manifest.runtimeId || `${content.game.appId}-${activeArea.id}`,
+      appVersion: content.game.appVersion,
+      saveVersion: Number(content.game.saveVersion),
+      balanceVersion: content.game.balanceVersion,
       areaId: activeArea.id,
       eyebrow: content.game.eyebrow,
       name: activeArea.manifest.name,

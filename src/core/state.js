@@ -3,6 +3,7 @@ import {
   isUpgradeInitiallyDiscovered,
   syncSystemUnlocks
 } from "../systems/progression.js";
+import { migrateSaveEnvelope } from "./save-migrations.js";
 
 export function buildStateSnapshot(state) {
   state.stats.lastSavedAt = Date.now();
@@ -41,13 +42,8 @@ export function createInitialState(content) {
 }
 
 export function normalizeState(content, candidate) {
-  const payload = candidate && typeof candidate === "object" ? candidate : {};
-
-  if (payload.gameId && payload.gameId !== content.meta.id) {
-    throw new Error("This save file belongs to a different game.");
-  }
-
-  const source = payload.state && typeof payload.state === "object" ? payload.state : payload;
+  const payload = migrateSaveEnvelope(content, candidate);
+  const source = payload.state && typeof payload.state === "object" ? payload.state : {};
   const initial = createInitialState(content);
   const prestigeCurrencyId = getPrestigeCurrencyId(content);
   const validBuildingIds = new Set(content.buildings.map((building) => building.id));
