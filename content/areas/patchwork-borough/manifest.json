@@ -25,10 +25,10 @@
       "id": "collect-taxes",
       "name": "Collect Taxes",
       "currency": "coins",
-      "baseAmount": 1,
+      "baseAmount": 1.25,
       "applyGlobalMultiplier": true,
       "residentScaling": {
-        "perResidents": 25,
+        "perResidents": 20,
         "amount": 1
       }
     },
@@ -37,16 +37,16 @@
       "name": "Gather Harvest",
       "currency": "food",
       "unlockUpgradeId": "builders-guild",
-      "baseAmount": 1.1,
+      "baseAmount": 1.45,
       "applyGlobalMultiplier": true,
       "buildingScaling": [
         {
           "buildingId": "farmstead",
-          "amountPerOwned": 0.22
+          "amountPerOwned": 0.32
         },
         {
           "buildingId": "palm-bungalow",
-          "amountPerOwned": 0.08
+          "amountPerOwned": 0.1
         }
       ]
     },
@@ -55,12 +55,12 @@
       "name": "Fell Timber",
       "currency": "timber",
       "unlockUpgradeId": "supply-depot",
-      "baseAmount": 0.9,
+      "baseAmount": 1,
       "applyGlobalMultiplier": true,
       "buildingScaling": [
         {
           "buildingId": "timber-cabin",
-          "amountPerOwned": 0.18
+          "amountPerOwned": 0.24
         },
         {
           "buildingId": "farmstead",
@@ -69,26 +69,140 @@
       ]
     },
     {
-      "id": "pack-goods",
-      "name": "Pack Goods",
-      "currency": "goods",
-      "unlockUpgradeId": "plumbing-grid",
-      "baseAmount": 0.6,
+      "id": "quarry-stone",
+      "name": "Quarry Stone",
+      "currency": "stone",
+      "unlockUpgradeId": "supply-depot",
+      "baseAmount": 0.75,
       "applyGlobalMultiplier": true,
       "buildingScaling": [
         {
-          "buildingId": "red-cottage",
-          "amountPerOwned": 0.06
+          "buildingId": "timber-cabin",
+          "amountPerOwned": 0.16
         },
         {
           "buildingId": "brick-factory",
           "amountPerOwned": 0.1
         }
       ]
+    },
+    {
+      "id": "pack-goods",
+      "name": "Pack Goods",
+      "currency": "goods",
+      "unlockUpgradeId": "plumbing-grid",
+      "baseAmount": 0.75,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "red-cottage",
+          "amountPerOwned": 0.09
+        },
+        {
+          "buildingId": "brick-factory",
+          "amountPerOwned": 0.14
+        }
+      ]
+    },
+    {
+      "id": "stage-festival",
+      "name": "Stage Festival",
+      "currency": "appeal",
+      "unlockUpgradeId": "tourism-board",
+      "baseAmount": 0.22,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "grand-manor",
+          "amountPerOwned": 0.04
+        },
+        {
+          "buildingId": "hillside-lodge",
+          "amountPerOwned": 0.04
+        },
+        {
+          "buildingId": "stone-keep",
+          "amountPerOwned": 0.03
+        },
+        {
+          "buildingId": "palm-bungalow",
+          "amountPerOwned": 0.05
+        }
+      ]
+    },
+    {
+      "id": "survey-archives",
+      "name": "Survey Archives",
+      "currency": "knowledge",
+      "unlockUpgradeId": "heritage-program",
+      "baseAmount": 0.38,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "cube-villa",
+          "amountPerOwned": 0.08
+        },
+        {
+          "buildingId": "dome-habitat",
+          "amountPerOwned": 0.06
+        },
+        {
+          "buildingId": "glass-condo",
+          "amountPerOwned": 0.05
+        }
+      ]
+    },
+    {
+      "id": "route-current",
+      "name": "Route Current",
+      "currency": "power",
+      "unlockUpgradeId": "industrial-logistics",
+      "baseAmount": 0.5,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "brick-factory",
+          "amountPerOwned": 0.08
+        },
+        {
+          "buildingId": "dome-habitat",
+          "amountPerOwned": 0.12
+        },
+        {
+          "buildingId": "glass-condo",
+          "amountPerOwned": 0.04
+        }
+      ]
+    },
+    {
+      "id": "broker-favors",
+      "name": "Broker Favors",
+      "currency": "influence",
+      "unlockUpgradeId": "skyline-campaign",
+      "baseAmount": 0.16,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "grand-manor",
+          "amountPerOwned": 0.03
+        },
+        {
+          "buildingId": "hillside-lodge",
+          "amountPerOwned": 0.03
+        },
+        {
+          "buildingId": "stone-keep",
+          "amountPerOwned": 0.05
+        },
+        {
+          "buildingId": "glass-condo",
+          "amountPerOwned": 0.03
+        }
+      ]
     }
   ],
   "formulas": {
-    "buildingCostGrowth": 1.15,
+    "buildingCostGrowth": 1.18,
     "buildingCostFormula": "floor(baseCost[currency] * pow(buildingCostGrowth, owned))",
     "manualActionFormula": "baseAmount + resident scaling + owned-building scaling, then optional global income multipliers and click bonuses",
     "tickRateMs": 100,

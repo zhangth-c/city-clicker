@@ -302,7 +302,9 @@ export function createRenderer({ content, elements, handlers }) {
     elements.statusLine.hidden = !nextMessage;
   }
 
-  function renderManualActions({ derived }) {
+  function renderManualActions({ state, derived }) {
+    const focusedCurrencies = getFocusedManualActionCurrencies(state, derived);
+
     (content.manualActions || []).forEach((action) => {
       const nodes = manualActionNodes.get(action.id);
       const derivedAction = derived.manualActions.find((item) => item.id === action.id);
@@ -315,9 +317,81 @@ export function createRenderer({ content, elements, handlers }) {
         return;
       }
 
-      nodes.button.className = `manual-action manual-action--${derivedAction.currency}`;
+      nodes.button.className = [
+        "manual-action",
+        `manual-action--${derivedAction.currency}`,
+        focusedCurrencies.has(derivedAction.currency) ? "manual-action--focus" : ""
+      ]
+        .filter(Boolean)
+        .join(" ");
       nodes.value.textContent = `+${formatNumber(derivedAction.amount)} ${labelForCurrency(content, derivedAction.currency)}`;
     });
+  }
+
+  function getFocusedManualActionCurrencies(state, derived) {
+    const focused = new Set();
+    const currentBlockers = getCurrentResourceBlockers(state, derived);
+
+    currentBlockers.forEach(({ currencyId }) => {
+      focused.add(currencyId);
+    });
+
+    if (focused.size > 0) {
+      return focused;
+    }
+
+    const hint = getNextBuildingUnlockHint(content, state, derived);
+    (hint?.missing || []).forEach(({ currencyId }) => {
+      focused.add(currencyId);
+    });
+
+    return focused;
+  }
+
+  function getCurrentResourceBlockers(state, derived) {
+    const firstBlockedBuilding = content.buildings.find((building) => {
+      if (!state.discoveredBuildings.includes(building.id)) {
+        return false;
+      }
+      return !canAfford(state, getBuildingCost(content, state, derived, building));
+    });
+
+    if (firstBlockedBuilding) {
+      return getMissingCostEntries(state, getBuildingCost(content, state, derived, firstBlockedBuilding));
+    }
+
+    const firstBlockedUpgrade = content.globalUpgrades.find((upgrade) => {
+      if (!state.discoveredUpgrades.includes(upgrade.id) || state.purchasedUpgrades.includes(upgrade.id)) {
+        return false;
+      }
+      return !canAfford(state, upgrade.cost || {});
+    });
+
+    if (firstBlockedUpgrade) {
+      return getMissingCostEntries(state, firstBlockedUpgrade.cost || {});
+    }
+
+    return [];
+  }
+
+  function getMissingCostEntries(state, cost) {
+    return Object.entries(cost)
+      .map(([currencyId, amount]) => ({
+        currencyId,
+        deficit: Math.max(0, Number(amount) - Number(state.currencies[currencyId] || 0)),
+        shareMissing:
+          Number(amount) > 0
+            ? Math.max(0, Number(amount) - Number(state.currencies[currencyId] || 0)) / Number(amount)
+            : 0
+      }))
+      .filter((entry) => entry.deficit > 0)
+      .sort((left, right) => {
+        if (right.shareMissing !== left.shareMissing) {
+          return right.shareMissing - left.shareMissing;
+        }
+        return right.deficit - left.deficit;
+      })
+      .slice(0, 2);
   }
 
   function renderSidebar({ state }) {

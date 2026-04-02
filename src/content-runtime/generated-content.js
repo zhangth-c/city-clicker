@@ -40,10 +40,10 @@ export const GAME_CONTENT = {
           "id": "collect-taxes",
           "name": "Collect Taxes",
           "currency": "coins",
-          "baseAmount": 1,
+          "baseAmount": 1.25,
           "applyGlobalMultiplier": true,
           "residentScaling": {
-            "perResidents": 25,
+            "perResidents": 20,
             "amount": 1
           }
         },
@@ -52,16 +52,16 @@ export const GAME_CONTENT = {
           "name": "Gather Harvest",
           "currency": "food",
           "unlockUpgradeId": "builders-guild",
-          "baseAmount": 1.1,
+          "baseAmount": 1.45,
           "applyGlobalMultiplier": true,
           "buildingScaling": [
             {
               "buildingId": "farmstead",
-              "amountPerOwned": 0.22
+              "amountPerOwned": 0.32
             },
             {
               "buildingId": "palm-bungalow",
-              "amountPerOwned": 0.08
+              "amountPerOwned": 0.1
             }
           ]
         },
@@ -70,12 +70,12 @@ export const GAME_CONTENT = {
           "name": "Fell Timber",
           "currency": "timber",
           "unlockUpgradeId": "supply-depot",
-          "baseAmount": 0.9,
+          "baseAmount": 1,
           "applyGlobalMultiplier": true,
           "buildingScaling": [
             {
               "buildingId": "timber-cabin",
-              "amountPerOwned": 0.18
+              "amountPerOwned": 0.24
             },
             {
               "buildingId": "farmstead",
@@ -84,26 +84,140 @@ export const GAME_CONTENT = {
           ]
         },
         {
-          "id": "pack-goods",
-          "name": "Pack Goods",
-          "currency": "goods",
-          "unlockUpgradeId": "plumbing-grid",
-          "baseAmount": 0.6,
+          "id": "quarry-stone",
+          "name": "Quarry Stone",
+          "currency": "stone",
+          "unlockUpgradeId": "supply-depot",
+          "baseAmount": 0.75,
           "applyGlobalMultiplier": true,
           "buildingScaling": [
             {
-              "buildingId": "red-cottage",
-              "amountPerOwned": 0.06
+              "buildingId": "timber-cabin",
+              "amountPerOwned": 0.16
             },
             {
               "buildingId": "brick-factory",
               "amountPerOwned": 0.1
             }
           ]
+        },
+        {
+          "id": "pack-goods",
+          "name": "Pack Goods",
+          "currency": "goods",
+          "unlockUpgradeId": "plumbing-grid",
+          "baseAmount": 0.75,
+          "applyGlobalMultiplier": true,
+          "buildingScaling": [
+            {
+              "buildingId": "red-cottage",
+              "amountPerOwned": 0.09
+            },
+            {
+              "buildingId": "brick-factory",
+              "amountPerOwned": 0.14
+            }
+          ]
+        },
+        {
+          "id": "stage-festival",
+          "name": "Stage Festival",
+          "currency": "appeal",
+          "unlockUpgradeId": "tourism-board",
+          "baseAmount": 0.22,
+          "applyGlobalMultiplier": true,
+          "buildingScaling": [
+            {
+              "buildingId": "grand-manor",
+              "amountPerOwned": 0.04
+            },
+            {
+              "buildingId": "hillside-lodge",
+              "amountPerOwned": 0.04
+            },
+            {
+              "buildingId": "stone-keep",
+              "amountPerOwned": 0.03
+            },
+            {
+              "buildingId": "palm-bungalow",
+              "amountPerOwned": 0.05
+            }
+          ]
+        },
+        {
+          "id": "survey-archives",
+          "name": "Survey Archives",
+          "currency": "knowledge",
+          "unlockUpgradeId": "heritage-program",
+          "baseAmount": 0.38,
+          "applyGlobalMultiplier": true,
+          "buildingScaling": [
+            {
+              "buildingId": "cube-villa",
+              "amountPerOwned": 0.08
+            },
+            {
+              "buildingId": "dome-habitat",
+              "amountPerOwned": 0.06
+            },
+            {
+              "buildingId": "glass-condo",
+              "amountPerOwned": 0.05
+            }
+          ]
+        },
+        {
+          "id": "route-current",
+          "name": "Route Current",
+          "currency": "power",
+          "unlockUpgradeId": "industrial-logistics",
+          "baseAmount": 0.5,
+          "applyGlobalMultiplier": true,
+          "buildingScaling": [
+            {
+              "buildingId": "brick-factory",
+              "amountPerOwned": 0.08
+            },
+            {
+              "buildingId": "dome-habitat",
+              "amountPerOwned": 0.12
+            },
+            {
+              "buildingId": "glass-condo",
+              "amountPerOwned": 0.04
+            }
+          ]
+        },
+        {
+          "id": "broker-favors",
+          "name": "Broker Favors",
+          "currency": "influence",
+          "unlockUpgradeId": "skyline-campaign",
+          "baseAmount": 0.16,
+          "applyGlobalMultiplier": true,
+          "buildingScaling": [
+            {
+              "buildingId": "grand-manor",
+              "amountPerOwned": 0.03
+            },
+            {
+              "buildingId": "hillside-lodge",
+              "amountPerOwned": 0.03
+            },
+            {
+              "buildingId": "stone-keep",
+              "amountPerOwned": 0.05
+            },
+            {
+              "buildingId": "glass-condo",
+              "amountPerOwned": 0.03
+            }
+          ]
         }
       ],
       "formulas": {
-        "buildingCostGrowth": 1.15,
+        "buildingCostGrowth": 1.18,
         "buildingCostFormula": "floor(baseCost[currency] * pow(buildingCostGrowth, owned))",
         "manualActionFormula": "baseAmount + resident scaling + owned-building scaling, then optional global income multipliers and click bonuses",
         "tickRateMs": 100,
@@ -154,7 +268,12 @@ export const GAME_CONTENT = {
       "collect-taxes",
       "gather-harvest",
       "fell-timber",
-      "pack-goods"
+      "quarry-stone",
+      "pack-goods",
+      "stage-festival",
+      "survey-archives",
+      "route-current",
+      "broker-favors"
     ],
     "resourceIds": [
       "coins",
@@ -264,10 +383,10 @@ export const GAME_CONTENT = {
       "id": "collect-taxes",
       "name": "Collect Taxes",
       "currency": "coins",
-      "baseAmount": 1,
+      "baseAmount": 1.25,
       "applyGlobalMultiplier": true,
       "residentScaling": {
-        "perResidents": 25,
+        "perResidents": 20,
         "amount": 1
       }
     },
@@ -276,16 +395,16 @@ export const GAME_CONTENT = {
       "name": "Gather Harvest",
       "currency": "food",
       "unlockUpgradeId": "builders-guild",
-      "baseAmount": 1.1,
+      "baseAmount": 1.45,
       "applyGlobalMultiplier": true,
       "buildingScaling": [
         {
           "buildingId": "farmstead",
-          "amountPerOwned": 0.22
+          "amountPerOwned": 0.32
         },
         {
           "buildingId": "palm-bungalow",
-          "amountPerOwned": 0.08
+          "amountPerOwned": 0.1
         }
       ]
     },
@@ -294,12 +413,12 @@ export const GAME_CONTENT = {
       "name": "Fell Timber",
       "currency": "timber",
       "unlockUpgradeId": "supply-depot",
-      "baseAmount": 0.9,
+      "baseAmount": 1,
       "applyGlobalMultiplier": true,
       "buildingScaling": [
         {
           "buildingId": "timber-cabin",
-          "amountPerOwned": 0.18
+          "amountPerOwned": 0.24
         },
         {
           "buildingId": "farmstead",
@@ -308,26 +427,140 @@ export const GAME_CONTENT = {
       ]
     },
     {
-      "id": "pack-goods",
-      "name": "Pack Goods",
-      "currency": "goods",
-      "unlockUpgradeId": "plumbing-grid",
-      "baseAmount": 0.6,
+      "id": "quarry-stone",
+      "name": "Quarry Stone",
+      "currency": "stone",
+      "unlockUpgradeId": "supply-depot",
+      "baseAmount": 0.75,
       "applyGlobalMultiplier": true,
       "buildingScaling": [
         {
-          "buildingId": "red-cottage",
-          "amountPerOwned": 0.06
+          "buildingId": "timber-cabin",
+          "amountPerOwned": 0.16
         },
         {
           "buildingId": "brick-factory",
           "amountPerOwned": 0.1
         }
       ]
+    },
+    {
+      "id": "pack-goods",
+      "name": "Pack Goods",
+      "currency": "goods",
+      "unlockUpgradeId": "plumbing-grid",
+      "baseAmount": 0.75,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "red-cottage",
+          "amountPerOwned": 0.09
+        },
+        {
+          "buildingId": "brick-factory",
+          "amountPerOwned": 0.14
+        }
+      ]
+    },
+    {
+      "id": "stage-festival",
+      "name": "Stage Festival",
+      "currency": "appeal",
+      "unlockUpgradeId": "tourism-board",
+      "baseAmount": 0.22,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "grand-manor",
+          "amountPerOwned": 0.04
+        },
+        {
+          "buildingId": "hillside-lodge",
+          "amountPerOwned": 0.04
+        },
+        {
+          "buildingId": "stone-keep",
+          "amountPerOwned": 0.03
+        },
+        {
+          "buildingId": "palm-bungalow",
+          "amountPerOwned": 0.05
+        }
+      ]
+    },
+    {
+      "id": "survey-archives",
+      "name": "Survey Archives",
+      "currency": "knowledge",
+      "unlockUpgradeId": "heritage-program",
+      "baseAmount": 0.38,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "cube-villa",
+          "amountPerOwned": 0.08
+        },
+        {
+          "buildingId": "dome-habitat",
+          "amountPerOwned": 0.06
+        },
+        {
+          "buildingId": "glass-condo",
+          "amountPerOwned": 0.05
+        }
+      ]
+    },
+    {
+      "id": "route-current",
+      "name": "Route Current",
+      "currency": "power",
+      "unlockUpgradeId": "industrial-logistics",
+      "baseAmount": 0.5,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "brick-factory",
+          "amountPerOwned": 0.08
+        },
+        {
+          "buildingId": "dome-habitat",
+          "amountPerOwned": 0.12
+        },
+        {
+          "buildingId": "glass-condo",
+          "amountPerOwned": 0.04
+        }
+      ]
+    },
+    {
+      "id": "broker-favors",
+      "name": "Broker Favors",
+      "currency": "influence",
+      "unlockUpgradeId": "skyline-campaign",
+      "baseAmount": 0.16,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "grand-manor",
+          "amountPerOwned": 0.03
+        },
+        {
+          "buildingId": "hillside-lodge",
+          "amountPerOwned": 0.03
+        },
+        {
+          "buildingId": "stone-keep",
+          "amountPerOwned": 0.05
+        },
+        {
+          "buildingId": "glass-condo",
+          "amountPerOwned": 0.03
+        }
+      ]
     }
   ],
   "formulas": {
-    "buildingCostGrowth": 1.15,
+    "buildingCostGrowth": 1.18,
     "buildingCostFormula": "floor(baseCost[currency] * pow(buildingCostGrowth, owned))",
     "manualActionFormula": "baseAmount + resident scaling + owned-building scaling, then optional global income multipliers and click bonuses",
     "tickRateMs": 100,
@@ -351,7 +584,7 @@ export const GAME_CONTENT = {
         "coins": 15
       },
       "outputPerSecond": {
-        "coins": 0.12
+        "coins": 0.14
       },
       "maintenancePerSecond": {
         "coins": 0.02
@@ -383,11 +616,11 @@ export const GAME_CONTENT = {
       "category": "residential",
       "unlock": {},
       "baseCost": {
-        "coins": 55
+        "coins": 50
       },
       "outputPerSecond": {
-        "coins": 0.35,
-        "goods": 0.08
+        "coins": 0.38,
+        "goods": 0.1
       },
       "maintenancePerSecond": {
         "coins": 0.06
@@ -419,11 +652,11 @@ export const GAME_CONTENT = {
       "category": "rural",
       "unlock": {},
       "baseCost": {
-        "coins": 140
+        "coins": 120
       },
       "outputPerSecond": {
-        "timber": 0.18,
-        "stone": 0.12
+        "timber": 0.2,
+        "stone": 0.14
       },
       "maintenancePerSecond": {
         "coins": 0.03
@@ -452,18 +685,18 @@ export const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/windmill-homestead.png",
       "category": "rural",
       "unlock": {
-        "residents": 14
+        "residents": 18
       },
       "baseCost": {
-        "coins": 320,
-        "timber": 10
+        "coins": 260,
+        "timber": 8
       },
       "outputPerSecond": {
-        "food": 0.55,
-        "timber": 0.08
+        "food": 0.68,
+        "timber": 0.06
       },
       "maintenancePerSecond": {
-        "coins": 0.06
+        "coins": 0.05
       },
       "statsPerOwned": {
         "residents": 1
@@ -491,22 +724,24 @@ export const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/observatory-villa.png",
       "category": "modern",
       "unlock": {
-        "residents": 32,
-        "timber": 18,
-        "stone": 14
+        "residents": 42,
+        "timber": 28,
+        "stone": 22,
+        "goods": 6
       },
       "baseCost": {
-        "coins": 900,
-        "timber": 20,
-        "stone": 18
+        "coins": 750,
+        "timber": 30,
+        "stone": 24,
+        "goods": 8
       },
       "outputPerSecond": {
-        "coins": 0.8,
-        "knowledge": 0.12
+        "coins": 1.05,
+        "knowledge": 0.16
       },
       "maintenancePerSecond": {
-        "food": 0.04,
-        "goods": 0.03
+        "food": 0.05,
+        "goods": 0.04
       },
       "statsPerOwned": {
         "residents": 2
@@ -534,22 +769,22 @@ export const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/pagoda-estate.png",
       "category": "prestige",
       "unlock": {
-        "residents": 52,
-        "goods": 6,
-        "timber": 24
+        "residents": 70,
+        "goods": 12,
+        "timber": 40
       },
       "baseCost": {
-        "coins": 2800,
-        "timber": 26,
-        "goods": 10
+        "coins": 1200,
+        "timber": 56,
+        "goods": 20
       },
       "outputPerSecond": {
-        "appeal": 0.18,
-        "influence": 0.08
+        "appeal": 0.22,
+        "influence": 0.09
       },
       "maintenancePerSecond": {
-        "food": 0.08,
-        "coins": 0.12
+        "food": 0.1,
+        "coins": 0.08
       },
       "statsPerOwned": {
         "residents": 1
@@ -577,23 +812,24 @@ export const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/lighthouse-lodge.png",
       "category": "tourism",
       "unlock": {
-        "residents": 80,
-        "appeal": 2,
-        "goods": 12
+        "residents": 105,
+        "appeal": 4,
+        "goods": 22,
+        "stone": 34
       },
       "baseCost": {
-        "coins": 6500,
-        "stone": 28,
-        "goods": 16
+        "coins": 2200,
+        "stone": 75,
+        "goods": 30
       },
       "outputPerSecond": {
-        "coins": 1.4,
-        "appeal": 0.14,
-        "influence": 0.05
+        "coins": 2,
+        "appeal": 0.16,
+        "influence": 0.08
       },
       "maintenancePerSecond": {
-        "food": 0.06,
-        "goods": 0.04
+        "food": 0.1,
+        "goods": 0.06
       },
       "statsPerOwned": {},
       "synergies": [
@@ -619,22 +855,25 @@ export const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/brick-factory.png",
       "category": "industrial",
       "unlock": {
-        "residents": 115,
-        "stone": 30,
-        "timber": 24
+        "residents": 145,
+        "stone": 70,
+        "timber": 50,
+        "goods": 20
       },
       "baseCost": {
-        "coins": 11000,
-        "stone": 42,
-        "timber": 28
+        "coins": 3200,
+        "stone": 120,
+        "timber": 70,
+        "goods": 30
       },
       "outputPerSecond": {
-        "goods": 0.65,
-        "stone": 0.45,
-        "power": 0.3
+        "goods": 0.8,
+        "stone": 0.62,
+        "power": 0.34
       },
       "maintenancePerSecond": {
-        "coins": 0.5
+        "coins": 0.28,
+        "food": 0.04
       },
       "statsPerOwned": {},
       "synergies": [
@@ -660,24 +899,26 @@ export const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/ice-dome-habitat.png",
       "category": "future",
       "unlock": {
-        "residents": 150,
-        "power": 5,
-        "knowledge": 4,
-        "appeal": 3
+        "residents": 210,
+        "power": 12,
+        "knowledge": 10,
+        "appeal": 6,
+        "goods": 16
       },
       "baseCost": {
-        "coins": 24000,
-        "stone": 60,
-        "power": 8,
-        "knowledge": 5
+        "coins": 5000,
+        "stone": 220,
+        "power": 36,
+        "knowledge": 26,
+        "goods": 24
       },
       "outputPerSecond": {
-        "power": 0.55,
-        "knowledge": 0.22
+        "power": 0.72,
+        "knowledge": 0.3
       },
       "maintenancePerSecond": {
-        "food": 0.1,
-        "coins": 0.65
+        "food": 0.12,
+        "coins": 0.35
       },
       "statsPerOwned": {
         "residents": 6
@@ -706,23 +947,23 @@ export const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/gothic-keep.png",
       "category": "heritage",
       "unlock": {
-        "residents": 220,
-        "stone": 120,
-        "influence": 6,
-        "appeal": 8
+        "residents": 320,
+        "stone": 220,
+        "influence": 16,
+        "appeal": 16
       },
       "baseCost": {
-        "coins": 50000,
-        "stone": 140,
-        "influence": 8,
-        "appeal": 10
+        "coins": 7000,
+        "stone": 360,
+        "influence": 28,
+        "appeal": 30
       },
       "outputPerSecond": {
-        "appeal": 0.32,
-        "influence": 0.18
+        "appeal": 0.38,
+        "influence": 0.22
       },
       "maintenancePerSecond": {
-        "coins": 0.7
+        "coins": 0.35
       },
       "statsPerOwned": {},
       "synergies": [
@@ -748,24 +989,27 @@ export const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/treehouse-retreat.png",
       "category": "tourism",
       "unlock": {
-        "residents": 300,
-        "food": 20,
-        "appeal": 14,
-        "timber": 70
+        "residents": 450,
+        "food": 36,
+        "appeal": 24,
+        "timber": 160,
+        "goods": 24
       },
       "baseCost": {
-        "coins": 90000,
-        "timber": 90,
-        "food": 24,
-        "appeal": 18
+        "coins": 9000,
+        "timber": 240,
+        "food": 50,
+        "appeal": 36,
+        "goods": 30
       },
       "outputPerSecond": {
-        "appeal": 0.26,
-        "food": 0.22,
-        "coins": 0.75
+        "appeal": 0.31,
+        "food": 0.3,
+        "coins": 1.1,
+        "influence": 0.06
       },
       "maintenancePerSecond": {
-        "goods": 0.05
+        "goods": 0.06
       },
       "statsPerOwned": {},
       "synergies": [
@@ -791,26 +1035,29 @@ export const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/glass-highrise.png",
       "category": "modern",
       "unlock": {
-        "residents": 400,
-        "power": 18,
-        "knowledge": 10,
-        "influence": 16
+        "residents": 620,
+        "power": 42,
+        "knowledge": 28,
+        "influence": 30,
+        "goods": 28
       },
       "baseCost": {
-        "coins": 180000,
-        "stone": 150,
-        "power": 20,
-        "knowledge": 12,
-        "influence": 18
+        "coins": 14000,
+        "stone": 650,
+        "power": 120,
+        "knowledge": 80,
+        "influence": 110,
+        "goods": 40
       },
       "outputPerSecond": {
-        "coins": 3.4,
-        "knowledge": 0.18,
-        "influence": 0.12
+        "coins": 4.6,
+        "knowledge": 0.24,
+        "influence": 0.16
       },
       "maintenancePerSecond": {
-        "food": 0.12,
-        "power": 0.15
+        "food": 0.16,
+        "power": 0.22,
+        "goods": 0.08
       },
       "statsPerOwned": {
         "residents": 10
@@ -845,7 +1092,7 @@ export const GAME_CONTENT = {
         {
           "type": "clickBonus",
           "currency": "coins",
-          "amount": 1
+          "amount": 1.25
         }
       ],
       "description": "A fast stamp line makes every manual tax round feel more official and more profitable."
@@ -905,9 +1152,9 @@ export const GAME_CONTENT = {
         "food": 4
       },
       "cost": {
-        "coins": 1400,
-        "food": 10,
-        "timber": 8
+        "coins": 900,
+        "food": 14,
+        "timber": 12
       },
       "effects": [
         {
@@ -922,7 +1169,12 @@ export const GAME_CONTENT = {
           "type": "maintenanceMultiplier",
           "currency": "food",
           "targets": "all",
-          "multiplier": 0.85
+          "multiplier": 0.82
+        },
+        {
+          "type": "clickBonus",
+          "currency": "food",
+          "amount": 0.7
         }
       ],
       "description": "Shared granaries reduce waste, smooth out harvest swings, and open a manual harvest round when food is tight."
@@ -932,12 +1184,12 @@ export const GAME_CONTENT = {
       "name": "Masons Guild",
       "iconPath": "./public/art/icon-kits/patchwork-borough/policies/supply-depot.png",
       "unlock": {
-        "stone": 8
+        "stone": 10
       },
       "cost": {
-        "coins": 2600,
-        "timber": 16,
-        "stone": 18
+        "coins": 1500,
+        "timber": 30,
+        "stone": 30
       },
       "effects": [
         {
@@ -951,22 +1203,40 @@ export const GAME_CONTENT = {
           "currency": "stone",
           "targets": "all",
           "multiplier": 0.88
+        },
+        {
+          "type": "incomeMultiplier",
+          "currencies": [
+            "timber"
+          ],
+          "targets": "all",
+          "multiplier": 1.25
+        },
+        {
+          "type": "clickBonus",
+          "currency": "timber",
+          "amount": 0.55
+        },
+        {
+          "type": "clickBonus",
+          "currency": "stone",
+          "amount": 0.45
         }
       ],
-      "description": "Standard cuts and shared crews lower wasted material and unlock direct timber runs when construction stalls."
+      "description": "Standard cuts and shared crews lower wasted material and unlock direct timber and stone hauling when construction stalls."
     },
     {
       "id": "plumbing-grid",
       "name": "Workshop Standards",
       "iconPath": "./public/art/icon-kits/patchwork-borough/policies/plumbing-grid.png",
       "unlock": {
-        "goods": 6
+        "goods": 8
       },
       "cost": {
-        "coins": 4800,
-        "goods": 14,
-        "timber": 20,
-        "stone": 20
+        "coins": 2600,
+        "goods": 26,
+        "timber": 40,
+        "stone": 40
       },
       "effects": [
         {
@@ -984,9 +1254,20 @@ export const GAME_CONTENT = {
             "brick-factory"
           ],
           "multiplier": 1.15
+        },
+        {
+          "type": "resourceToIncomeBonus",
+          "sourceCurrency": "goods",
+          "targetCurrency": "coins",
+          "ratePerPoint": 0.01
+        },
+        {
+          "type": "clickBonus",
+          "currency": "goods",
+          "amount": 0.45
         }
       ],
-      "description": "With shared gauges, parts, and methods, the borough's workshops stop improvising, and manual goods packing becomes viable."
+      "description": "With shared gauges, parts, and methods, the borough's workshops stop improvising, manual goods packing becomes viable, and stocked wares start feeding the tax base."
     },
     {
       "id": "heritage-program",
@@ -996,9 +1277,9 @@ export const GAME_CONTENT = {
         "knowledge": 3
       },
       "cost": {
-        "coins": 9000,
-        "goods": 24,
-        "knowledge": 8
+        "coins": 4200,
+        "goods": 36,
+        "knowledge": 20
       },
       "effects": [
         {
@@ -1006,12 +1287,8 @@ export const GAME_CONTENT = {
           "currencies": [
             "knowledge"
           ],
-          "buildingIds": [
-            "cube-villa",
-            "dome-habitat",
-            "glass-condo"
-          ],
-          "multiplier": 1.5
+          "targets": "all",
+          "multiplier": 1.35
         },
         {
           "type": "statMultiplier",
@@ -1022,9 +1299,20 @@ export const GAME_CONTENT = {
             "glass-condo"
           ],
           "multiplier": 1.1
+        },
+        {
+          "type": "clickBonus",
+          "currency": "knowledge",
+          "amount": 0.35
+        },
+        {
+          "type": "resourceToIncomeBonus",
+          "sourceCurrency": "knowledge",
+          "targetCurrency": "coins",
+          "ratePerPoint": 0.02
         }
       ],
-      "description": "Schools, libraries, and civic exams turn elegant districts into real engines of technical growth."
+      "description": "Schools, libraries, and civic exams turn elegant districts into real engines of technical growth, while opening a manual survey round when knowledge runs short."
     },
     {
       "id": "tourism-board",
@@ -1034,9 +1322,9 @@ export const GAME_CONTENT = {
         "appeal": 3
       },
       "cost": {
-        "coins": 15000,
-        "goods": 30,
-        "appeal": 5
+        "coins": 5600,
+        "goods": 40,
+        "appeal": 12
       },
       "effects": [
         {
@@ -1062,9 +1350,14 @@ export const GAME_CONTENT = {
             "palm-bungalow"
           ],
           "multiplier": 1.2
+        },
+        {
+          "type": "clickBonus",
+          "currency": "appeal",
+          "amount": 0.22
         }
       ],
-      "description": "Once celebrations are scheduled and marketed properly, scenic districts start paying back in both fame and cash."
+      "description": "Once celebrations are scheduled and marketed properly, scenic districts start paying back in both fame and cash, and festivals can be staged by hand when appeal is the blocker."
     },
     {
       "id": "industrial-logistics",
@@ -1074,10 +1367,11 @@ export const GAME_CONTENT = {
         "power": 5
       },
       "cost": {
-        "coins": 28000,
-        "stone": 40,
-        "goods": 35,
-        "power": 10
+        "coins": 9000,
+        "stone": 120,
+        "goods": 70,
+        "power": 28,
+        "knowledge": 18
       },
       "effects": [
         {
@@ -1106,9 +1400,14 @@ export const GAME_CONTENT = {
             "glass-condo"
           ],
           "multiplier": 1.15
+        },
+        {
+          "type": "clickBonus",
+          "currency": "power",
+          "amount": 0.4
         }
       ],
-      "description": "A real grid makes modern districts less fragile and lets industrial power flow like a planned utility instead of a lucky accident."
+      "description": "A real grid makes modern districts less fragile, lets industrial power flow like a planned utility, and opens direct power routing when the borough is short on charge."
     },
     {
       "id": "zoning-reform",
@@ -1120,16 +1419,17 @@ export const GAME_CONTENT = {
         "influence": 8
       },
       "cost": {
-        "coins": 75000,
-        "stone": 80,
-        "knowledge": 12,
-        "influence": 10
+        "coins": 14000,
+        "stone": 240,
+        "knowledge": 40,
+        "influence": 26,
+        "appeal": 16
       },
       "effects": [
         {
           "type": "uniqueBuildingIncomeBonus",
-          "ratePerUniqueOwned": 0.04,
-          "cap": 0.48
+          "ratePerUniqueOwned": 0.05,
+          "cap": 0.6
         }
       ],
       "description": "Mixed-use rules reward a balanced borough. The more distinct districts you actually operate, the stronger everything becomes."
@@ -1143,17 +1443,17 @@ export const GAME_CONTENT = {
         "appeal": 4
       },
       "cost": {
-        "coins": 52000,
-        "goods": 42,
-        "appeal": 8,
-        "influence": 8
+        "coins": 18000,
+        "goods": 75,
+        "appeal": 18,
+        "influence": 30
       },
       "effects": [
         {
           "type": "resourceToIncomeBonus",
           "sourceCurrency": "influence",
           "targetCurrency": "coins",
-          "ratePerPoint": 0.012
+          "ratePerPoint": 0.03
         },
         {
           "type": "incomeMultiplier",
@@ -1162,9 +1462,14 @@ export const GAME_CONTENT = {
           ],
           "targets": "all",
           "multiplier": 1.3
+        },
+        {
+          "type": "clickBonus",
+          "currency": "influence",
+          "amount": 0.24
         }
       ],
-      "description": "When reputation becomes negotiable, influence stops being symbolic and starts driving the treasury directly."
+      "description": "When reputation becomes negotiable, influence stops being symbolic and starts driving the treasury directly, pushing late-game pressure toward civic resources instead of raw cash and opening direct favor-brokering."
     },
     {
       "id": "city-charter",
@@ -1174,14 +1479,16 @@ export const GAME_CONTENT = {
         "residents": 520,
         "appeal": 24,
         "influence": 18,
-        "knowledge": 14
+        "knowledge": 14,
+        "power": 12
       },
       "cost": {
-        "coins": 200000,
-        "stone": 180,
-        "knowledge": 14,
-        "influence": 20,
-        "appeal": 24
+        "coins": 26000,
+        "stone": 850,
+        "knowledge": 120,
+        "influence": 120,
+        "appeal": 120,
+        "power": 80
       },
       "effects": [
         {

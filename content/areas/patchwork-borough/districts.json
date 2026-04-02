@@ -10,7 +10,7 @@
       "coins": 15
     },
     "outputPerSecond": {
-      "coins": 0.12
+      "coins": 0.14
     },
     "maintenancePerSecond": {
       "coins": 0.02
@@ -41,11 +41,11 @@
     "category": "residential",
     "unlock": {},
     "baseCost": {
-      "coins": 55
+      "coins": 50
     },
     "outputPerSecond": {
-      "coins": 0.35,
-      "goods": 0.08
+      "coins": 0.38,
+      "goods": 0.1
     },
     "maintenancePerSecond": {
       "coins": 0.06
@@ -76,11 +76,11 @@
     "category": "rural",
     "unlock": {},
     "baseCost": {
-      "coins": 140
+      "coins": 120
     },
     "outputPerSecond": {
-      "timber": 0.18,
-      "stone": 0.12
+      "timber": 0.2,
+      "stone": 0.14
     },
     "maintenancePerSecond": {
       "coins": 0.03
@@ -108,18 +108,18 @@
     "artPath": "./public/art/house-kits/patchwork-borough/current/windmill-homestead.png",
     "category": "rural",
     "unlock": {
-      "residents": 14
+      "residents": 18
     },
     "baseCost": {
-      "coins": 320,
-      "timber": 10
+      "coins": 260,
+      "timber": 8
     },
     "outputPerSecond": {
-      "food": 0.55,
-      "timber": 0.08
+      "food": 0.68,
+      "timber": 0.06
     },
     "maintenancePerSecond": {
-      "coins": 0.06
+      "coins": 0.05
     },
     "statsPerOwned": {
       "residents": 1
@@ -146,22 +146,24 @@
     "artPath": "./public/art/house-kits/patchwork-borough/current/observatory-villa.png",
     "category": "modern",
     "unlock": {
-      "residents": 32,
-      "timber": 18,
-      "stone": 14
+      "residents": 42,
+      "timber": 28,
+      "stone": 22,
+      "goods": 6
     },
     "baseCost": {
-      "coins": 900,
-      "timber": 20,
-      "stone": 18
+      "coins": 750,
+      "timber": 30,
+      "stone": 24,
+      "goods": 8
     },
     "outputPerSecond": {
-      "coins": 0.8,
-      "knowledge": 0.12
+      "coins": 1.05,
+      "knowledge": 0.16
     },
     "maintenancePerSecond": {
-      "food": 0.04,
-      "goods": 0.03
+      "food": 0.05,
+      "goods": 0.04
     },
     "statsPerOwned": {
       "residents": 2
@@ -188,22 +190,22 @@
     "artPath": "./public/art/house-kits/patchwork-borough/current/pagoda-estate.png",
     "category": "prestige",
     "unlock": {
-      "residents": 52,
-      "goods": 6,
-      "timber": 24
+      "residents": 70,
+      "goods": 12,
+      "timber": 40
     },
     "baseCost": {
-      "coins": 2800,
-      "timber": 26,
-      "goods": 10
+      "coins": 1200,
+      "timber": 56,
+      "goods": 20
     },
     "outputPerSecond": {
-      "appeal": 0.18,
-      "influence": 0.08
+      "appeal": 0.22,
+      "influence": 0.09
     },
     "maintenancePerSecond": {
-      "food": 0.08,
-      "coins": 0.12
+      "food": 0.1,
+      "coins": 0.08
     },
     "statsPerOwned": {
       "residents": 1
@@ -230,23 +232,24 @@
     "artPath": "./public/art/house-kits/patchwork-borough/current/lighthouse-lodge.png",
     "category": "tourism",
     "unlock": {
-      "residents": 80,
-      "appeal": 2,
-      "goods": 12
+      "residents": 105,
+      "appeal": 4,
+      "goods": 22,
+      "stone": 34
     },
     "baseCost": {
-      "coins": 6500,
-      "stone": 28,
-      "goods": 16
+      "coins": 2200,
+      "stone": 75,
+      "goods": 30
     },
     "outputPerSecond": {
-      "coins": 1.4,
-      "appeal": 0.14,
-      "influence": 0.05
+      "coins": 2,
+      "appeal": 0.16,
+      "influence": 0.08
     },
     "maintenancePerSecond": {
-      "food": 0.06,
-      "goods": 0.04
+      "food": 0.1,
+      "goods": 0.06
     },
     "statsPerOwned": {},
     "synergies": [
@@ -271,22 +274,25 @@
     "artPath": "./public/art/house-kits/patchwork-borough/current/brick-factory.png",
     "category": "industrial",
     "unlock": {
-      "residents": 115,
-      "stone": 30,
-      "timber": 24
+      "residents": 145,
+      "stone": 70,
+      "timber": 50,
+      "goods": 20
     },
     "baseCost": {
-      "coins": 11000,
-      "stone": 42,
-      "timber": 28
+      "coins": 3200,
+      "stone": 120,
+      "timber": 70,
+      "goods": 30
     },
     "outputPerSecond": {
-      "goods": 0.65,
-      "stone": 0.45,
-      "power": 0.3
+      "goods": 0.8,
+      "stone": 0.62,
+      "power": 0.34
     },
     "maintenancePerSecond": {
-      "coins": 0.5
+      "coins": 0.28,
+      "food": 0.04
     },
     "statsPerOwned": {},
     "synergies": [
@@ -311,24 +317,26 @@
     "artPath": "./public/art/house-kits/patchwork-borough/current/ice-dome-habitat.png",
     "category": "future",
     "unlock": {
-      "residents": 150,
-      "power": 5,
-      "knowledge": 4,
-      "appeal": 3
+      "residents": 210,
+      "power": 12,
+      "knowledge": 10,
+      "appeal": 6,
+      "goods": 16
     },
     "baseCost": {
-      "coins": 24000,
-      "stone": 60,
-      "power": 8,
-      "knowledge": 5
+      "coins": 5000,
+      "stone": 220,
+      "power": 36,
+      "knowledge": 26,
+      "goods": 24
     },
     "outputPerSecond": {
-      "power": 0.55,
-      "knowledge": 0.22
+      "power": 0.72,
+      "knowledge": 0.3
     },
     "maintenancePerSecond": {
-      "food": 0.1,
-      "coins": 0.65
+      "food": 0.12,
+      "coins": 0.35
     },
     "statsPerOwned": {
       "residents": 6
@@ -356,23 +364,23 @@
     "artPath": "./public/art/house-kits/patchwork-borough/current/gothic-keep.png",
     "category": "heritage",
     "unlock": {
-      "residents": 220,
-      "stone": 120,
-      "influence": 6,
-      "appeal": 8
+      "residents": 320,
+      "stone": 220,
+      "influence": 16,
+      "appeal": 16
     },
     "baseCost": {
-      "coins": 50000,
-      "stone": 140,
-      "influence": 8,
-      "appeal": 10
+      "coins": 7000,
+      "stone": 360,
+      "influence": 28,
+      "appeal": 30
     },
     "outputPerSecond": {
-      "appeal": 0.32,
-      "influence": 0.18
+      "appeal": 0.38,
+      "influence": 0.22
     },
     "maintenancePerSecond": {
-      "coins": 0.7
+      "coins": 0.35
     },
     "statsPerOwned": {},
     "synergies": [
@@ -397,24 +405,27 @@
     "artPath": "./public/art/house-kits/patchwork-borough/current/treehouse-retreat.png",
     "category": "tourism",
     "unlock": {
-      "residents": 300,
-      "food": 20,
-      "appeal": 14,
-      "timber": 70
+      "residents": 450,
+      "food": 36,
+      "appeal": 24,
+      "timber": 160,
+      "goods": 24
     },
     "baseCost": {
-      "coins": 90000,
-      "timber": 90,
-      "food": 24,
-      "appeal": 18
+      "coins": 9000,
+      "timber": 240,
+      "food": 50,
+      "appeal": 36,
+      "goods": 30
     },
     "outputPerSecond": {
-      "appeal": 0.26,
-      "food": 0.22,
-      "coins": 0.75
+      "appeal": 0.31,
+      "food": 0.3,
+      "coins": 1.1,
+      "influence": 0.06
     },
     "maintenancePerSecond": {
-      "goods": 0.05
+      "goods": 0.06
     },
     "statsPerOwned": {},
     "synergies": [
@@ -439,26 +450,29 @@
     "artPath": "./public/art/house-kits/patchwork-borough/current/glass-highrise.png",
     "category": "modern",
     "unlock": {
-      "residents": 400,
-      "power": 18,
-      "knowledge": 10,
-      "influence": 16
+      "residents": 620,
+      "power": 42,
+      "knowledge": 28,
+      "influence": 30,
+      "goods": 28
     },
     "baseCost": {
-      "coins": 180000,
-      "stone": 150,
-      "power": 20,
-      "knowledge": 12,
-      "influence": 18
+      "coins": 14000,
+      "stone": 650,
+      "power": 120,
+      "knowledge": 80,
+      "influence": 110,
+      "goods": 40
     },
     "outputPerSecond": {
-      "coins": 3.4,
-      "knowledge": 0.18,
-      "influence": 0.12
+      "coins": 4.6,
+      "knowledge": 0.24,
+      "influence": 0.16
     },
     "maintenancePerSecond": {
-      "food": 0.12,
-      "power": 0.15
+      "food": 0.16,
+      "power": 0.22,
+      "goods": 0.08
     },
     "statsPerOwned": {
       "residents": 10

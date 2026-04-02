@@ -11,7 +11,7 @@
       {
         "type": "clickBonus",
         "currency": "coins",
-        "amount": 1
+        "amount": 1.25
       }
     ],
     "description": "A fast stamp line makes every manual tax round feel more official and more profitable."
@@ -71,9 +71,9 @@
       "food": 4
     },
     "cost": {
-      "coins": 1400,
-      "food": 10,
-      "timber": 8
+      "coins": 900,
+      "food": 14,
+      "timber": 12
     },
     "effects": [
       {
@@ -88,7 +88,12 @@
         "type": "maintenanceMultiplier",
         "currency": "food",
         "targets": "all",
-        "multiplier": 0.85
+        "multiplier": 0.82
+      },
+      {
+        "type": "clickBonus",
+        "currency": "food",
+        "amount": 0.7
       }
     ],
     "description": "Shared granaries reduce waste, smooth out harvest swings, and open a manual harvest round when food is tight."
@@ -98,12 +103,12 @@
     "name": "Masons Guild",
     "iconPath": "./public/art/icon-kits/patchwork-borough/policies/supply-depot.png",
     "unlock": {
-      "stone": 8
+      "stone": 10
     },
     "cost": {
-      "coins": 2600,
-      "timber": 16,
-      "stone": 18
+      "coins": 1500,
+      "timber": 30,
+      "stone": 30
     },
     "effects": [
       {
@@ -117,22 +122,40 @@
         "currency": "stone",
         "targets": "all",
         "multiplier": 0.88
+      },
+      {
+        "type": "incomeMultiplier",
+        "currencies": [
+          "timber"
+        ],
+        "targets": "all",
+        "multiplier": 1.25
+      },
+      {
+        "type": "clickBonus",
+        "currency": "timber",
+        "amount": 0.55
+      },
+      {
+        "type": "clickBonus",
+        "currency": "stone",
+        "amount": 0.45
       }
     ],
-    "description": "Standard cuts and shared crews lower wasted material and unlock direct timber runs when construction stalls."
+    "description": "Standard cuts and shared crews lower wasted material and unlock direct timber and stone hauling when construction stalls."
   },
   {
     "id": "plumbing-grid",
     "name": "Workshop Standards",
     "iconPath": "./public/art/icon-kits/patchwork-borough/policies/plumbing-grid.png",
     "unlock": {
-      "goods": 6
+      "goods": 8
     },
     "cost": {
-      "coins": 4800,
-      "goods": 14,
-      "timber": 20,
-      "stone": 20
+      "coins": 2600,
+      "goods": 26,
+      "timber": 40,
+      "stone": 40
     },
     "effects": [
       {
@@ -150,9 +173,20 @@
           "brick-factory"
         ],
         "multiplier": 1.15
+      },
+      {
+        "type": "resourceToIncomeBonus",
+        "sourceCurrency": "goods",
+        "targetCurrency": "coins",
+        "ratePerPoint": 0.01
+      },
+      {
+        "type": "clickBonus",
+        "currency": "goods",
+        "amount": 0.45
       }
     ],
-    "description": "With shared gauges, parts, and methods, the borough's workshops stop improvising, and manual goods packing becomes viable."
+    "description": "With shared gauges, parts, and methods, the borough's workshops stop improvising, manual goods packing becomes viable, and stocked wares start feeding the tax base."
   },
   {
     "id": "heritage-program",
@@ -162,9 +196,9 @@
       "knowledge": 3
     },
     "cost": {
-      "coins": 9000,
-      "goods": 24,
-      "knowledge": 8
+      "coins": 4200,
+      "goods": 36,
+      "knowledge": 20
     },
     "effects": [
       {
@@ -172,12 +206,8 @@
         "currencies": [
           "knowledge"
         ],
-        "buildingIds": [
-          "cube-villa",
-          "dome-habitat",
-          "glass-condo"
-        ],
-        "multiplier": 1.5
+        "targets": "all",
+        "multiplier": 1.35
       },
       {
         "type": "statMultiplier",
@@ -188,9 +218,20 @@
           "glass-condo"
         ],
         "multiplier": 1.1
+      },
+      {
+        "type": "clickBonus",
+        "currency": "knowledge",
+        "amount": 0.35
+      },
+      {
+        "type": "resourceToIncomeBonus",
+        "sourceCurrency": "knowledge",
+        "targetCurrency": "coins",
+        "ratePerPoint": 0.02
       }
     ],
-    "description": "Schools, libraries, and civic exams turn elegant districts into real engines of technical growth."
+    "description": "Schools, libraries, and civic exams turn elegant districts into real engines of technical growth, while opening a manual survey round when knowledge runs short."
   },
   {
     "id": "tourism-board",
@@ -200,9 +241,9 @@
       "appeal": 3
     },
     "cost": {
-      "coins": 15000,
-      "goods": 30,
-      "appeal": 5
+      "coins": 5600,
+      "goods": 40,
+      "appeal": 12
     },
     "effects": [
       {
@@ -228,9 +269,14 @@
           "palm-bungalow"
         ],
         "multiplier": 1.2
+      },
+      {
+        "type": "clickBonus",
+        "currency": "appeal",
+        "amount": 0.22
       }
     ],
-    "description": "Once celebrations are scheduled and marketed properly, scenic districts start paying back in both fame and cash."
+    "description": "Once celebrations are scheduled and marketed properly, scenic districts start paying back in both fame and cash, and festivals can be staged by hand when appeal is the blocker."
   },
   {
     "id": "industrial-logistics",
@@ -240,10 +286,11 @@
       "power": 5
     },
     "cost": {
-      "coins": 28000,
-      "stone": 40,
-      "goods": 35,
-      "power": 10
+      "coins": 9000,
+      "stone": 120,
+      "goods": 70,
+      "power": 28,
+      "knowledge": 18
     },
     "effects": [
       {
@@ -272,9 +319,14 @@
           "glass-condo"
         ],
         "multiplier": 1.15
+      },
+      {
+        "type": "clickBonus",
+        "currency": "power",
+        "amount": 0.4
       }
     ],
-    "description": "A real grid makes modern districts less fragile and lets industrial power flow like a planned utility instead of a lucky accident."
+    "description": "A real grid makes modern districts less fragile, lets industrial power flow like a planned utility, and opens direct power routing when the borough is short on charge."
   },
   {
     "id": "zoning-reform",
@@ -286,16 +338,17 @@
       "influence": 8
     },
     "cost": {
-      "coins": 75000,
-      "stone": 80,
-      "knowledge": 12,
-      "influence": 10
+      "coins": 14000,
+      "stone": 240,
+      "knowledge": 40,
+      "influence": 26,
+      "appeal": 16
     },
     "effects": [
       {
         "type": "uniqueBuildingIncomeBonus",
-        "ratePerUniqueOwned": 0.04,
-        "cap": 0.48
+        "ratePerUniqueOwned": 0.05,
+        "cap": 0.6
       }
     ],
     "description": "Mixed-use rules reward a balanced borough. The more distinct districts you actually operate, the stronger everything becomes."
@@ -309,17 +362,17 @@
       "appeal": 4
     },
     "cost": {
-      "coins": 52000,
-      "goods": 42,
-      "appeal": 8,
-      "influence": 8
+      "coins": 18000,
+      "goods": 75,
+      "appeal": 18,
+      "influence": 30
     },
     "effects": [
       {
         "type": "resourceToIncomeBonus",
         "sourceCurrency": "influence",
         "targetCurrency": "coins",
-        "ratePerPoint": 0.012
+        "ratePerPoint": 0.03
       },
       {
         "type": "incomeMultiplier",
@@ -328,9 +381,14 @@
         ],
         "targets": "all",
         "multiplier": 1.3
+      },
+      {
+        "type": "clickBonus",
+        "currency": "influence",
+        "amount": 0.24
       }
     ],
-    "description": "When reputation becomes negotiable, influence stops being symbolic and starts driving the treasury directly."
+    "description": "When reputation becomes negotiable, influence stops being symbolic and starts driving the treasury directly, pushing late-game pressure toward civic resources instead of raw cash and opening direct favor-brokering."
   },
   {
     "id": "city-charter",
@@ -340,14 +398,16 @@
       "residents": 520,
       "appeal": 24,
       "influence": 18,
-      "knowledge": 14
+      "knowledge": 14,
+      "power": 12
     },
     "cost": {
-      "coins": 200000,
-      "stone": 180,
-      "knowledge": 14,
-      "influence": 20,
-      "appeal": 24
+      "coins": 26000,
+      "stone": 850,
+      "knowledge": 120,
+      "influence": 120,
+      "appeal": 120,
+      "power": 80
     },
     "effects": [
       {

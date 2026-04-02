@@ -17,11 +17,22 @@ export function formatNumber(value) {
   const numeric = Number(value || 0);
   const absolute = Math.abs(numeric);
 
+  if (absolute >= 1_000_000) {
+    return new Intl.NumberFormat("en-US", {
+      notation: "compact",
+      maximumSignificantDigits: absolute >= 1_000_000_000 ? 3 : 4
+    })
+      .format(numeric)
+      .replace(/\s+/g, "");
+  }
+
   if (absolute >= 10_000) {
     return new Intl.NumberFormat("en-US", {
       notation: "compact",
-      maximumFractionDigits: absolute >= 1_000_000 ? 2 : 1
-    }).format(numeric);
+      maximumFractionDigits: 1
+    })
+      .format(numeric)
+      .replace(/\s+/g, "");
   }
 
   if (absolute >= 1000) {
