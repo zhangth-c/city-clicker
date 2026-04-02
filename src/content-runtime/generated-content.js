@@ -5,11 +5,11 @@ export const GAME_CONTENT = {
     "areaId": "patchwork-borough",
     "eyebrow": "HTML5 City Clicker",
     "name": "Patchwork Borough",
-    "theme": "A mixed-neighborhood city builder clicker based on the house art set in houses.jpg.",
+    "theme": "A mixed-neighborhood city builder clicker built around interlocking supplies, prestige districts, and specialized borough roles.",
     "goalText": "Grow a small borough into a city worth remembering.",
     "artReference": {
-      "file": "public/art/houses.jpg",
-      "note": "Sprite order and building flavor map to the visible house, dome, factory, manor, cabin, and bungalow silhouettes."
+      "file": "public/art/curated-houses/",
+      "note": "District art now mixes the original `houses.jpg` sprites with curated standalone renders selected from the expanded house reference sheets."
     }
   },
   "areas": [
@@ -17,17 +17,23 @@ export const GAME_CONTENT = {
       "id": "patchwork-borough",
       "runtimeId": "patchwork-borough-v1",
       "name": "Patchwork Borough",
-      "theme": "A mixed-neighborhood city builder clicker based on the house art set in houses.jpg.",
+      "theme": "A mixed-neighborhood city builder clicker built around interlocking supplies, prestige districts, and specialized borough roles.",
       "goalText": "Grow a small borough into a city worth remembering.",
       "artReference": {
-        "file": "public/art/houses.jpg",
-        "note": "Sprite order and building flavor map to the visible house, dome, factory, manor, cabin, and bungalow silhouettes."
+        "file": "public/art/curated-houses/",
+        "note": "District art now mixes the original `houses.jpg` sprites with curated standalone renders selected from the expanded house reference sheets."
       },
       "startingState": {
         "coins": 0,
         "residents": 0,
-        "materials": 0,
+        "food": 0,
+        "timber": 0,
+        "stone": 0,
+        "goods": 0,
+        "power": 0,
+        "knowledge": 0,
         "appeal": 0,
+        "influence": 0,
         "clickActionName": "Collect Taxes",
         "baseCoinsPerClick": 1,
         "residentsPerClickBonus": 25,
@@ -42,9 +48,9 @@ export const GAME_CONTENT = {
         "offlineProgressCapSeconds": 14400
       },
       "pacing": {
-        "firstMinuteGoal": "Buy 3 starter homes and the first manual click upgrade.",
-        "midgameShift": "Players transition from cottage taxes into materials and appeal management.",
-        "lateGameIdentity": "Premium districts convert appeal into strong city-wide tax growth."
+        "firstMinuteGoal": "Establish housing, quarry supplies, and a food source before upkeep catches up.",
+        "midgameShift": "The economy branches into stone, goods, power, and knowledge, forcing real specialization decisions.",
+        "lateGameIdentity": "Influence, appeal, and infrastructure turn the borough from a tax base into a civic machine."
       }
     }
   ],
@@ -84,8 +90,14 @@ export const GAME_CONTENT = {
     "resourceIds": [
       "coins",
       "residents",
-      "materials",
-      "appeal"
+      "food",
+      "timber",
+      "stone",
+      "goods",
+      "power",
+      "knowledge",
+      "appeal",
+      "influence"
     ],
     "buildingsByArea": {
       "patchwork-borough": [
@@ -109,32 +121,67 @@ export const GAME_CONTENT = {
       "name": "Coins",
       "kind": "primary",
       "iconPath": "./public/art/generated/icons/resources/coins.svg",
-      "description": "Main spend currency from clicks and passive taxes."
+      "description": "Tax revenue and liquid cash used for almost every project."
     },
     "residents": {
       "name": "Residents",
       "kind": "gate",
       "iconPath": "./public/art/generated/icons/resources/residents.svg",
-      "description": "Population used for unlock thresholds. Residents are not spent."
+      "description": "Population capacity. Residents unlock districts but are never spent."
     },
-    "materials": {
-      "name": "Materials",
-      "kind": "secondary",
-      "iconPath": "./public/art/generated/icons/resources/materials.svg",
-      "description": "Construction goods generated mostly by rustic and industrial districts."
+    "food": {
+      "name": "Food",
+      "kind": "supply",
+      "description": "Harvests and pantry stock that keep homes, visitors, and advanced habitats running."
+    },
+    "timber": {
+      "name": "Timber",
+      "kind": "supply",
+      "description": "Lumber for framing, mills, terraces, and midgame housing."
+    },
+    "stone": {
+      "name": "Stone",
+      "kind": "supply",
+      "description": "Quarried masonry needed for civic, industrial, and landmark construction."
+    },
+    "goods": {
+      "name": "Goods",
+      "kind": "trade",
+      "description": "Crafted wares and freight used by policy offices, tourism, and higher-tier builds."
+    },
+    "power": {
+      "name": "Power",
+      "kind": "utility",
+      "description": "Electrical and mechanical capacity for modern and engineered districts."
+    },
+    "knowledge": {
+      "name": "Knowledge",
+      "kind": "research",
+      "description": "Surveying, schooling, and technical expertise that unlocks advanced designs."
     },
     "appeal": {
       "name": "Appeal",
-      "kind": "special",
+      "kind": "civic",
       "iconPath": "./public/art/generated/icons/resources/appeal.svg",
-      "description": "Slow prestige-like civic currency from tourism and premium districts."
+      "description": "Cultural pull generated by landmarks, resorts, and scenic districts."
+    },
+    "influence": {
+      "name": "Influence",
+      "kind": "civic",
+      "description": "Political and social leverage produced by the borough's most visible districts."
     }
   },
   "startingState": {
     "coins": 0,
     "residents": 0,
-    "materials": 0,
+    "food": 0,
+    "timber": 0,
+    "stone": 0,
+    "goods": 0,
+    "power": 0,
+    "knowledge": 0,
     "appeal": 0,
+    "influence": 0,
     "clickActionName": "Collect Taxes",
     "baseCoinsPerClick": 1,
     "residentsPerClickBonus": 25,
@@ -149,43 +196,44 @@ export const GAME_CONTENT = {
     "offlineProgressCapSeconds": 14400
   },
   "pacing": {
-    "firstMinuteGoal": "Buy 3 starter homes and the first manual click upgrade.",
-    "midgameShift": "Players transition from cottage taxes into materials and appeal management.",
-    "lateGameIdentity": "Premium districts convert appeal into strong city-wide tax growth."
+    "firstMinuteGoal": "Establish housing, quarry supplies, and a food source before upkeep catches up.",
+    "midgameShift": "The economy branches into stone, goods, power, and knowledge, forcing real specialization decisions.",
+    "lateGameIdentity": "Influence, appeal, and infrastructure turn the borough from a tax base into a civic machine."
   },
   "buildings": [
     {
       "id": "suburban-duplex",
-      "name": "Suburban Duplex",
+      "name": "Clockhouse Duplex",
       "spriteRef": "houses-top-1",
+      "artPath": "./public/art/curated-houses/clockhouse-duplex.png",
       "category": "residential",
       "unlock": {},
       "baseCost": {
         "coins": 15
       },
       "outputPerSecond": {
-        "coins": 0.2
+        "coins": 0.12
       },
       "maintenancePerSecond": {
-        "coins": 0.03
+        "coins": 0.02
       },
       "statsPerOwned": {
         "residents": 2
       },
       "synergies": [
         {
-          "label": "Cottage lanes",
-          "targetType": "output",
-          "target": "coins",
+          "label": "Shared porches",
+          "targetType": "stat",
+          "target": "residents",
           "sourceBuildingIds": [
             "red-cottage"
           ],
           "perOwned": 2,
-          "bonus": 0.08,
-          "cap": 0.4
+          "bonus": 0.05,
+          "cap": 0.25
         }
       ],
-      "description": "The duplex is where the borough begins: two doors, two porch lights, and the first hint that this road might become a neighborhood.",
+      "description": "The clockhouse duplex is the borough's first dependable address: modest tax revenue, a few new residents, and just enough daily upkeep to make food matter immediately.",
       "areaId": "patchwork-borough"
     },
     {
@@ -195,57 +243,57 @@ export const GAME_CONTENT = {
       "category": "residential",
       "unlock": {},
       "baseCost": {
-        "coins": 60
+        "coins": 55
       },
       "outputPerSecond": {
-        "coins": 0.65
+        "coins": 0.35,
+        "goods": 0.08
       },
       "maintenancePerSecond": {
-        "coins": 0.07
-      },
-      "statsPerOwned": {
-        "residents": 4
-      },
-      "synergies": [
-        {
-          "label": "Neighborly blocks",
-          "targetType": "stat",
-          "target": "residents",
-          "sourceBuildingIds": [
-            "suburban-duplex"
-          ],
-          "perOwned": 2,
-          "bonus": 0.05,
-          "cap": 0.25
-        }
-      ],
-      "description": "These red cottages arrive when families decide the borough feels permanent. Their gardens and painted fences make the whole street look settled.",
-      "areaId": "patchwork-borough"
-    },
-    {
-      "id": "timber-cabin",
-      "name": "Timber Cabin",
-      "spriteRef": "houses-top-2",
-      "category": "rural",
-      "unlock": {},
-      "baseCost": {
-        "coins": 150
-      },
-      "outputPerSecond": {
-        "coins": 0.25,
-        "materials": 0.05
-      },
-      "maintenancePerSecond": {
-        "coins": 0.05
+        "coins": 0.06
       },
       "statsPerOwned": {
         "residents": 3
       },
       "synergies": [
         {
-          "label": "Lumber route",
+          "label": "Corner trade",
           "targetType": "output",
-          "target": "materials",
+          "target": "goods",
+          "sourceBuildingIds": [
+            "suburban-duplex"
+          ],
+          "perOwned": 2,
+          "bonus": 0.08,
+          "cap": 0.4
+        }
+      ],
+      "description": "The red cottage is where domestic life becomes commerce. It still raises population, but porch stalls and side trades make it your first reliable source of goods.",
+      "areaId": "patchwork-borough"
+    },
+    {
+      "id": "timber-cabin",
+      "name": "Hearth Grotto",
+      "spriteRef": "houses-top-2",
+      "artPath": "./public/art/curated-houses/hearth-grotto.png",
+      "category": "rural",
+      "unlock": {},
+      "baseCost": {
+        "coins": 140
+      },
+      "outputPerSecond": {
+        "timber": 0.18,
+        "stone": 0.12
+      },
+      "maintenancePerSecond": {
+        "coins": 0.03
+      },
+      "statsPerOwned": {},
+      "synergies": [
+        {
+          "label": "Supply trail",
+          "targetType": "output",
+          "target": "timber",
           "sourceBuildingIds": [
             "farmstead"
           ],
@@ -254,161 +302,174 @@ export const GAME_CONTENT = {
           "cap": 0.6
         }
       ],
-      "description": "Built from timber hauled in from the edge of town, each cabin marks the line between rough ground and a place people intend to keep.",
+      "description": "The hearth grotto is not comfortable, but it is productive. It anchors the borough's first real supply chain by cutting timber and hauling stone out of the hillside.",
       "areaId": "patchwork-borough"
     },
     {
       "id": "farmstead",
-      "name": "Farmstead",
+      "name": "Windmill Homestead",
       "spriteRef": "houses-bottom-2",
+      "artPath": "./public/art/curated-houses/windmill-homestead.png",
       "category": "rural",
       "unlock": {
-        "residents": 20
+        "residents": 14
       },
       "baseCost": {
-        "coins": 400
+        "coins": 320,
+        "timber": 10
       },
       "outputPerSecond": {
-        "coins": 0.75,
-        "materials": 0.2
+        "food": 0.55,
+        "timber": 0.08
       },
       "maintenancePerSecond": {
-        "coins": 0.12
+        "coins": 0.06
       },
       "statsPerOwned": {
-        "residents": 6
+        "residents": 1
       },
       "synergies": [
         {
-          "label": "Market wagons",
+          "label": "Town orders",
           "targetType": "output",
-          "target": "coins",
+          "target": "food",
           "sourceBuildingIds": [
-            "timber-cabin"
+            "red-cottage"
           ],
           "perOwned": 2,
-          "bonus": 0.1,
-          "cap": 0.5
+          "bonus": 0.08,
+          "cap": 0.4
         }
       ],
-      "description": "Once the farmsteads appear, the borough stops living day to day. Storehouses fill, carts roll in, and builders stop worrying about the next shipment.",
+      "description": "The windmill homestead keeps the borough from starving itself. It does not mint coins directly, but almost every later district depends on the food it grinds out.",
       "areaId": "patchwork-borough"
     },
     {
       "id": "cube-villa",
-      "name": "Cube Villa",
+      "name": "Observatory Villa",
       "spriteRef": "houses-top-3",
+      "artPath": "./public/art/curated-houses/observatory-villa.png",
       "category": "modern",
       "unlock": {
-        "residents": 40,
-        "materials": 10
+        "residents": 32,
+        "timber": 18,
+        "stone": 14
       },
       "baseCost": {
-        "coins": 1200,
-        "materials": 15
+        "coins": 900,
+        "timber": 20,
+        "stone": 18
       },
       "outputPerSecond": {
-        "coins": 2,
-        "appeal": 0.03
+        "coins": 0.8,
+        "knowledge": 0.12
       },
       "maintenancePerSecond": {
-        "coins": 0.4
+        "food": 0.04,
+        "goods": 0.03
       },
       "statsPerOwned": {
-        "residents": 5
+        "residents": 2
       },
       "synergies": [
         {
-          "label": "Prestige spillover",
+          "label": "Field notes",
           "targetType": "output",
-          "target": "coins",
+          "target": "knowledge",
           "sourceBuildingIds": [
-            "grand-manor"
+            "timber-cabin"
           ],
           "perOwned": 1,
           "bonus": 0.08,
           "cap": 0.4
         }
       ],
-      "description": "The first cube villa always looks slightly ahead of its time. Clean lines, broad windows, and careful landscaping announce that wealth has noticed the borough.",
+      "description": "The observatory villa is the borough's first knowledge district. It still pays taxes, but its real value is converting ordinary housing and local goods into technical capability.",
       "areaId": "patchwork-borough"
     },
     {
       "id": "grand-manor",
-      "name": "Grand Manor",
+      "name": "Pagoda Estate",
       "spriteRef": "houses-top-5",
+      "artPath": "./public/art/curated-houses/pagoda-estate.png",
       "category": "prestige",
       "unlock": {
-        "residents": 60,
-        "materials": 25
+        "residents": 52,
+        "goods": 6,
+        "timber": 24
       },
       "baseCost": {
-        "coins": 3500,
-        "materials": 40
+        "coins": 2800,
+        "timber": 26,
+        "goods": 10
       },
       "outputPerSecond": {
-        "coins": 4.2,
-        "appeal": 0.12
+        "appeal": 0.18,
+        "influence": 0.08
       },
       "maintenancePerSecond": {
-        "coins": 0.6
+        "food": 0.08,
+        "coins": 0.12
       },
       "statsPerOwned": {
-        "residents": 8
+        "residents": 1
       },
       "synergies": [
         {
-          "label": "Society season",
+          "label": "Ceremonial circuit",
           "targetType": "output",
           "target": "appeal",
           "sourceBuildingIds": [
             "hillside-lodge"
           ],
           "perOwned": 1,
-          "bonus": 0.12,
-          "cap": 0.6
-        }
-      ],
-      "description": "A grand manor does not just house residents; it rewrites the reputation of the whole district. Carriages, parties, and quiet envy follow close behind.",
-      "areaId": "patchwork-borough"
-    },
-    {
-      "id": "hillside-lodge",
-      "name": "Hillside Lodge",
-      "spriteRef": "houses-top-6",
-      "category": "tourism",
-      "unlock": {
-        "residents": 90,
-        "materials": 40
-      },
-      "baseCost": {
-        "coins": 8000,
-        "materials": 90
-      },
-      "outputPerSecond": {
-        "coins": 4.8,
-        "appeal": 0.22
-      },
-      "maintenancePerSecond": {
-        "coins": 0.75
-      },
-      "statsPerOwned": {
-        "residents": 6
-      },
-      "synergies": [
-        {
-          "label": "Castle views",
-          "targetType": "output",
-          "target": "appeal",
-          "sourceBuildingIds": [
-            "stone-keep"
-          ],
-          "perOwned": 1,
           "bonus": 0.1,
           "cap": 0.5
         }
       ],
-      "description": "The lodge turns scenery into business. Visitors come for the view, then start asking whether the borough has room for more.",
+      "description": "The pagoda estate does not solve shortages; it solves reputation. It is where the borough starts producing civic gravity instead of just rent.",
+      "areaId": "patchwork-borough"
+    },
+    {
+      "id": "hillside-lodge",
+      "name": "Lighthouse Lodge",
+      "spriteRef": "houses-top-6",
+      "artPath": "./public/art/curated-houses/lighthouse-lodge.png",
+      "category": "tourism",
+      "unlock": {
+        "residents": 80,
+        "appeal": 2,
+        "goods": 12
+      },
+      "baseCost": {
+        "coins": 6500,
+        "stone": 28,
+        "goods": 16
+      },
+      "outputPerSecond": {
+        "coins": 1.4,
+        "appeal": 0.14,
+        "influence": 0.05
+      },
+      "maintenancePerSecond": {
+        "food": 0.06,
+        "goods": 0.04
+      },
+      "statsPerOwned": {},
+      "synergies": [
+        {
+          "label": "Beacon reputation",
+          "targetType": "output",
+          "target": "influence",
+          "sourceBuildingIds": [
+            "stone-keep"
+          ],
+          "perOwned": 1,
+          "bonus": 0.08,
+          "cap": 0.4
+        }
+      ],
+      "description": "The lighthouse lodge monetizes scenery. It is one of the first districts where coins, appeal, and influence all move together, but it needs a steady stream of stocked goods to serve visitors properly.",
       "areaId": "patchwork-borough"
     },
     {
@@ -417,69 +478,74 @@ export const GAME_CONTENT = {
       "spriteRef": "houses-bottom-4",
       "category": "industrial",
       "unlock": {
-        "residents": 130,
-        "materials": 60
+        "residents": 115,
+        "stone": 30,
+        "timber": 24
       },
       "baseCost": {
-        "coins": 15000,
-        "materials": 140
+        "coins": 11000,
+        "stone": 42,
+        "timber": 28
       },
       "outputPerSecond": {
-        "coins": 1.2,
-        "materials": 0.9
+        "goods": 0.65,
+        "stone": 0.45,
+        "power": 0.3
       },
       "maintenancePerSecond": {
-        "coins": 0.95
+        "coins": 0.5
       },
-      "statsPerOwned": {
-        "residents": 3
-      },
+      "statsPerOwned": {},
       "synergies": [
         {
-          "label": "Rural freight",
+          "label": "Quarry freight",
           "targetType": "output",
-          "target": "materials",
+          "target": "stone",
           "sourceBuildingIds": [
-            "farmstead"
+            "timber-cabin"
           ],
           "perOwned": 1,
           "bonus": 0.08,
           "cap": 0.48
         }
       ],
-      "description": "Smoke from the brick factory means the borough has chosen scale over charm. The streets grumble, but the construction crews never wait long for materials again.",
+      "description": "The brick factory is the borough's industrial hinge. It produces no population and little glamour, but it unlocks power and durable midgame throughput.",
       "areaId": "patchwork-borough"
     },
     {
       "id": "dome-habitat",
-      "name": "Dome Habitat",
+      "name": "Ice Dome Habitat",
       "spriteRef": "houses-bottom-1",
+      "artPath": "./public/art/curated-houses/ice-dome-habitat.png",
       "category": "future",
       "unlock": {
-        "residents": 180,
-        "materials": 120,
-        "appeal": 4
+        "residents": 150,
+        "power": 5,
+        "knowledge": 4,
+        "appeal": 3
       },
       "baseCost": {
-        "coins": 30000,
-        "materials": 250
+        "coins": 24000,
+        "stone": 60,
+        "power": 8,
+        "knowledge": 5
       },
       "outputPerSecond": {
-        "coins": 6,
-        "materials": 0.35,
-        "appeal": 0.08
+        "power": 0.55,
+        "knowledge": 0.22
       },
       "maintenancePerSecond": {
-        "coins": 1.4
+        "food": 0.1,
+        "coins": 0.65
       },
       "statsPerOwned": {
-        "residents": 10
+        "residents": 6
       },
       "synergies": [
         {
-          "label": "Smart grid",
+          "label": "Research grid",
           "targetType": "output",
-          "target": "coins",
+          "target": "knowledge",
           "sourceBuildingIds": [
             "cube-villa",
             "glass-condo"
@@ -489,38 +555,40 @@ export const GAME_CONTENT = {
           "cap": 0.4
         }
       ],
-      "description": "The dome habitat is what people build when they stop asking whether the borough belongs on the map and start asking how large it can become.",
+      "description": "The ice dome habitat is engineered living. It adds residents, but more importantly it pushes the borough into a power-and-knowledge economy.",
       "areaId": "patchwork-borough"
     },
     {
       "id": "stone-keep",
-      "name": "Stone Keep",
+      "name": "Gothic Keep",
       "spriteRef": "houses-bottom-3",
+      "artPath": "./public/art/curated-houses/gothic-keep.png",
       "category": "heritage",
       "unlock": {
-        "residents": 250,
-        "materials": 220,
-        "appeal": 10
+        "residents": 220,
+        "stone": 120,
+        "influence": 6,
+        "appeal": 8
       },
       "baseCost": {
-        "coins": 70000,
-        "materials": 450
+        "coins": 50000,
+        "stone": 140,
+        "influence": 8,
+        "appeal": 10
       },
       "outputPerSecond": {
-        "coins": 2.5,
-        "appeal": 0.45
+        "appeal": 0.32,
+        "influence": 0.18
       },
       "maintenancePerSecond": {
-        "coins": 1.25
+        "coins": 0.7
       },
-      "statsPerOwned": {
-        "residents": 2
-      },
+      "statsPerOwned": {},
       "synergies": [
         {
-          "label": "Ancestral ties",
+          "label": "Ancestral prestige",
           "targetType": "output",
-          "target": "appeal",
+          "target": "influence",
           "sourceBuildingIds": [
             "grand-manor"
           ],
@@ -529,33 +597,36 @@ export const GAME_CONTENT = {
           "cap": 0.5
         }
       ],
-      "description": "The keep is older than the borough and somehow still ends up at its center. Once restored, it gives every surrounding street a sense of history.",
+      "description": "The gothic keep is a prestige anchor. It does not carry the population count; it carries the borough's authority.",
       "areaId": "patchwork-borough"
     },
     {
       "id": "palm-bungalow",
-      "name": "Palm Bungalow",
+      "name": "Treehouse Retreat",
       "spriteRef": "houses-bottom-5",
+      "artPath": "./public/art/curated-houses/treehouse-retreat.png",
       "category": "tourism",
       "unlock": {
-        "residents": 330,
-        "materials": 320,
-        "appeal": 18
+        "residents": 300,
+        "food": 20,
+        "appeal": 14,
+        "timber": 70
       },
       "baseCost": {
-        "coins": 120000,
-        "materials": 800
+        "coins": 90000,
+        "timber": 90,
+        "food": 24,
+        "appeal": 18
       },
       "outputPerSecond": {
-        "coins": 4.8,
-        "appeal": 0.4
+        "appeal": 0.26,
+        "food": 0.22,
+        "coins": 0.75
       },
       "maintenancePerSecond": {
-        "coins": 1.2
+        "goods": 0.05
       },
-      "statsPerOwned": {
-        "residents": 4
-      },
+      "statsPerOwned": {},
       "synergies": [
         {
           "label": "Holiday circuit",
@@ -569,32 +640,39 @@ export const GAME_CONTENT = {
           "cap": 0.4
         }
       ],
-      "description": "The bungalow sells a softer dream: shade, warm evenings, and guests who stay longer than they planned.",
+      "description": "The treehouse retreat turns comfort into destination spending. It feeds itself better than most tourism districts, but still leans on the rest of the borough for goods.",
       "areaId": "patchwork-borough"
     },
     {
       "id": "glass-condo",
-      "name": "Glass Condo",
+      "name": "Glass Highrise",
       "spriteRef": "houses-bottom-6",
+      "artPath": "./public/art/curated-houses/glass-highrise.png",
       "category": "modern",
       "unlock": {
-        "residents": 450,
-        "materials": 550,
-        "appeal": 30
+        "residents": 400,
+        "power": 18,
+        "knowledge": 10,
+        "influence": 16
       },
       "baseCost": {
-        "coins": 250000,
-        "materials": 1400
+        "coins": 180000,
+        "stone": 150,
+        "power": 20,
+        "knowledge": 12,
+        "influence": 18
       },
       "outputPerSecond": {
-        "coins": 12,
-        "appeal": 0.18
+        "coins": 3.4,
+        "knowledge": 0.18,
+        "influence": 0.12
       },
       "maintenancePerSecond": {
-        "coins": 2.8
+        "food": 0.12,
+        "power": 0.15
       },
       "statsPerOwned": {
-        "residents": 12
+        "residents": 10
       },
       "synergies": [
         {
@@ -609,7 +687,7 @@ export const GAME_CONTENT = {
           "cap": 0.35
         }
       ],
-      "description": "Glass condos turn the skyline into a statement. They pull in residents, investors, and the quiet feeling that the borough has become a city.",
+      "description": "The glass highrise is the final proof that the borough has become a city. It brings back tax revenue, but only because the rest of the economy can keep it powered and fed.",
       "areaId": "patchwork-borough"
     }
   ],
@@ -629,7 +707,7 @@ export const GAME_CONTENT = {
           "amount": 1
         }
       ],
-      "description": "A clerk with a stamp and a ledger can move a city faster than a dozen speeches."
+      "description": "A fast stamp line makes every manual tax round feel more official and more profitable."
     },
     {
       "id": "stone-roads",
@@ -645,13 +723,14 @@ export const GAME_CONTENT = {
         {
           "type": "incomeMultiplier",
           "currencies": [
-            "coins"
+            "coins",
+            "goods"
           ],
           "targets": "all",
-          "multiplier": 1.2
+          "multiplier": 1.15
         }
       ],
-      "description": "Once the mud is gone, traffic finds its rhythm. Every route in town starts to pay a little better."
+      "description": "Paved streets speed up trade, make tax routes predictable, and let local commerce scale."
     },
     {
       "id": "census-office",
@@ -670,110 +749,153 @@ export const GAME_CONTENT = {
           "buildingIds": [
             "suburban-duplex",
             "red-cottage",
-            "timber-cabin",
             "farmstead"
           ],
           "multiplier": 1.15
         }
       ],
-      "description": "The first proper census teaches the borough its own size, and suddenly planners start building with confidence."
+      "description": "Once the borough counts households properly, small homes start housing people far more efficiently."
     },
     {
       "id": "builders-guild",
-      "name": "Builder's Guild",
+      "name": "Granary Cooperative",
       "iconPath": "./public/art/generated/icons/policies/builders-guild.svg",
       "unlock": {
-        "materials": 8
+        "food": 4
       },
       "cost": {
-        "coins": 1500,
-        "materials": 10
-      },
-      "effects": [
-        {
-          "type": "buildingCostMultiplier",
-          "currency": "coins",
-          "targets": "all",
-          "multiplier": 0.9
-        },
-        {
-          "type": "maintenanceMultiplier",
-          "currency": "coins",
-          "targets": "all",
-          "multiplier": 0.92
-        }
-      ],
-      "description": "When the guild arrives, crews stop reinventing each project from scratch. Costs fall because competence becomes common."
-    },
-    {
-      "id": "supply-depot",
-      "name": "Supply Depot",
-      "iconPath": "./public/art/generated/icons/policies/supply-depot.svg",
-      "unlock": {
-        "materials": 20
-      },
-      "cost": {
-        "coins": 3000,
-        "materials": 35
+        "coins": 1400,
+        "food": 10,
+        "timber": 8
       },
       "effects": [
         {
           "type": "incomeMultiplier",
           "currencies": [
-            "materials"
+            "food"
           ],
           "targets": "all",
-          "multiplier": 1.25
-        }
-      ],
-      "description": "A depot means spare parts, stored lumber, and fewer days lost waiting on a cart."
-    },
-    {
-      "id": "plumbing-grid",
-      "name": "Plumbing & Grid",
-      "iconPath": "./public/art/generated/icons/policies/plumbing-grid.svg",
-      "unlock": {
-        "residents": 55,
-        "materials": 35
-      },
-      "cost": {
-        "coins": 6000,
-        "materials": 60
-      },
-      "effects": [
-        {
-          "type": "buildingOutputMultiplier",
-          "buildingIds": [
-            "cube-villa",
-            "dome-habitat",
-            "glass-condo"
-          ],
-          "multiplier": 1.25
+          "multiplier": 1.35
         },
         {
           "type": "maintenanceMultiplier",
-          "currency": "coins",
+          "currency": "food",
+          "targets": "all",
+          "multiplier": 0.85
+        }
+      ],
+      "description": "Shared granaries reduce waste, smooth out harvest swings, and make feeding the borough much easier."
+    },
+    {
+      "id": "supply-depot",
+      "name": "Masons Guild",
+      "iconPath": "./public/art/generated/icons/policies/supply-depot.svg",
+      "unlock": {
+        "stone": 8
+      },
+      "cost": {
+        "coins": 2600,
+        "timber": 16,
+        "stone": 18
+      },
+      "effects": [
+        {
+          "type": "buildingCostMultiplier",
+          "currency": "timber",
+          "targets": "all",
+          "multiplier": 0.88
+        },
+        {
+          "type": "buildingCostMultiplier",
+          "currency": "stone",
+          "targets": "all",
+          "multiplier": 0.88
+        }
+      ],
+      "description": "Standard cuts and shared crews lower the amount of raw material wasted on each new build."
+    },
+    {
+      "id": "plumbing-grid",
+      "name": "Workshop Standards",
+      "iconPath": "./public/art/generated/icons/policies/plumbing-grid.svg",
+      "unlock": {
+        "goods": 6
+      },
+      "cost": {
+        "coins": 4800,
+        "goods": 14,
+        "timber": 20,
+        "stone": 20
+      },
+      "effects": [
+        {
+          "type": "incomeMultiplier",
+          "currencies": [
+            "goods"
+          ],
+          "targets": "all",
+          "multiplier": 1.35
+        },
+        {
+          "type": "buildingOutputMultiplier",
+          "buildingIds": [
+            "red-cottage",
+            "brick-factory"
+          ],
+          "multiplier": 1.15
+        }
+      ],
+      "description": "With shared gauges, parts, and methods, the borough's workshops stop improvising and start compounding."
+    },
+    {
+      "id": "heritage-program",
+      "name": "Public Schools",
+      "iconPath": "./public/art/generated/icons/policies/heritage-program.svg",
+      "unlock": {
+        "knowledge": 3
+      },
+      "cost": {
+        "coins": 9000,
+        "goods": 24,
+        "knowledge": 8
+      },
+      "effects": [
+        {
+          "type": "incomeMultiplier",
+          "currencies": [
+            "knowledge"
+          ],
           "buildingIds": [
             "cube-villa",
             "dome-habitat",
             "glass-condo"
           ],
-          "multiplier": 0.8
+          "multiplier": 1.5
+        },
+        {
+          "type": "statMultiplier",
+          "stat": "residents",
+          "buildingIds": [
+            "cube-villa",
+            "dome-habitat",
+            "glass-condo"
+          ],
+          "multiplier": 1.1
         }
       ],
-      "description": "Modern districts only feel modern after the pipes and wires disappear into the walls and simply work."
+      "description": "Schools, libraries, and civic exams turn elegant districts into real engines of technical growth."
     },
     {
-      "id": "heritage-program",
-      "name": "Heritage Program",
-      "iconPath": "./public/art/generated/icons/policies/heritage-program.svg",
+      "id": "tourism-board",
+      "name": "Festival Calendar",
+      "iconPath": "./public/art/generated/icons/policies/tourism-board.svg",
       "unlock": {
-        "appeal": 1
+        "appeal": 3
       },
       "cost": {
-        "coins": 12000,
-        "materials": 90,
-        "appeal": 2
+        "coins": 15000,
+        "goods": 30,
+        "appeal": 5
       },
       "effects": [
         {
@@ -784,70 +906,10 @@ export const GAME_CONTENT = {
           "buildingIds": [
             "grand-manor",
             "hillside-lodge",
+            "palm-bungalow",
             "stone-keep"
           ],
-          "multiplier": 1.5
-        },
-        {
-          "type": "maintenanceMultiplier",
-          "currency": "coins",
-          "buildingIds": [
-            "grand-manor",
-            "hillside-lodge",
-            "stone-keep",
-            "palm-bungalow"
-          ],
-          "multiplier": 0.85
-        }
-      ],
-      "description": "The heritage board learns how to turn age into value instead of repair bills."
-    },
-    {
-      "id": "tourism-board",
-      "name": "Tourism Board",
-      "iconPath": "./public/art/generated/icons/policies/tourism-board.svg",
-      "unlock": {
-        "appeal": 3
-      },
-      "cost": {
-        "coins": 20000,
-        "materials": 150,
-        "appeal": 5
-      },
-      "effects": [
-        {
-          "type": "appealToIncomeBonus",
-          "sourceCurrency": "appeal",
-          "targetCurrency": "coins",
-          "ratePerPoint": 0.005
-        }
-      ],
-      "description": "The borough stops being a place people pass through and starts becoming a place they mention by name."
-    },
-    {
-      "id": "industrial-logistics",
-      "name": "Industrial Logistics",
-      "iconPath": "./public/art/generated/icons/policies/industrial-logistics.svg",
-      "unlock": {
-        "residents": 130,
-        "materials": 80
-      },
-      "cost": {
-        "coins": 35000,
-        "materials": 280,
-        "appeal": 8
-      },
-      "effects": [
-        {
-          "type": "incomeMultiplier",
-          "currencies": [
-            "materials"
-          ],
-          "buildingIds": [
-            "farmstead",
-            "brick-factory"
-          ],
-          "multiplier": 1.5
+          "multiplier": 1.4
         },
         {
           "type": "incomeMultiplier",
@@ -855,82 +917,113 @@ export const GAME_CONTENT = {
             "coins"
           ],
           "buildingIds": [
-            "farmstead",
-            "brick-factory"
+            "hillside-lodge",
+            "palm-bungalow"
           ],
-          "multiplier": 1.25
+          "multiplier": 1.2
+        }
+      ],
+      "description": "Once celebrations are scheduled and marketed properly, scenic districts start paying back in both fame and cash."
+    },
+    {
+      "id": "industrial-logistics",
+      "name": "Power Authority",
+      "iconPath": "./public/art/generated/icons/policies/industrial-logistics.svg",
+      "unlock": {
+        "power": 5
+      },
+      "cost": {
+        "coins": 28000,
+        "stone": 40,
+        "goods": 35,
+        "power": 10
+      },
+      "effects": [
+        {
+          "type": "incomeMultiplier",
+          "currencies": [
+            "power"
+          ],
+          "targets": "all",
+          "multiplier": 1.45
         },
         {
           "type": "maintenanceMultiplier",
-          "currency": "coins",
+          "currency": "power",
           "buildingIds": [
-            "farmstead",
-            "brick-factory"
+            "brick-factory",
+            "dome-habitat",
+            "glass-condo"
           ],
-          "multiplier": 0.8
+          "multiplier": 0.75
+        },
+        {
+          "type": "buildingOutputMultiplier",
+          "buildingIds": [
+            "brick-factory",
+            "dome-habitat",
+            "glass-condo"
+          ],
+          "multiplier": 1.15
         }
       ],
-      "description": "Schedules, sidings, and freight ledgers make the rough parts of the borough suddenly efficient."
+      "description": "A real grid makes modern districts less fragile and lets industrial power flow like a planned utility instead of a lucky accident."
     },
     {
       "id": "zoning-reform",
       "name": "Zoning Reform",
       "iconPath": "./public/art/generated/icons/policies/zoning-reform.svg",
       "unlock": {
-        "residents": 220,
-        "materials": 200,
-        "appeal": 8
+        "residents": 240,
+        "knowledge": 8,
+        "influence": 8
       },
       "cost": {
-        "coins": 60000,
-        "materials": 500,
-        "appeal": 15
+        "coins": 75000,
+        "stone": 80,
+        "knowledge": 12,
+        "influence": 10
       },
       "effects": [
         {
           "type": "uniqueBuildingIncomeBonus",
-          "ratePerUniqueOwned": 0.05,
-          "cap": 0.6
+          "ratePerUniqueOwned": 0.04,
+          "cap": 0.48
         }
       ],
-      "description": "Clear rules let unlike neighborhoods grow beside each other without tripping over every permit."
+      "description": "Mixed-use rules reward a balanced borough. The more distinct districts you actually operate, the stronger everything becomes."
     },
     {
       "id": "skyline-campaign",
-      "name": "Skyline Campaign",
+      "name": "Civic Exchange",
       "iconPath": "./public/art/generated/icons/policies/skyline-campaign.svg",
       "unlock": {
-        "residents": 380,
-        "appeal": 18
+        "influence": 4,
+        "appeal": 4
       },
       "cost": {
-        "coins": 100000,
-        "materials": 900,
-        "appeal": 25
+        "coins": 52000,
+        "goods": 42,
+        "appeal": 8,
+        "influence": 8
       },
       "effects": [
         {
-          "type": "incomeMultiplier",
-          "currencies": [
-            "coins"
-          ],
-          "buildingIds": [
-            "cube-villa",
-            "glass-condo"
-          ],
-          "multiplier": 1.6
+          "type": "resourceToIncomeBonus",
+          "sourceCurrency": "influence",
+          "targetCurrency": "coins",
+          "ratePerPoint": 0.012
         },
         {
-          "type": "statMultiplier",
-          "stat": "residents",
-          "buildingIds": [
-            "cube-villa",
-            "glass-condo"
+          "type": "incomeMultiplier",
+          "currencies": [
+            "influence"
           ],
-          "multiplier": 1.2
+          "targets": "all",
+          "multiplier": 1.3
         }
       ],
-      "description": "Developers love a vision they can point to from across town."
+      "description": "When reputation becomes negotiable, influence stops being symbolic and starts driving the treasury directly."
     },
     {
       "id": "city-charter",
@@ -938,12 +1031,16 @@ export const GAME_CONTENT = {
       "iconPath": "./public/art/generated/icons/policies/city-charter.svg",
       "unlock": {
         "residents": 520,
-        "appeal": 28
+        "appeal": 24,
+        "influence": 18,
+        "knowledge": 14
       },
       "cost": {
         "coins": 200000,
-        "materials": 1600,
-        "appeal": 40
+        "stone": 180,
+        "knowledge": 14,
+        "influence": 20,
+        "appeal": 24
       },
       "effects": [
         {
@@ -951,7 +1048,7 @@ export const GAME_CONTENT = {
           "systemId": "annexation"
         }
       ],
-      "description": "The charter is the moment the borough writes down what it has become and claims the right to grow further."
+      "description": "The charter is the moment the borough writes down what it has become and claims the right to start again on stronger terms."
     }
   ],
   "systems": {
@@ -965,16 +1062,21 @@ export const GAME_CONTENT = {
         "iconPath": "./public/art/generated/icons/resources/districts.svg"
       },
       "gainFormula": "max(0, floor(peakResidents / 200) + floor(peakAppeal / 15))",
-      "resetRule": "Reset buildings, upgrades, coins, residents, and materials. Keep unlocked annexation and earned districts.",
+      "resetRule": "Reset buildings, upgrades, and all non-prestige resources. Keep annexation access and earned districts.",
       "permanentBonuses": [
         {
           "type": "incomeMultiplierPerPrestige",
           "currency": "coins",
-          "multiplierPerPoint": 0.05
+          "multiplierPerPoint": 0.04
         },
         {
           "type": "incomeMultiplierPerPrestige",
-          "currency": "materials",
+          "currency": "food",
+          "multiplierPerPoint": 0.03
+        },
+        {
+          "type": "incomeMultiplierPerPrestige",
+          "currency": "knowledge",
           "multiplierPerPoint": 0.02
         }
       ]

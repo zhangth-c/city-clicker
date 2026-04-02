@@ -6,6 +6,7 @@ export function calculateDerivedState(content, state) {
   const uniqueDistricts = content.buildings.filter(
     (building) => Number(state.ownedBuildings[building.id] || 0) > 0
   ).length;
+  const passiveCurrencyIds = Object.keys(content.currencies).filter((currencyId) => currencyId !== "residents");
 
   const residentsByBuilding = {};
   const synergyStateByBuilding = {};
@@ -24,14 +25,15 @@ export function calculateDerivedState(content, state) {
     residents += totalResidents;
   });
 
-  const grossPerSecond = { coins: 0, materials: 0, appeal: 0 };
-  const maintenancePerSecond = { coins: 0, materials: 0, appeal: 0 };
-  const passivePerSecond = { coins: 0, materials: 0, appeal: 0 };
-  const globalIncomeMultipliers = {
-    coins: getGlobalIncomeMultiplier(content, state, "coins", effects, uniqueDistricts),
-    materials: getGlobalIncomeMultiplier(content, state, "materials", effects, uniqueDistricts),
-    appeal: getGlobalIncomeMultiplier(content, state, "appeal", effects, uniqueDistricts)
-  };
+  const grossPerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
+  const maintenancePerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
+  const passivePerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
+  const globalIncomeMultipliers = Object.fromEntries(
+    passiveCurrencyIds.map((currencyId) => [
+      currencyId,
+      getGlobalIncomeMultiplier(content, state, currencyId, effects, uniqueDistricts)
+    ])
+  );
   const perBuilding = {};
 
   content.buildings.forEach((building) => {
@@ -238,7 +240,10 @@ function getGlobalIncomeMultiplier(content, state, currencyId, effects, uniqueDi
       multiplier *= Number(effect.multiplier || 1);
     }
 
-    if (effect.type === "appealToIncomeBonus" && effect.targetCurrency === currencyId) {
+    if (
+      (effect.type === "appealToIncomeBonus" || effect.type === "resourceToIncomeBonus") &&
+      effect.targetCurrency === currencyId
+    ) {
       multiplier *= 1 + Number(state.currencies[effect.sourceCurrency] || 0) * Number(effect.ratePerPoint || 0);
     }
 

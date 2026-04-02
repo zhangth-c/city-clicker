@@ -2,17 +2,23 @@
   "id": "patchwork-borough",
   "runtimeId": "patchwork-borough-v1",
   "name": "Patchwork Borough",
-  "theme": "A mixed-neighborhood city builder clicker based on the house art set in houses.jpg.",
+  "theme": "A mixed-neighborhood city builder clicker built around interlocking supplies, prestige districts, and specialized borough roles.",
   "goalText": "Grow a small borough into a city worth remembering.",
   "artReference": {
-    "file": "public/art/houses.jpg",
-    "note": "Sprite order and building flavor map to the visible house, dome, factory, manor, cabin, and bungalow silhouettes."
+    "file": "public/art/curated-houses/",
+    "note": "District art now mixes the original `houses.jpg` sprites with curated standalone renders selected from the expanded house reference sheets."
   },
   "startingState": {
     "coins": 0,
     "residents": 0,
-    "materials": 0,
+    "food": 0,
+    "timber": 0,
+    "stone": 0,
+    "goods": 0,
+    "power": 0,
+    "knowledge": 0,
     "appeal": 0,
+    "influence": 0,
     "clickActionName": "Collect Taxes",
     "baseCoinsPerClick": 1,
     "residentsPerClickBonus": 25,
@@ -27,8 +33,8 @@
     "offlineProgressCapSeconds": 14400
   },
   "pacing": {
-    "firstMinuteGoal": "Buy 3 starter homes and the first manual click upgrade.",
-    "midgameShift": "Players transition from cottage taxes into materials and appeal management.",
-    "lateGameIdentity": "Premium districts convert appeal into strong city-wide tax growth."
+    "firstMinuteGoal": "Establish housing, quarry supplies, and a food source before upkeep catches up.",
+    "midgameShift": "The economy branches into stone, goods, power, and knowledge, forcing real specialization decisions.",
+    "lateGameIdentity": "Influence, appeal, and infrastructure turn the borough from a tax base into a civic machine."
   }
 }

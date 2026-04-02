@@ -9,16 +9,21 @@
       "iconPath": "./public/art/generated/icons/resources/districts.svg"
     },
     "gainFormula": "max(0, floor(peakResidents / 200) + floor(peakAppeal / 15))",
-    "resetRule": "Reset buildings, upgrades, coins, residents, and materials. Keep unlocked annexation and earned districts.",
+    "resetRule": "Reset buildings, upgrades, and all non-prestige resources. Keep annexation access and earned districts.",
     "permanentBonuses": [
       {
         "type": "incomeMultiplierPerPrestige",
         "currency": "coins",
-        "multiplierPerPoint": 0.05
+        "multiplierPerPoint": 0.04
       },
       {
         "type": "incomeMultiplierPerPrestige",
-        "currency": "materials",
+        "currency": "food",
+        "multiplierPerPoint": 0.03
+      },
+      {
+        "type": "incomeMultiplierPerPrestige",
+        "currency": "knowledge",
         "multiplierPerPoint": 0.02
       }
     ]

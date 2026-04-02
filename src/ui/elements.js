@@ -12,6 +12,8 @@ export function getElements(documentRef = document) {
     buildingsList: documentRef.getElementById("buildings-list"),
     upgradesList: documentRef.getElementById("upgrades-list"),
     sidebar: documentRef.getElementById("sidebar"),
+    activePoliciesPanel: documentRef.getElementById("active-policies-panel"),
+    activePoliciesList: documentRef.getElementById("active-policies-list"),
     policiesPanel: documentRef.getElementById("policies-panel"),
     annexPanel: documentRef.getElementById("annex-panel"),
     annexationSummary: documentRef.getElementById("annexation-summary"),

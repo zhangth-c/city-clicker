@@ -101,9 +101,5 @@ export function normalizeState(content, candidate) {
 }
 
 export function snapshotCurrencies(state) {
-  return {
-    coins: state.currencies.coins || 0,
-    materials: state.currencies.materials || 0,
-    appeal: state.currencies.appeal || 0
-  };
+  return { ...(state.currencies || {}) };
 }

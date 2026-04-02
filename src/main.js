@@ -237,16 +237,22 @@ function applyOfflineProgress() {
     remaining -= step;
   }
 
-  const gains = {
-    coins: state.currencies.coins - before.coins,
-    materials: state.currencies.materials - before.materials,
-    appeal: state.currencies.appeal - before.appeal
-  };
+  const gains = Object.fromEntries(
+    Object.keys(content.currencies).map((currencyId) => [
+      currencyId,
+      Number(state.currencies[currencyId] || 0) - Number(before[currencyId] || 0)
+    ])
+  );
   const offlineMinutes = Math.round(cappedSeconds / 60);
   statusMessage = `Offline progress applied for ${offlineMinutes} min.`;
+  const gainSummary = Object.entries(gains)
+    .filter(([currencyId, amount]) => currencyId !== "residents" && amount > 0.01)
+    .slice(0, 4)
+    .map(([currencyId, amount]) => `+${formatNumber(amount)} ${content.currencies[currencyId].name}`)
+    .join(", ");
   pushLog(
     "Offline progress applied.",
-    `+${formatNumber(gains.coins)} Coins, +${formatNumber(gains.materials)} Materials, +${formatNumber(gains.appeal)} Appeal.`
+    gainSummary || "The borough continued ticking while you were away."
   );
 }
 
@@ -358,7 +364,7 @@ function annexDistrict() {
   }
 
   const confirmed = window.confirm(
-    `Annex the current borough for ${gain} Districts?\n\nThis resets buildings, upgrades, coins, materials, appeal, and residents.`
+    `Annex the current borough for ${gain} Districts?\n\nThis resets buildings, upgrades, and all non-prestige resources.`
   );
 
   if (!confirmed) {

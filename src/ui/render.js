@@ -4,8 +4,44 @@ import { canAfford, getBuildingCost } from "../systems/economy.js";
 import { calculateAnnexationGain, getPrestigeCurrencyId, getVisibleCurrencyIds } from "../systems/progression.js";
 
 export function createRenderer({ content, elements, handlers }) {
+  const statNodes = new Map();
   const buildingNodes = new Map();
   const upgradeNodes = new Map();
+  const activeUpgradeNodes = new Map();
+
+  function ensureStatCards() {
+    if (statNodes.size) {
+      return;
+    }
+
+    const currencyIds = [...Object.keys(content.currencies), getPrestigeCurrencyId(content)];
+    elements.statsGrid.innerHTML = currencyIds
+      .map((currencyId) => {
+        const currencyDef =
+          currencyId === "districts"
+            ? content.systems.annexation.prestigeCurrency
+            : content.currencies[currencyId];
+
+        return `
+          <article class="stat-card" data-stat-card="${currencyId}" hidden>
+            <div class="stat-card__head">
+              ${renderIcon(currencyDef.iconPath, "stat-card__icon")}
+              <span>${currencyDef.name}</span>
+            </div>
+            <strong data-stat-value="${currencyId}">0</strong>
+          </article>
+        `;
+      })
+      .join("");
+
+    elements.statsGrid.querySelectorAll("[data-stat-card]").forEach((card) => {
+      const currencyId = card.getAttribute("data-stat-card");
+      statNodes.set(currencyId, {
+        card,
+        value: card.querySelector(`[data-stat-value="${currencyId}"]`)
+      });
+    });
+  }
 
   function ensureMarketCards() {
     if (!buildingNodes.size) {
@@ -95,14 +131,37 @@ export function createRenderer({ content, elements, handlers }) {
         });
       });
     }
+
+    if (!activeUpgradeNodes.size) {
+      elements.activePoliciesList.innerHTML = content.globalUpgrades
+        .map((upgrade) => {
+          return `
+            <article class="active-policy" data-active-upgrade-card="${upgrade.id}" hidden>
+              ${renderIcon(upgrade.iconPath, "active-policy__icon")}
+              <div class="active-policy__copy">
+                <strong>${upgrade.name}</strong>
+                <span>Active</span>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+
+      elements.activePoliciesList.querySelectorAll("[data-active-upgrade-card]").forEach((card) => {
+        const upgradeId = card.getAttribute("data-active-upgrade-card");
+        activeUpgradeNodes.set(upgradeId, { card });
+      });
+    }
   }
 
   function render(view) {
+    ensureStatCards();
     ensureMarketCards();
     renderStats(view);
     renderHeaderMetrics(view);
     renderBuildings(view);
     renderUpgrades(view);
+    renderActivePolicies(view);
     renderAnnexation(view);
     renderSidebar(view);
   }
@@ -203,38 +262,36 @@ export function createRenderer({ content, elements, handlers }) {
   }
 
   function renderSidebar({ state }) {
+    const activePolicies = content.globalUpgrades.some((upgrade) => {
+      return state.purchasedUpgrades.includes(upgrade.id);
+    });
     const visiblePolicies = content.globalUpgrades.some((upgrade) => {
       const purchased = state.purchasedUpgrades.includes(upgrade.id);
       return !purchased && state.discoveredUpgrades.includes(upgrade.id);
     });
+    elements.activePoliciesPanel.hidden = !activePolicies;
     elements.policiesPanel.hidden = !visiblePolicies;
-    elements.sidebar.hidden = !visiblePolicies && elements.annexPanel.hidden;
+    elements.sidebar.hidden = !visiblePolicies && !activePolicies && elements.annexPanel.hidden;
     elements.contentGrid.classList.toggle("content-grid--single", elements.sidebar.hidden);
   }
 
   function renderStats({ state, derived }) {
-    elements.statsGrid.innerHTML = getVisibleCurrencyIds(content, state, derived)
-      .map((currencyId) => {
-        const currencyDef =
-          currencyId === "districts"
-            ? content.systems.annexation.prestigeCurrency
-            : content.currencies[currencyId];
-        const value =
-          currencyId === "residents"
-            ? derived.residents
-            : Number(state.currencies[currencyId] || 0);
+    const visibleIds = new Set(getVisibleCurrencyIds(content, state, derived));
 
-        return `
-          <article class="stat-card">
-            <div class="stat-card__head">
-              ${renderIcon(currencyDef.iconPath, "stat-card__icon")}
-              <span>${currencyDef.name}</span>
-            </div>
-            <strong>${formatNumber(value)}</strong>
-          </article>
-        `;
-      })
-      .join("");
+    statNodes.forEach((nodes, currencyId) => {
+      const visible = visibleIds.has(currencyId);
+      nodes.card.hidden = !visible;
+      if (!visible) {
+        return;
+      }
+
+      const value =
+        currencyId === "residents"
+          ? derived.residents
+          : Number(state.currencies[currencyId] || 0);
+
+      nodes.value.textContent = formatNumber(value);
+    });
   }
 
   function renderUpgrades({ state }) {
@@ -269,16 +326,26 @@ export function createRenderer({ content, elements, handlers }) {
     });
   }
 
+  function renderActivePolicies({ state }) {
+    content.globalUpgrades.forEach((upgrade) => {
+      const nodes = activeUpgradeNodes.get(upgrade.id);
+      if (!nodes) {
+        return;
+      }
+
+      nodes.card.hidden = !state.purchasedUpgrades.includes(upgrade.id);
+    });
+  }
+
   function renderYieldPills(state, derived, building, details) {
     const pills = [];
-    const visibleCurrencies = new Set(getVisibleCurrencyIds(content, state, derived));
     const residentsPerOwned = building.statsPerOwned && building.statsPerOwned.residents
       ? details.count > 0
         ? Math.round(details.residents / details.count)
         : Math.round(building.statsPerOwned.residents)
       : 0;
 
-    if (residentsPerOwned && visibleCurrencies.has("residents")) {
+    if (residentsPerOwned) {
       pills.push(
         `<span class="yield-pill yield-pill--residents">+${formatNumber(residentsPerOwned)} Residents</span>`
       );
@@ -293,12 +360,13 @@ export function createRenderer({ content, elements, handlers }) {
     });
 
     Object.entries(netOutputs).forEach(([currencyId, amount]) => {
-      if (!visibleCurrencies.has(currencyId) || Math.abs(amount) < 0.0001) {
+      if (Math.abs(amount) < 0.0001) {
         return;
       }
       const prefix = amount > 0 ? "+" : "";
+      const signClass = amount < 0 ? " yield-pill--negative" : "";
       pills.push(
-        `<span class="yield-pill yield-pill--${currencyId}">${prefix}${formatNumber(amount)}/${currencyUnit(currencyId)}</span>`
+        `<span class="yield-pill yield-pill--${currencyId}${signClass}">${prefix}${formatNumber(amount)} ${labelForCurrency(content, currencyId)}/${currencyUnit(currencyId)}</span>`
       );
     });
 
@@ -311,7 +379,7 @@ export function createRenderer({ content, elements, handlers }) {
 function renderBuildingArt(building) {
   if (building.artPath) {
     return `
-      <div class="market-card__art market-card__art--file" aria-hidden="true">
+      <div class="market-card__file-art" aria-hidden="true">
         <img class="market-card__art-image" src="${building.artPath}" alt="" loading="lazy" />
       </div>
     `;

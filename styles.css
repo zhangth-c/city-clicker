@@ -27,6 +27,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -408,8 +412,45 @@ button {
   gap: 14px;
 }
 
+.active-policy-list {
+  display: grid;
+  gap: 10px;
+}
+
 .card-list--compact {
   gap: 12px;
+}
+
+.active-policy {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(42, 122, 114, 0.16);
+  background: #eef6f4;
+}
+
+.active-policy__icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+}
+
+.active-policy__copy {
+  display: grid;
+  gap: 2px;
+}
+
+.active-policy__copy strong {
+  font-size: 0.98rem;
+  line-height: 1.2;
+}
+
+.active-policy__copy span {
+  color: var(--muted);
+  font-size: 0.82rem;
 }
 
 .market-card {
@@ -457,12 +498,18 @@ button {
   box-shadow: none;
 }
 
-.market-card__art--file {
+.market-card__file-art {
+  width: 110px;
+  height: 110px;
+  border-radius: 14px;
+  border: 1px solid rgba(86, 57, 27, 0.14);
+  background: #f7f5f0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px;
   overflow: hidden;
+  box-shadow: none;
 }
 
 .market-card__art-image {
@@ -552,9 +599,39 @@ button {
   background: rgba(255, 233, 181, 0.88);
 }
 
-.yield-pill--materials,
-.cost-pill--materials {
-  background: rgba(216, 226, 222, 0.92);
+.yield-pill--residents,
+.cost-pill--residents {
+  background: rgba(212, 223, 247, 0.92);
+}
+
+.yield-pill--food,
+.cost-pill--food {
+  background: rgba(214, 236, 188, 0.95);
+}
+
+.yield-pill--timber,
+.cost-pill--timber {
+  background: rgba(223, 202, 176, 0.95);
+}
+
+.yield-pill--stone,
+.cost-pill--stone {
+  background: rgba(220, 223, 226, 0.95);
+}
+
+.yield-pill--goods,
+.cost-pill--goods {
+  background: rgba(242, 221, 191, 0.95);
+}
+
+.yield-pill--power,
+.cost-pill--power {
+  background: rgba(199, 234, 245, 0.96);
+}
+
+.yield-pill--knowledge,
+.cost-pill--knowledge {
+  background: rgba(220, 210, 244, 0.96);
 }
 
 .yield-pill--appeal,
@@ -562,9 +639,19 @@ button {
   background: rgba(240, 210, 206, 0.9);
 }
 
-.yield-pill--residents,
-.cost-pill--residents {
-  background: rgba(212, 223, 247, 0.92);
+.yield-pill--influence,
+.cost-pill--influence {
+  background: rgba(244, 221, 168, 0.95);
+}
+
+.yield-pill--districts,
+.cost-pill--districts {
+  background: rgba(210, 222, 231, 0.95);
+}
+
+.yield-pill--negative {
+  border-color: rgba(86, 57, 27, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(86, 57, 27, 0.06);
 }
 
 .market-count {

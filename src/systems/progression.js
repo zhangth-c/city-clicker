@@ -56,19 +56,24 @@ export function getPrestigeCurrencyId(content) {
 }
 
 export function getVisibleCurrencyIds(content, state, derived) {
-  const visible = ["coins"];
+  const visible = [];
 
-  if (derived && derived.residents > 0) {
-    visible.push("residents");
-  }
-  if (Number(state.currencies.materials || 0) > 0) {
-    visible.push("materials");
-  }
-  if (Number(state.currencies.appeal || 0) > 0) {
-    visible.push("appeal");
-  }
-  if (state.systems.annexationUnlocked || Number(state.currencies.districts || 0) > 0) {
-    visible.push("districts");
+  Object.keys(content.currencies).forEach((currencyId) => {
+    if (currencyId === "residents") {
+      if (derived && derived.residents > 0) {
+        visible.push(currencyId);
+      }
+      return;
+    }
+
+    if (Number(state.currencies[currencyId] || 0) > 0) {
+      visible.push(currencyId);
+    }
+  });
+
+  const prestigeCurrencyId = getPrestigeCurrencyId(content);
+  if (Number(state.currencies[prestigeCurrencyId] || 0) > 0) {
+    visible.push(prestigeCurrencyId);
   }
 
   return visible;
