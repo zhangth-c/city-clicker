@@ -421,7 +421,14 @@ button {
   transform: translate(-50%, -50%);
   font-weight: 700;
   color: #fff7ed;
-  text-shadow: none;
+  font-size: 0.95rem;
+  line-height: 1;
+  white-space: nowrap;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(45, 31, 20, 0.94);
+  border: 1px solid rgba(255, 247, 237, 0.16);
+  box-shadow: 0 12px 28px rgba(45, 31, 20, 0.28);
   pointer-events: none;
   animation: taxBurst 850ms ease forwards;
 }
@@ -429,14 +436,14 @@ button {
 @keyframes taxBurst {
   0% {
     opacity: 0;
-    transform: translate(-50%, -10%) scale(0.75);
+    transform: translate(-50%, -12%) scale(0.88);
   }
   20% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -140%) scale(1.05);
+    transform: translate(-50%, -165%) scale(1.02);
   }
 }
 
