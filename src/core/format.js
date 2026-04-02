@@ -17,16 +17,16 @@ export function formatNumber(value) {
   const numeric = Number(value || 0);
   const absolute = Math.abs(numeric);
 
-  if (absolute >= 1_000_000) {
+  if (absolute >= 10_000) {
     return new Intl.NumberFormat("en-US", {
       notation: "compact",
-      maximumFractionDigits: 2
+      maximumFractionDigits: absolute >= 1_000_000 ? 2 : 1
     }).format(numeric);
   }
 
   if (absolute >= 1000) {
     return new Intl.NumberFormat("en-US", {
-      maximumFractionDigits: 1
+      maximumFractionDigits: 0
     }).format(numeric);
   }
 

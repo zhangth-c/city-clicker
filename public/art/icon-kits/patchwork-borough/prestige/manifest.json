@@ -1,0 +1,21 @@
+{
+  "source": "/Users/tianhao/Documents/New project/gemini-art-lab/output/collections/patchwork-borough-prestige/patchwork-borough-prestige-v2.png",
+  "rows": 1,
+  "columns": 1,
+  "insetX": 120,
+  "insetY": 120,
+  "width": 1024,
+  "height": 1024,
+  "cellWidth": 1024,
+  "cellHeight": 1024,
+  "manifest": [
+    {
+      "name": "districts",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/prestige/districts.png",
+      "offsetX": 120,
+      "offsetY": 120,
+      "cropWidth": 784,
+      "cropHeight": 784
+    }
+  ]
+}

@@ -9,6 +9,19 @@ city-clicker/
   public/
     art/
       houses.jpg
+      house-kits/
+        patchwork-borough/
+          current/
+          future/
+          library/
+          kit.json
+      icon-kits/
+        patchwork-borough/
+          policies/
+          prestige/
+          resources/
+          library/
+          kit.json
       generated/
         manifest.json
   content/
@@ -94,6 +107,38 @@ node scripts/build-content.mjs
 ```
 
 `build:art` regenerates the SVG pixel assets under [`public/art/generated/`](/Users/tianhao/Documents/New%20project/city-clicker/public/art/generated) and refreshes the generated art manifest.
+
+## House Kits
+
+Patchwork Borough now keeps its finalized house art in [`public/art/house-kits/patchwork-borough/`](/Users/tianhao/Documents/New%20project/city-clicker/public/art/house-kits/patchwork-borough):
+
+- `current/`
+  Extracted house sprites used by the live district cards.
+- `library/`
+  The approved source sheet used to derive the live sprites.
+- `future/`
+  Curated expansion sheets and upgrade ladders for later areas or district-upgrade systems.
+- `kit.json`
+  A small manifest pointing at the approved sheet selection.
+
+The raw generation workflow stays outside this upload folder in `gemini-art-lab`. Only approved outputs should be copied into `house-kits/`.
+
+## Icon Kits
+
+Patchwork Borough also keeps its finalized HUD and policy icons in [`public/art/icon-kits/patchwork-borough/`](/Users/tianhao/Documents/New%20project/city-clicker/public/art/icon-kits/patchwork-borough):
+
+- `resources/`
+  The live currency icons used in the top HUD and district output labels.
+- `prestige/`
+  The live annexation prestige icon.
+- `policies/`
+  The live policy icons used in the market and active-policy panel.
+- `library/`
+  The approved source sheets selected from the batch icon generations.
+- `kit.json`
+  A manifest recording which sheet variant was chosen for each icon family.
+
+As with the house kits, raw generation remains in `gemini-art-lab`; only curated sheets and exported icons belong here.
 
 ## Adding Another Area
 

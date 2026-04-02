@@ -6,7 +6,7 @@
     "prestigeCurrency": {
       "id": "districts",
       "name": "Districts",
-      "iconPath": "./public/art/generated/icons/resources/districts.svg"
+      "iconPath": "./public/art/icon-kits/patchwork-borough/prestige/districts.png"
     },
     "gainFormula": "max(0, floor(peakResidents / 200) + floor(peakAppeal / 15))",
     "resetRule": "Reset buildings, upgrades, and all non-prestige resources. Keep annexation access and earned districts.",

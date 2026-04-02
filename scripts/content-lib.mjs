@@ -52,12 +52,20 @@ export function validateContent(content) {
   const areaIds = new Set();
   const districtIds = new Set();
   const policyIds = new Set();
+  const manualActionIds = new Set();
 
   content.areas.forEach((area) => {
     if (areaIds.has(area.manifest.id)) {
       errors.push(`Duplicate area id "${area.manifest.id}".`);
     }
     areaIds.add(area.manifest.id);
+
+    for (const manualAction of area.manifest.manualActions || []) {
+      if (manualActionIds.has(manualAction.id)) {
+        errors.push(`Duplicate manual action id "${manualAction.id}".`);
+      }
+      manualActionIds.add(manualAction.id);
+    }
 
     area.districts.forEach((district) => {
       if (districtIds.has(district.id)) {
@@ -81,6 +89,24 @@ export function validateContent(content) {
   const validCurrencies = new Set([...resourceIds]);
 
   for (const area of content.areas) {
+    for (const manualAction of area.manifest.manualActions || []) {
+      if (!resourceIds.has(manualAction.currency)) {
+        errors.push(`Manual action ${manualAction.id} references unknown resource "${manualAction.currency}".`);
+      }
+      if (manualAction.unlockUpgradeId && !policyIds.has(manualAction.unlockUpgradeId)) {
+        errors.push(
+          `Manual action ${manualAction.id} references unknown unlock policy "${manualAction.unlockUpgradeId}".`
+        );
+      }
+      for (const scaling of manualAction.buildingScaling || []) {
+        if (!districtIds.has(scaling.buildingId)) {
+          errors.push(
+            `Manual action ${manualAction.id} references unknown district "${scaling.buildingId}".`
+          );
+        }
+      }
+    }
+
     for (const district of area.districts) {
       validateResourceMap(errors, district.baseCost, validCurrencies, `district ${district.id} baseCost`);
       validateResourceMap(errors, district.outputPerSecond, validCurrencies, `district ${district.id} outputPerSecond`);
@@ -182,6 +208,7 @@ export function buildRuntimeContent(content) {
       areaIds: areas.map((area) => area.id),
       buildingIds: buildings.map((building) => building.id),
       upgradeIds: content.policies.map((policy) => policy.id),
+      manualActionIds: (activeArea.manifest.manualActions || []).map((action) => action.id),
       resourceIds: Object.keys(content.resources),
       buildingsByArea: {
         [activeArea.id]: buildings.map((building) => building.id)
@@ -189,6 +216,7 @@ export function buildRuntimeContent(content) {
     },
     currencies: content.resources,
     startingState: activeArea.manifest.startingState,
+    manualActions: activeArea.manifest.manualActions || [],
     formulas: activeArea.manifest.formulas,
     pacing: activeArea.manifest.pacing,
     buildings,

@@ -1,0 +1,30 @@
+{
+  "id": "patchwork-borough",
+  "currentKit": {
+    "sourceSheet": "./public/art/house-kits/patchwork-borough/library/current-lineup-source.png",
+    "supplementalSourceSheet": "./public/art/house-kits/patchwork-borough/library/completion-source.png",
+    "assetFolder": "./public/art/house-kits/patchwork-borough/current",
+    "selectedVariant": "patchwork-borough-current-v1",
+    "districtAssets": [
+      "clockhouse-duplex",
+      "red-cottage",
+      "hearth-grotto",
+      "windmill-homestead",
+      "observatory-villa",
+      "pagoda-estate",
+      "lighthouse-lodge",
+      "brick-factory",
+      "ice-dome-habitat",
+      "gothic-keep",
+      "treehouse-retreat",
+      "glass-highrise"
+    ]
+  },
+  "futureLibrary": {
+    "expansionLineup": "./public/art/house-kits/patchwork-borough/future/expansion-lineup.png",
+    "upgradeLadders": [
+      "./public/art/house-kits/patchwork-borough/future/treehouse-ladder.png",
+      "./public/art/house-kits/patchwork-borough/future/observatory-ladder.png"
+    ]
+  }
+}

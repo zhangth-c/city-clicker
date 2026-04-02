@@ -2,6 +2,7 @@ import { getPrestigeCurrencyId } from "./progression.js";
 
 export function calculateDerivedState(content, state) {
   const purchasedUpgrades = getPurchasedUpgrades(content, state);
+  const purchasedUpgradeIds = new Set(purchasedUpgrades.map((upgrade) => upgrade.id));
   const effects = purchasedUpgrades.flatMap((upgrade) => upgrade.effects || []);
   const uniqueDistricts = content.buildings.filter(
     (building) => Number(state.ownedBuildings[building.id] || 0) > 0
@@ -72,12 +73,22 @@ export function calculateDerivedState(content, state) {
     };
   });
 
-  const clickBase =
-    Number(content.startingState.baseCoinsPerClick || 0) +
-    Math.floor(residents / Number(content.startingState.residentsPerClickBonus || 1)) *
-      Number(content.startingState.coinsPerClickPerResidentBonus || 0) +
-    getClickBonus(effects);
-  const coinsPerClick = clickBase * globalIncomeMultipliers.coins;
+  const manualActions = (content.manualActions || []).map((action) => {
+    const unlocked = !action.unlockUpgradeId || purchasedUpgradeIds.has(action.unlockUpgradeId);
+    const amount = calculateManualActionYield({
+      state,
+      effects,
+      residents,
+      globalIncomeMultipliers,
+      action
+    });
+
+    return {
+      ...action,
+      unlocked,
+      amount
+    };
+  });
 
   return {
     purchasedUpgrades,
@@ -88,7 +99,7 @@ export function calculateDerivedState(content, state) {
     maintenancePerSecond,
     passivePerSecond,
     globalIncomeMultipliers,
-    coinsPerClick,
+    manualActions,
     uniqueDistricts
   };
 }
@@ -217,9 +228,36 @@ function getBuildingSynergyState(content, state, building) {
   return synergyState;
 }
 
-function getClickBonus(effects) {
+function calculateManualActionYield({ state, effects, residents, globalIncomeMultipliers, action }) {
+  let amount = Number(action.baseAmount || 0);
+
+  if (action.residentScaling && Number(action.residentScaling.perResidents || 0) > 0) {
+    amount +=
+      Math.floor(residents / Number(action.residentScaling.perResidents || 1)) *
+      Number(action.residentScaling.amount || 0);
+  }
+
+  (action.buildingScaling || []).forEach((scaling) => {
+    const owned = Number(state.ownedBuildings[scaling.buildingId] || 0);
+    amount += owned * Number(scaling.amountPerOwned || 0);
+  });
+
+  amount += getClickBonus(effects, action.currency, action.id);
+
+  if (action.applyGlobalMultiplier) {
+    amount *= Number(globalIncomeMultipliers[action.currency] || 1);
+  }
+
+  return amount;
+}
+
+function getClickBonus(effects, currencyId, actionId) {
   return effects.reduce((total, effect) => {
-    if (effect.type === "clickBonus" && effect.currency === "coins") {
+    if (
+      effect.type === "clickBonus" &&
+      ((effect.currency && effect.currency === currencyId) ||
+        (effect.actionId && effect.actionId === actionId))
+    ) {
       return total + Number(effect.amount || 0);
     }
     return total;

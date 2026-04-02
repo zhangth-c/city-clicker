@@ -32,12 +32,7 @@
       <section class="stats-grid" id="stats-grid" aria-label="City resources"></section>
 
       <section class="panel command-center">
-        <div class="tax-button-wrap">
-          <button class="collect-button" id="collect-button" type="button">
-            <span id="collect-label"></span>
-            <strong id="coins-per-click"></strong>
-          </button>
-        </div>
+        <div class="manual-actions" id="manual-actions" aria-label="Manual actions"></div>
 
         <div class="status-strip" id="status-line" hidden></div>
       </section>
@@ -47,6 +42,8 @@
           <div class="section-heading section-heading--minimal">
             <h2>Districts</h2>
           </div>
+
+          <p class="section-hint" id="district-hint" hidden></p>
 
           <div class="card-list" id="buildings-list"></div>
         </section>

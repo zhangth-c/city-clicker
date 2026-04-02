@@ -51,6 +51,36 @@ export function discoverUpgrades(content, state, derived) {
   return discoveredNow;
 }
 
+export function getNextBuildingUnlockHint(content, state, derived) {
+  const nextLockedBuilding = content.buildings.find((building) => {
+    return !(state.discoveredBuildings || []).includes(building.id);
+  });
+
+  if (!nextLockedBuilding) {
+    return null;
+  }
+
+  const missing = Object.entries(nextLockedBuilding.unlock || {})
+    .map(([currencyId, amount]) => {
+      const current =
+        currencyId === "residents"
+          ? Number(derived?.residents || 0)
+          : Number(state.currencies[currencyId] || 0);
+      const deficit = Math.max(0, Number(amount) - current);
+      return {
+        currencyId,
+        deficit
+      };
+    })
+    .filter((entry) => entry.deficit > 0);
+
+  return {
+    buildingId: nextLockedBuilding.id,
+    buildingName: nextLockedBuilding.name,
+    missing
+  };
+}
+
 export function getPrestigeCurrencyId(content) {
   return content.systems.annexation.prestigeCurrency.id;
 }

@@ -18,16 +18,79 @@
     "power": 0,
     "knowledge": 0,
     "appeal": 0,
-    "influence": 0,
-    "clickActionName": "Collect Taxes",
-    "baseCoinsPerClick": 1,
-    "residentsPerClickBonus": 25,
-    "coinsPerClickPerResidentBonus": 1
+    "influence": 0
   },
+  "manualActions": [
+    {
+      "id": "collect-taxes",
+      "name": "Collect Taxes",
+      "currency": "coins",
+      "baseAmount": 1,
+      "applyGlobalMultiplier": true,
+      "residentScaling": {
+        "perResidents": 25,
+        "amount": 1
+      }
+    },
+    {
+      "id": "gather-harvest",
+      "name": "Gather Harvest",
+      "currency": "food",
+      "unlockUpgradeId": "builders-guild",
+      "baseAmount": 1.1,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "farmstead",
+          "amountPerOwned": 0.22
+        },
+        {
+          "buildingId": "palm-bungalow",
+          "amountPerOwned": 0.08
+        }
+      ]
+    },
+    {
+      "id": "fell-timber",
+      "name": "Fell Timber",
+      "currency": "timber",
+      "unlockUpgradeId": "supply-depot",
+      "baseAmount": 0.9,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "timber-cabin",
+          "amountPerOwned": 0.18
+        },
+        {
+          "buildingId": "farmstead",
+          "amountPerOwned": 0.05
+        }
+      ]
+    },
+    {
+      "id": "pack-goods",
+      "name": "Pack Goods",
+      "currency": "goods",
+      "unlockUpgradeId": "plumbing-grid",
+      "baseAmount": 0.6,
+      "applyGlobalMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "red-cottage",
+          "amountPerOwned": 0.06
+        },
+        {
+          "buildingId": "brick-factory",
+          "amountPerOwned": 0.1
+        }
+      ]
+    }
+  ],
   "formulas": {
     "buildingCostGrowth": 1.15,
     "buildingCostFormula": "floor(baseCost[currency] * pow(buildingCostGrowth, owned))",
-    "coinsPerClickFormula": "baseCoinsPerClick + floor(residents / residentsPerClickBonus) * coinsPerClickPerResidentBonus",
+    "manualActionFormula": "baseAmount + resident scaling + owned-building scaling, then optional global income multipliers and click bonuses",
     "tickRateMs": 100,
     "autosaveMs": 10000,
     "offlineProgressCapSeconds": 14400

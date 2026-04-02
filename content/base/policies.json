@@ -2,7 +2,7 @@
   {
     "id": "permit-desk",
     "name": "Permit Desk",
-    "iconPath": "./public/art/generated/icons/policies/permit-desk.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/permit-desk.png",
     "unlock": {},
     "cost": {
       "coins": 100
@@ -19,7 +19,7 @@
   {
     "id": "stone-roads",
     "name": "Stone Roads",
-    "iconPath": "./public/art/generated/icons/policies/stone-roads.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/stone-roads.png",
     "unlock": {
       "coins": 150
     },
@@ -42,7 +42,7 @@
   {
     "id": "census-office",
     "name": "Census Office",
-    "iconPath": "./public/art/generated/icons/policies/census-office.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/census-office.png",
     "unlock": {
       "residents": 12
     },
@@ -66,7 +66,7 @@
   {
     "id": "builders-guild",
     "name": "Granary Cooperative",
-    "iconPath": "./public/art/generated/icons/policies/builders-guild.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/builders-guild.png",
     "unlock": {
       "food": 4
     },
@@ -91,12 +91,12 @@
         "multiplier": 0.85
       }
     ],
-    "description": "Shared granaries reduce waste, smooth out harvest swings, and make feeding the borough much easier."
+    "description": "Shared granaries reduce waste, smooth out harvest swings, and open a manual harvest round when food is tight."
   },
   {
     "id": "supply-depot",
     "name": "Masons Guild",
-    "iconPath": "./public/art/generated/icons/policies/supply-depot.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/supply-depot.png",
     "unlock": {
       "stone": 8
     },
@@ -119,12 +119,12 @@
         "multiplier": 0.88
       }
     ],
-    "description": "Standard cuts and shared crews lower the amount of raw material wasted on each new build."
+    "description": "Standard cuts and shared crews lower wasted material and unlock direct timber runs when construction stalls."
   },
   {
     "id": "plumbing-grid",
     "name": "Workshop Standards",
-    "iconPath": "./public/art/generated/icons/policies/plumbing-grid.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/plumbing-grid.png",
     "unlock": {
       "goods": 6
     },
@@ -152,12 +152,12 @@
         "multiplier": 1.15
       }
     ],
-    "description": "With shared gauges, parts, and methods, the borough's workshops stop improvising and start compounding."
+    "description": "With shared gauges, parts, and methods, the borough's workshops stop improvising, and manual goods packing becomes viable."
   },
   {
     "id": "heritage-program",
     "name": "Public Schools",
-    "iconPath": "./public/art/generated/icons/policies/heritage-program.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/heritage-program.png",
     "unlock": {
       "knowledge": 3
     },
@@ -195,7 +195,7 @@
   {
     "id": "tourism-board",
     "name": "Festival Calendar",
-    "iconPath": "./public/art/generated/icons/policies/tourism-board.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/tourism-board.png",
     "unlock": {
       "appeal": 3
     },
@@ -235,7 +235,7 @@
   {
     "id": "industrial-logistics",
     "name": "Power Authority",
-    "iconPath": "./public/art/generated/icons/policies/industrial-logistics.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/industrial-logistics.png",
     "unlock": {
       "power": 5
     },
@@ -279,7 +279,7 @@
   {
     "id": "zoning-reform",
     "name": "Zoning Reform",
-    "iconPath": "./public/art/generated/icons/policies/zoning-reform.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/zoning-reform.png",
     "unlock": {
       "residents": 240,
       "knowledge": 8,
@@ -303,7 +303,7 @@
   {
     "id": "skyline-campaign",
     "name": "Civic Exchange",
-    "iconPath": "./public/art/generated/icons/policies/skyline-campaign.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/skyline-campaign.png",
     "unlock": {
       "influence": 4,
       "appeal": 4
@@ -335,7 +335,7 @@
   {
     "id": "city-charter",
     "name": "City Charter",
-    "iconPath": "./public/art/generated/icons/policies/city-charter.svg",
+    "iconPath": "./public/art/icon-kits/patchwork-borough/policies/city-charter.png",
     "unlock": {
       "residents": 520,
       "appeal": 24,

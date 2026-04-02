@@ -1,0 +1,93 @@
+{
+  "source": "/Users/tianhao/Documents/New project/gemini-art-lab/output/collections/patchwork-borough-resources/patchwork-borough-resources-v2.png",
+  "rows": 2,
+  "columns": 5,
+  "insetX": 55,
+  "insetY": 95,
+  "width": 2752,
+  "height": 1536,
+  "cellWidth": 550,
+  "cellHeight": 768,
+  "manifest": [
+    {
+      "name": "coins",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/coins.png",
+      "offsetX": 55,
+      "offsetY": 95,
+      "cropWidth": 440,
+      "cropHeight": 578
+    },
+    {
+      "name": "residents",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/residents.png",
+      "offsetX": 605,
+      "offsetY": 95,
+      "cropWidth": 440,
+      "cropHeight": 578
+    },
+    {
+      "name": "food",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/food.png",
+      "offsetX": 1155,
+      "offsetY": 95,
+      "cropWidth": 440,
+      "cropHeight": 578
+    },
+    {
+      "name": "timber",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/timber.png",
+      "offsetX": 1705,
+      "offsetY": 95,
+      "cropWidth": 440,
+      "cropHeight": 578
+    },
+    {
+      "name": "stone",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/stone.png",
+      "offsetX": 2255,
+      "offsetY": 95,
+      "cropWidth": 440,
+      "cropHeight": 578
+    },
+    {
+      "name": "goods",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/goods.png",
+      "offsetX": 55,
+      "offsetY": 863,
+      "cropWidth": 440,
+      "cropHeight": 578
+    },
+    {
+      "name": "power",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/power.png",
+      "offsetX": 605,
+      "offsetY": 863,
+      "cropWidth": 440,
+      "cropHeight": 578
+    },
+    {
+      "name": "knowledge",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/knowledge.png",
+      "offsetX": 1155,
+      "offsetY": 863,
+      "cropWidth": 440,
+      "cropHeight": 578
+    },
+    {
+      "name": "appeal",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/appeal.png",
+      "offsetX": 1705,
+      "offsetY": 863,
+      "cropWidth": 440,
+      "cropHeight": 578
+    },
+    {
+      "name": "influence",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/resources/influence.png",
+      "offsetX": 2255,
+      "offsetY": 863,
+      "cropWidth": 440,
+      "cropHeight": 578
+    }
+  ]
+}

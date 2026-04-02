@@ -1,0 +1,47 @@
+{
+  "id": "patchwork-borough-icons",
+  "resourceKit": {
+    "sourceSheet": "./public/art/icon-kits/patchwork-borough/library/resources-source.png",
+    "assetFolder": "./public/art/icon-kits/patchwork-borough/resources",
+    "selectedVariant": "patchwork-borough-resources-v2",
+    "assetIds": [
+      "coins",
+      "residents",
+      "food",
+      "timber",
+      "stone",
+      "goods",
+      "power",
+      "knowledge",
+      "appeal",
+      "influence"
+    ]
+  },
+  "prestigeKit": {
+    "sourceSheet": "./public/art/icon-kits/patchwork-borough/library/prestige-source.png",
+    "assetFolder": "./public/art/icon-kits/patchwork-borough/prestige",
+    "selectedVariant": "patchwork-borough-prestige-v2",
+    "assetIds": [
+      "districts"
+    ]
+  },
+  "policyKit": {
+    "sourceSheet": "./public/art/icon-kits/patchwork-borough/library/policies-source.png",
+    "assetFolder": "./public/art/icon-kits/patchwork-borough/policies",
+    "selectedVariant": "patchwork-borough-policies-v1",
+    "assetIds": [
+      "permit-desk",
+      "stone-roads",
+      "census-office",
+      "builders-guild",
+      "supply-depot",
+      "plumbing-grid",
+      "heritage-program",
+      "tourism-board",
+      "industrial-logistics",
+      "zoning-reform",
+      "skyline-campaign",
+      "city-charter"
+    ]
+  }
+}

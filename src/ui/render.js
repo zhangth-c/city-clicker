@@ -1,10 +1,16 @@
 import { CATEGORY_LABELS, SPRITE_POSITIONS } from "../core/config.js";
 import { currencyUnit, formatNumber, formatPercent, labelForCurrency } from "../core/format.js";
 import { canAfford, getBuildingCost } from "../systems/economy.js";
-import { calculateAnnexationGain, getPrestigeCurrencyId, getVisibleCurrencyIds } from "../systems/progression.js";
+import {
+  calculateAnnexationGain,
+  getNextBuildingUnlockHint,
+  getPrestigeCurrencyId,
+  getVisibleCurrencyIds
+} from "../systems/progression.js";
 
 export function createRenderer({ content, elements, handlers }) {
   const statNodes = new Map();
+  const manualActionNodes = new Map();
   const buildingNodes = new Map();
   const upgradeNodes = new Map();
   const activeUpgradeNodes = new Map();
@@ -154,14 +160,50 @@ export function createRenderer({ content, elements, handlers }) {
     }
   }
 
+  function ensureManualActionCards() {
+    if (manualActionNodes.size) {
+      return;
+    }
+
+    elements.manualActions.innerHTML = (content.manualActions || [])
+      .map((action) => {
+        const currency = content.currencies[action.currency];
+
+        return `
+          <button class="manual-action manual-action--${action.currency}" data-manual-action-card="${action.id}" type="button" hidden>
+            <span class="manual-action__head">
+              ${renderIcon(currency.iconPath, "manual-action__icon")}
+              <span class="manual-action__label">${action.name}</span>
+            </span>
+            <strong class="manual-action__value" data-manual-action-value="${action.id}">+0 ${currency.name}</strong>
+          </button>
+        `;
+      })
+      .join("");
+
+    elements.manualActions.querySelectorAll("[data-manual-action-card]").forEach((button) => {
+      const actionId = button.getAttribute("data-manual-action-card");
+      button.addEventListener("click", (event) => {
+        handlers.onRunManualAction(actionId, event);
+      });
+      manualActionNodes.set(actionId, {
+        button,
+        value: button.querySelector(`[data-manual-action-value="${actionId}"]`)
+      });
+    });
+  }
+
   function render(view) {
     ensureStatCards();
+    ensureManualActionCards();
     ensureMarketCards();
     renderStats(view);
     renderHeaderMetrics(view);
+    renderManualActions(view);
     renderBuildings(view);
     renderUpgrades(view);
     renderActivePolicies(view);
+    renderDistrictHint(view);
     renderAnnexation(view);
     renderSidebar(view);
   }
@@ -251,14 +293,31 @@ export function createRenderer({ content, elements, handlers }) {
   }
 
   function renderHeaderMetrics({ derived, statusMessage }) {
-    elements.coinsPerClick.textContent = `+${formatNumber(derived.coinsPerClick)} Coins`;
-    const ambientMessage =
-      !statusMessage && derived.passivePerSecond.coins < 0
-        ? "Upkeep is draining more coins than your streets collect."
-        : "";
+    const shortageEntry = Object.entries(derived.passivePerSecond).find(([, rate]) => rate < -0.001);
+    const ambientMessage = !statusMessage && shortageEntry
+      ? `${labelForCurrency(content, shortageEntry[0])} upkeep is outpacing supply.`
+      : "";
     const nextMessage = statusMessage || ambientMessage;
     elements.statusLine.textContent = nextMessage;
     elements.statusLine.hidden = !nextMessage;
+  }
+
+  function renderManualActions({ derived }) {
+    (content.manualActions || []).forEach((action) => {
+      const nodes = manualActionNodes.get(action.id);
+      const derivedAction = derived.manualActions.find((item) => item.id === action.id);
+      if (!nodes || !derivedAction) {
+        return;
+      }
+
+      nodes.button.hidden = !derivedAction.unlocked;
+      if (!derivedAction.unlocked) {
+        return;
+      }
+
+      nodes.button.className = `manual-action manual-action--${derivedAction.currency}`;
+      nodes.value.textContent = `+${formatNumber(derivedAction.amount)} ${labelForCurrency(content, derivedAction.currency)}`;
+    });
   }
 
   function renderSidebar({ state }) {
@@ -324,6 +383,22 @@ export function createRenderer({ content, elements, handlers }) {
       nodes.action.setAttribute("aria-disabled", affordable ? "false" : "true");
       nodes.action.textContent = "Adopt";
     });
+  }
+
+  function renderDistrictHint({ state, derived }) {
+    const hint = getNextBuildingUnlockHint(content, state, derived);
+
+    elements.districtHint.hidden = !hint || hint.missing.length === 0;
+    if (!hint || hint.missing.length === 0) {
+      return;
+    }
+
+    const summary = hint.missing
+      .slice(0, 3)
+      .map(({ currencyId, deficit }) => `${formatNumber(deficit)} ${labelForCurrency(content, currencyId)}`)
+      .join(", ");
+
+    elements.districtHint.textContent = `Next: ${hint.buildingName}. Missing ${summary}.`;
   }
 
   function renderActivePolicies({ state }) {
@@ -394,7 +469,7 @@ function renderIcon(iconPath, className) {
     return "";
   }
 
-  return `<img class="${className}" src="${iconPath}" alt="" loading="lazy" />`;
+  return `<img class="${className}" src="${iconPath}" alt="" loading="lazy" decoding="async" />`;
 }
 
 function describeSynergyTarget(bonus) {

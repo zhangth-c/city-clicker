@@ -21,6 +21,7 @@ const renderer = createRenderer({
   content,
   elements,
   handlers: {
+    onRunManualAction: runManualAction,
     onBuyBuilding: buyBuilding,
     onBuyUpgrade: buyUpgrade
   }
@@ -52,11 +53,9 @@ function hydrateStaticCopy() {
   elements.eyebrow.textContent = content.meta.eyebrow;
   elements.title.textContent = content.meta.name;
   elements.goalLine.textContent = content.meta.goalText;
-  elements.collectLabel.textContent = content.startingState.clickActionName;
 }
 
 function bindEvents() {
-  elements.collectButton.addEventListener("click", collectTaxes);
   elements.saveButton.addEventListener("click", () => {
     if (saveState("Progress saved locally.")) {
       pushLog("Manual save created.", "Your borough snapshot has been written to local storage.");
@@ -273,25 +272,37 @@ function recalculate() {
   }
 }
 
-function collectTaxes(event) {
+function runManualAction(actionId, event) {
   recalculate();
-  state.currencies.coins += derived.coinsPerClick;
+  const action = derived.manualActions.find((item) => item.id === actionId && item.unlocked);
+  if (!action) {
+    statusMessage = "That manual action is not available yet.";
+    render();
+    return;
+  }
+
+  state.currencies[action.currency] = Number(state.currencies[action.currency] || 0) + Number(action.amount || 0);
   state.stats.totalClicks = Number(state.stats.totalClicks || 0) + 1;
   recalculate();
-  spawnTaxBurst(event, `+${formatNumber(derived.coinsPerClick)} Coins`);
+  spawnActionBurst(event, `+${formatNumber(action.amount)} ${content.currencies[action.currency].name}`);
   render();
 }
 
-function spawnTaxBurst(event, label) {
+function spawnActionBurst(event, label) {
+  const target = event && event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+  if (!target) {
+    return;
+  }
+
   const burst = document.createElement("span");
-  const rect = elements.collectButton.getBoundingClientRect();
+  const rect = target.getBoundingClientRect();
   const burstX = event && typeof event.clientX === "number" ? event.clientX - rect.left : rect.width / 2;
   const burstY = event && typeof event.clientY === "number" ? event.clientY - rect.top : rect.height / 2;
   burst.className = "tax-burst";
   burst.textContent = label;
   burst.style.left = `${burstX}px`;
   burst.style.top = `${burstY}px`;
-  elements.collectButton.appendChild(burst);
+  target.appendChild(burst);
   burst.addEventListener("animationend", () => burst.remove(), { once: true });
 }
 

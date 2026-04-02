@@ -1,0 +1,29 @@
+{
+  "source": "/Users/tianhao/Documents/New project/gemini-art-lab/output/collections/patchwork-borough-completion/patchwork-borough-completion-v1.png",
+  "rows": 1,
+  "columns": 2,
+  "insetX": 90,
+  "insetY": 130,
+  "width": 1376,
+  "height": 768,
+  "cellWidth": 688,
+  "cellHeight": 768,
+  "manifest": [
+    {
+      "name": "red-cottage",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/temp-completion/red-cottage.png",
+      "offsetX": 90,
+      "offsetY": 130,
+      "cropWidth": 508,
+      "cropHeight": 508
+    },
+    {
+      "name": "brick-factory",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/temp-completion/brick-factory.png",
+      "offsetX": 778,
+      "offsetY": 130,
+      "cropWidth": 508,
+      "cropHeight": 508
+    }
+  ]
+}

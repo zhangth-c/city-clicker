@@ -1,0 +1,109 @@
+{
+  "source": "/Users/tianhao/Documents/New project/gemini-art-lab/output/collections/patchwork-borough-policies/patchwork-borough-policies-v1.png",
+  "rows": 3,
+  "columns": 4,
+  "insetX": 75,
+  "insetY": 75,
+  "width": 2400,
+  "height": 1792,
+  "cellWidth": 600,
+  "cellHeight": 597,
+  "manifest": [
+    {
+      "name": "permit-desk",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/permit-desk.png",
+      "offsetX": 75,
+      "offsetY": 75,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "stone-roads",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/stone-roads.png",
+      "offsetX": 675,
+      "offsetY": 75,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "census-office",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/census-office.png",
+      "offsetX": 1275,
+      "offsetY": 75,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "builders-guild",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/builders-guild.png",
+      "offsetX": 1875,
+      "offsetY": 75,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "supply-depot",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/supply-depot.png",
+      "offsetX": 75,
+      "offsetY": 672,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "plumbing-grid",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/plumbing-grid.png",
+      "offsetX": 675,
+      "offsetY": 672,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "heritage-program",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/heritage-program.png",
+      "offsetX": 1275,
+      "offsetY": 672,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "tourism-board",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/tourism-board.png",
+      "offsetX": 1875,
+      "offsetY": 672,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "industrial-logistics",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/industrial-logistics.png",
+      "offsetX": 75,
+      "offsetY": 1269,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "zoning-reform",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/zoning-reform.png",
+      "offsetX": 675,
+      "offsetY": 1269,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "skyline-campaign",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/skyline-campaign.png",
+      "offsetX": 1275,
+      "offsetY": 1269,
+      "cropWidth": 450,
+      "cropHeight": 447
+    },
+    {
+      "name": "city-charter",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/patchwork-borough/policies/city-charter.png",
+      "offsetX": 1875,
+      "offsetY": 1269,
+      "cropWidth": 450,
+      "cropHeight": 447
+    }
+  ]
+}

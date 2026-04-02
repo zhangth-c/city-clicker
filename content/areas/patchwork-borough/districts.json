@@ -3,7 +3,7 @@
     "id": "suburban-duplex",
     "name": "Clockhouse Duplex",
     "spriteRef": "houses-top-1",
-    "artPath": "./public/art/curated-houses/clockhouse-duplex.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/clockhouse-duplex.png",
     "category": "residential",
     "unlock": {},
     "baseCost": {
@@ -37,6 +37,7 @@
     "id": "red-cottage",
     "name": "Red Cottage",
     "spriteRef": "houses-top-4",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/red-cottage.png",
     "category": "residential",
     "unlock": {},
     "baseCost": {
@@ -71,7 +72,7 @@
     "id": "timber-cabin",
     "name": "Hearth Grotto",
     "spriteRef": "houses-top-2",
-    "artPath": "./public/art/curated-houses/hearth-grotto.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/hearth-grotto.png",
     "category": "rural",
     "unlock": {},
     "baseCost": {
@@ -104,7 +105,7 @@
     "id": "farmstead",
     "name": "Windmill Homestead",
     "spriteRef": "houses-bottom-2",
-    "artPath": "./public/art/curated-houses/windmill-homestead.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/windmill-homestead.png",
     "category": "rural",
     "unlock": {
       "residents": 14
@@ -142,7 +143,7 @@
     "id": "cube-villa",
     "name": "Observatory Villa",
     "spriteRef": "houses-top-3",
-    "artPath": "./public/art/curated-houses/observatory-villa.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/observatory-villa.png",
     "category": "modern",
     "unlock": {
       "residents": 32,
@@ -184,7 +185,7 @@
     "id": "grand-manor",
     "name": "Pagoda Estate",
     "spriteRef": "houses-top-5",
-    "artPath": "./public/art/curated-houses/pagoda-estate.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/pagoda-estate.png",
     "category": "prestige",
     "unlock": {
       "residents": 52,
@@ -226,7 +227,7 @@
     "id": "hillside-lodge",
     "name": "Lighthouse Lodge",
     "spriteRef": "houses-top-6",
-    "artPath": "./public/art/curated-houses/lighthouse-lodge.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/lighthouse-lodge.png",
     "category": "tourism",
     "unlock": {
       "residents": 80,
@@ -267,6 +268,7 @@
     "id": "brick-factory",
     "name": "Brick Factory",
     "spriteRef": "houses-bottom-4",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/brick-factory.png",
     "category": "industrial",
     "unlock": {
       "residents": 115,
@@ -306,7 +308,7 @@
     "id": "dome-habitat",
     "name": "Ice Dome Habitat",
     "spriteRef": "houses-bottom-1",
-    "artPath": "./public/art/curated-houses/ice-dome-habitat.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/ice-dome-habitat.png",
     "category": "future",
     "unlock": {
       "residents": 150,
@@ -351,7 +353,7 @@
     "id": "stone-keep",
     "name": "Gothic Keep",
     "spriteRef": "houses-bottom-3",
-    "artPath": "./public/art/curated-houses/gothic-keep.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/gothic-keep.png",
     "category": "heritage",
     "unlock": {
       "residents": 220,
@@ -392,7 +394,7 @@
     "id": "palm-bungalow",
     "name": "Treehouse Retreat",
     "spriteRef": "houses-bottom-5",
-    "artPath": "./public/art/curated-houses/treehouse-retreat.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/treehouse-retreat.png",
     "category": "tourism",
     "unlock": {
       "residents": 300,
@@ -434,7 +436,7 @@
     "id": "glass-condo",
     "name": "Glass Highrise",
     "spriteRef": "houses-bottom-6",
-    "artPath": "./public/art/curated-houses/glass-highrise.png",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/glass-highrise.png",
     "category": "modern",
     "unlock": {
       "residents": 400,

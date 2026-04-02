@@ -177,6 +177,9 @@ button {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+  object-position: center;
   image-rendering: pixelated;
 }
 
@@ -187,6 +190,10 @@ button {
 
 .stat-card strong {
   font-size: clamp(1.4rem, 2vw, 2.1rem);
+  line-height: 1.05;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .stat-card p {
@@ -215,12 +222,22 @@ button {
   margin-bottom: 14px;
 }
 
-.tax-button-wrap {
-  position: relative;
+.section-hint {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.manual-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(172px, 1fr));
+  gap: 12px;
 }
 
 .collect-button,
-.utility-button {
+.utility-button,
+.manual-action {
   position: relative;
   z-index: 2;
   display: inline-flex;
@@ -231,6 +248,100 @@ button {
   transition:
     filter 180ms ease,
     box-shadow 180ms ease;
+}
+
+.manual-action {
+  width: 100%;
+  min-height: 128px;
+  height: 128px;
+  padding: 16px 18px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fbf7ef;
+  color: var(--ink);
+  box-shadow: none;
+  overflow: hidden;
+  isolation: isolate;
+  appearance: none;
+  -webkit-appearance: none;
+  touch-action: manipulation;
+}
+
+.manual-action__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  pointer-events: none;
+}
+
+.manual-action__icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  image-rendering: pixelated;
+}
+
+.manual-action__label {
+  display: block;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.manual-action__value {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  font-size: clamp(1.3rem, 2.7vw, 2rem);
+  line-height: 1.05;
+  font-family: Georgia, "Times New Roman", serif;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  pointer-events: none;
+}
+
+.manual-action--coins {
+  background: #fff4dc;
+}
+
+.manual-action--food {
+  background: #eef7de;
+}
+
+.manual-action--timber {
+  background: #f3ece6;
+}
+
+.manual-action--goods {
+  background: #f8efd8;
+}
+
+.manual-action--power {
+  background: #efe8ff;
+}
+
+.manual-action--knowledge {
+  background: #edf1ff;
 }
 
 .collect-button {
@@ -278,13 +389,15 @@ button {
 
 .collect-button:active:not(:disabled),
 .utility-button:active:not(:disabled),
-.market-action:active:not(:disabled) {
+.market-action:active:not(:disabled),
+.manual-action:active:not(:disabled) {
   filter: brightness(0.97);
 }
 
 .collect-button:disabled,
 .utility-button:disabled,
-.market-action:disabled {
+.market-action:disabled,
+.manual-action:disabled {
   cursor: not-allowed;
   opacity: 0.55;
   filter: none;
@@ -435,6 +548,9 @@ button {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+  object-position: center;
   image-rendering: pixelated;
 }
 
@@ -562,6 +678,9 @@ button {
   width: 28px;
   height: 28px;
   flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+  object-position: center;
   image-rendering: pixelated;
 }
 
@@ -589,9 +708,11 @@ button {
   padding: 7px 10px;
   border-radius: 999px;
   font-size: 0.82rem;
-  line-height: 1;
+  line-height: 1.2;
   border: 1px solid rgba(86, 57, 27, 0.12);
   background: #f7f5f0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .yield-pill--coins,
@@ -796,7 +917,38 @@ button {
   }
 
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(136px, 44vw);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding: 0 2px 8px;
+    margin-bottom: 14px;
+  }
+
+  .stat-card {
+    scroll-snap-align: start;
+  }
+
+  .manual-actions {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(160px, 72vw);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding-bottom: 4px;
+  }
+
+  .manual-action {
+    scroll-snap-align: start;
+    min-height: 120px;
+    height: 120px;
   }
 
   .market-card,
@@ -823,5 +975,12 @@ button {
 
   .market-topline {
     flex-direction: column;
+  }
+
+  .manual-action__value,
+  .collect-button strong {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
   }
 }
