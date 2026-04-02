@@ -1,0 +1,329 @@
+[
+  {
+    "id": "permit-desk",
+    "name": "Permit Desk",
+    "unlock": {},
+    "cost": {
+      "coins": 100
+    },
+    "effects": [
+      {
+        "type": "clickBonus",
+        "currency": "coins",
+        "amount": 1
+      }
+    ],
+    "description": "A clerk with a stamp and a ledger can move a city faster than a dozen speeches."
+  },
+  {
+    "id": "stone-roads",
+    "name": "Stone Roads",
+    "unlock": {
+      "coins": 150
+    },
+    "cost": {
+      "coins": 300
+    },
+    "effects": [
+      {
+        "type": "incomeMultiplier",
+        "currencies": [
+          "coins"
+        ],
+        "targets": "all",
+        "multiplier": 1.2
+      }
+    ],
+    "description": "Once the mud is gone, traffic finds its rhythm. Every route in town starts to pay a little better."
+  },
+  {
+    "id": "census-office",
+    "name": "Census Office",
+    "unlock": {
+      "residents": 12
+    },
+    "cost": {
+      "coins": 700
+    },
+    "effects": [
+      {
+        "type": "statMultiplier",
+        "stat": "residents",
+        "buildingIds": [
+          "suburban-duplex",
+          "red-cottage",
+          "timber-cabin",
+          "farmstead"
+        ],
+        "multiplier": 1.15
+      }
+    ],
+    "description": "The first proper census teaches the borough its own size, and suddenly planners start building with confidence."
+  },
+  {
+    "id": "builders-guild",
+    "name": "Builder's Guild",
+    "unlock": {
+      "materials": 8
+    },
+    "cost": {
+      "coins": 1500,
+      "materials": 10
+    },
+    "effects": [
+      {
+        "type": "buildingCostMultiplier",
+        "currency": "coins",
+        "targets": "all",
+        "multiplier": 0.9
+      },
+      {
+        "type": "maintenanceMultiplier",
+        "currency": "coins",
+        "targets": "all",
+        "multiplier": 0.92
+      }
+    ],
+    "description": "When the guild arrives, crews stop reinventing each project from scratch. Costs fall because competence becomes common."
+  },
+  {
+    "id": "supply-depot",
+    "name": "Supply Depot",
+    "unlock": {
+      "materials": 20
+    },
+    "cost": {
+      "coins": 3000,
+      "materials": 35
+    },
+    "effects": [
+      {
+        "type": "incomeMultiplier",
+        "currencies": [
+          "materials"
+        ],
+        "targets": "all",
+        "multiplier": 1.25
+      }
+    ],
+    "description": "A depot means spare parts, stored lumber, and fewer days lost waiting on a cart."
+  },
+  {
+    "id": "plumbing-grid",
+    "name": "Plumbing & Grid",
+    "unlock": {
+      "residents": 55,
+      "materials": 35
+    },
+    "cost": {
+      "coins": 6000,
+      "materials": 60
+    },
+    "effects": [
+      {
+        "type": "buildingOutputMultiplier",
+        "buildingIds": [
+          "cube-villa",
+          "dome-habitat",
+          "glass-condo"
+        ],
+        "multiplier": 1.25
+      },
+      {
+        "type": "maintenanceMultiplier",
+        "currency": "coins",
+        "buildingIds": [
+          "cube-villa",
+          "dome-habitat",
+          "glass-condo"
+        ],
+        "multiplier": 0.8
+      }
+    ],
+    "description": "Modern districts only feel modern after the pipes and wires disappear into the walls and simply work."
+  },
+  {
+    "id": "heritage-program",
+    "name": "Heritage Program",
+    "unlock": {
+      "appeal": 1
+    },
+    "cost": {
+      "coins": 12000,
+      "materials": 90,
+      "appeal": 2
+    },
+    "effects": [
+      {
+        "type": "incomeMultiplier",
+        "currencies": [
+          "appeal"
+        ],
+        "buildingIds": [
+          "grand-manor",
+          "hillside-lodge",
+          "stone-keep"
+        ],
+        "multiplier": 1.5
+      },
+      {
+        "type": "maintenanceMultiplier",
+        "currency": "coins",
+        "buildingIds": [
+          "grand-manor",
+          "hillside-lodge",
+          "stone-keep",
+          "palm-bungalow"
+        ],
+        "multiplier": 0.85
+      }
+    ],
+    "description": "The heritage board learns how to turn age into value instead of repair bills."
+  },
+  {
+    "id": "tourism-board",
+    "name": "Tourism Board",
+    "unlock": {
+      "appeal": 3
+    },
+    "cost": {
+      "coins": 20000,
+      "materials": 150,
+      "appeal": 5
+    },
+    "effects": [
+      {
+        "type": "appealToIncomeBonus",
+        "sourceCurrency": "appeal",
+        "targetCurrency": "coins",
+        "ratePerPoint": 0.005
+      }
+    ],
+    "description": "The borough stops being a place people pass through and starts becoming a place they mention by name."
+  },
+  {
+    "id": "industrial-logistics",
+    "name": "Industrial Logistics",
+    "unlock": {
+      "residents": 130,
+      "materials": 80
+    },
+    "cost": {
+      "coins": 35000,
+      "materials": 280,
+      "appeal": 8
+    },
+    "effects": [
+      {
+        "type": "incomeMultiplier",
+        "currencies": [
+          "materials"
+        ],
+        "buildingIds": [
+          "farmstead",
+          "brick-factory"
+        ],
+        "multiplier": 1.5
+      },
+      {
+        "type": "incomeMultiplier",
+        "currencies": [
+          "coins"
+        ],
+        "buildingIds": [
+          "farmstead",
+          "brick-factory"
+        ],
+        "multiplier": 1.25
+      },
+      {
+        "type": "maintenanceMultiplier",
+        "currency": "coins",
+        "buildingIds": [
+          "farmstead",
+          "brick-factory"
+        ],
+        "multiplier": 0.8
+      }
+    ],
+    "description": "Schedules, sidings, and freight ledgers make the rough parts of the borough suddenly efficient."
+  },
+  {
+    "id": "zoning-reform",
+    "name": "Zoning Reform",
+    "unlock": {
+      "residents": 220,
+      "materials": 200,
+      "appeal": 8
+    },
+    "cost": {
+      "coins": 60000,
+      "materials": 500,
+      "appeal": 15
+    },
+    "effects": [
+      {
+        "type": "uniqueBuildingIncomeBonus",
+        "ratePerUniqueOwned": 0.05,
+        "cap": 0.6
+      }
+    ],
+    "description": "Clear rules let unlike neighborhoods grow beside each other without tripping over every permit."
+  },
+  {
+    "id": "skyline-campaign",
+    "name": "Skyline Campaign",
+    "unlock": {
+      "residents": 380,
+      "appeal": 18
+    },
+    "cost": {
+      "coins": 100000,
+      "materials": 900,
+      "appeal": 25
+    },
+    "effects": [
+      {
+        "type": "incomeMultiplier",
+        "currencies": [
+          "coins"
+        ],
+        "buildingIds": [
+          "cube-villa",
+          "glass-condo"
+        ],
+        "multiplier": 1.6
+      },
+      {
+        "type": "statMultiplier",
+        "stat": "residents",
+        "buildingIds": [
+          "cube-villa",
+          "glass-condo"
+        ],
+        "multiplier": 1.2
+      }
+    ],
+    "description": "Developers love a vision they can point to from across town."
+  },
+  {
+    "id": "city-charter",
+    "name": "City Charter",
+    "unlock": {
+      "residents": 520,
+      "appeal": 28
+    },
+    "cost": {
+      "coins": 200000,
+      "materials": 1600,
+      "appeal": 40
+    },
+    "effects": [
+      {
+        "type": "unlockSystem",
+        "systemId": "annexation"
+      }
+    ],
+    "description": "The charter is the moment the borough writes down what it has become and claims the right to grow further."
+  }
+]

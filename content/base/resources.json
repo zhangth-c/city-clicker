@@ -1,0 +1,22 @@
+{
+  "coins": {
+    "name": "Coins",
+    "kind": "primary",
+    "description": "Main spend currency from clicks and passive taxes."
+  },
+  "residents": {
+    "name": "Residents",
+    "kind": "gate",
+    "description": "Population used for unlock thresholds. Residents are not spent."
+  },
+  "materials": {
+    "name": "Materials",
+    "kind": "secondary",
+    "description": "Construction goods generated mostly by rustic and industrial districts."
+  },
+  "appeal": {
+    "name": "Appeal",
+    "kind": "special",
+    "description": "Slow prestige-like civic currency from tourism and premium districts."
+  }
+}

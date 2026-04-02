@@ -1,0 +1,34 @@
+{
+  "id": "patchwork-borough",
+  "runtimeId": "patchwork-borough-v1",
+  "name": "Patchwork Borough",
+  "theme": "A mixed-neighborhood city builder clicker based on the house art set in houses.jpg.",
+  "goalText": "Grow a small borough into a city worth remembering.",
+  "artReference": {
+    "file": "public/art/houses.jpg",
+    "note": "Sprite order and building flavor map to the visible house, dome, factory, manor, cabin, and bungalow silhouettes."
+  },
+  "startingState": {
+    "coins": 0,
+    "residents": 0,
+    "materials": 0,
+    "appeal": 0,
+    "clickActionName": "Collect Taxes",
+    "baseCoinsPerClick": 1,
+    "residentsPerClickBonus": 25,
+    "coinsPerClickPerResidentBonus": 1
+  },
+  "formulas": {
+    "buildingCostGrowth": 1.15,
+    "buildingCostFormula": "floor(baseCost[currency] * pow(buildingCostGrowth, owned))",
+    "coinsPerClickFormula": "baseCoinsPerClick + floor(residents / residentsPerClickBonus) * coinsPerClickPerResidentBonus",
+    "tickRateMs": 100,
+    "autosaveMs": 10000,
+    "offlineProgressCapSeconds": 14400
+  },
+  "pacing": {
+    "firstMinuteGoal": "Buy 3 starter homes and the first manual click upgrade.",
+    "midgameShift": "Players transition from cottage taxes into materials and appeal management.",
+    "lateGameIdentity": "Premium districts convert appeal into strong city-wide tax growth."
+  }
+}

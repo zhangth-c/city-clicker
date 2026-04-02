@@ -1,0 +1,25 @@
+{
+  "annexation": {
+    "id": "annexation",
+    "name": "Annexation",
+    "unlockUpgradeId": "city-charter",
+    "prestigeCurrency": {
+      "id": "districts",
+      "name": "Districts"
+    },
+    "gainFormula": "max(0, floor(peakResidents / 200) + floor(peakAppeal / 15))",
+    "resetRule": "Reset buildings, upgrades, coins, residents, and materials. Keep unlocked annexation and earned districts.",
+    "permanentBonuses": [
+      {
+        "type": "incomeMultiplierPerPrestige",
+        "currency": "coins",
+        "multiplierPerPoint": 0.05
+      },
+      {
+        "type": "incomeMultiplierPerPrestige",
+        "currency": "materials",
+        "multiplierPerPoint": 0.02
+      }
+    ]
+  }
+}

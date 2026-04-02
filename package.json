@@ -1,0 +1,9 @@
+{
+  "name": "patchwork-borough",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:content": "node scripts/build-content.mjs",
+    "validate:content": "node scripts/validate-content.mjs"
+  }
+}
