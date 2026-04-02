@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2026-04-02T01:23:27.797Z",
+  "houses": [
+    {
+      "id": "artisan-rowhouse",
+      "name": "Artisan Rowhouse",
+      "path": "./public/art/generated/houses/artisan-rowhouse.svg",
+      "tags": [
+        "urban",
+        "starter"
+      ]
+    },
+    {
+      "id": "canal-townhouse",
+      "name": "Canal Townhouse",
+      "path": "./public/art/generated/houses/canal-townhouse.svg",
+      "tags": [
+        "urban",
+        "waterfront"
+      ]
+    },
+    {
+      "id": "corner-bakery",
+      "name": "Corner Bakery",
+      "path": "./public/art/generated/houses/corner-bakery.svg",
+      "tags": [
+        "commercial",
+        "cozy"
+      ]
+    },
+    {
+      "id": "clocktower-manor",
+      "name": "Clocktower Manor",
+      "path": "./public/art/generated/houses/clocktower-manor.svg",
+      "tags": [
+        "prestige",
+        "landmark"
+      ]
+    },
+    {
+      "id": "glass-greenhouse",
+      "name": "Glass Greenhouse",
+      "path": "./public/art/generated/houses/glass-greenhouse.svg",
+      "tags": [
+        "modern",
+        "garden"
+      ]
+    },
+    {
+      "id": "shrine-courtyard",
+      "name": "Shrine Courtyard",
+      "path": "./public/art/generated/houses/shrine-courtyard.svg",
+      "tags": [
+        "heritage",
+        "ornate"
+      ]
+    },
+    {
+      "id": "windmill-homestead",
+      "name": "Windmill Homestead",
+      "path": "./public/art/generated/houses/windmill-homestead.svg",
+      "tags": [
+        "rural",
+        "wind"
+      ]
+    },
+    {
+      "id": "adobe-court",
+      "name": "Adobe Court",
+      "path": "./public/art/generated/houses/adobe-court.svg",
+      "tags": [
+        "desert",
+        "flat-roof"
+      ]
+    },
+    {
+      "id": "boathouse-pier",
+      "name": "Boathouse Pier",
+      "path": "./public/art/generated/houses/boathouse-pier.svg",
+      "tags": [
+        "tourism",
+        "water"
+      ]
+    },
+    {
+      "id": "observatory-villa",
+      "name": "Observatory Villa",
+      "path": "./public/art/generated/houses/observatory-villa.svg",
+      "tags": [
+        "future",
+        "science"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": "coins",
+      "path": "./public/art/generated/icons/resources/coins.svg"
+    },
+    {
+      "id": "residents",
+      "path": "./public/art/generated/icons/resources/residents.svg"
+    },
+    {
+      "id": "materials",
+      "path": "./public/art/generated/icons/resources/materials.svg"
+    },
+    {
+      "id": "appeal",
+      "path": "./public/art/generated/icons/resources/appeal.svg"
+    },
+    {
+      "id": "districts",
+      "path": "./public/art/generated/icons/resources/districts.svg"
+    }
+  ],
+  "policies": [
+    {
+      "id": "permit-desk",
+      "path": "./public/art/generated/icons/policies/permit-desk.svg"
+    },
+    {
+      "id": "stone-roads",
+      "path": "./public/art/generated/icons/policies/stone-roads.svg"
+    },
+    {
+      "id": "census-office",
+      "path": "./public/art/generated/icons/policies/census-office.svg"
+    },
+    {
+      "id": "builders-guild",
+      "path": "./public/art/generated/icons/policies/builders-guild.svg"
+    },
+    {
+      "id": "supply-depot",
+      "path": "./public/art/generated/icons/policies/supply-depot.svg"
+    },
+    {
+      "id": "plumbing-grid",
+      "path": "./public/art/generated/icons/policies/plumbing-grid.svg"
+    },
+    {
+      "id": "heritage-program",
+      "path": "./public/art/generated/icons/policies/heritage-program.svg"
+    },
+    {
+      "id": "tourism-board",
+      "path": "./public/art/generated/icons/policies/tourism-board.svg"
+    },
+    {
+      "id": "industrial-logistics",
+      "path": "./public/art/generated/icons/policies/industrial-logistics.svg"
+    },
+    {
+      "id": "zoning-reform",
+      "path": "./public/art/generated/icons/policies/zoning-reform.svg"
+    },
+    {
+      "id": "skyline-campaign",
+      "path": "./public/art/generated/icons/policies/skyline-campaign.svg"
+    },
+    {
+      "id": "city-charter",
+      "path": "./public/art/generated/icons/policies/city-charter.svg"
+    }
+  ]
+}

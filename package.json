@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:art": "node scripts/generate-pixel-art.mjs",
     "build:content": "node scripts/build-content.mjs",
     "validate:content": "node scripts/validate-content.mjs"
   }

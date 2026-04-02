@@ -108,21 +108,25 @@ export const GAME_CONTENT = {
     "coins": {
       "name": "Coins",
       "kind": "primary",
+      "iconPath": "./public/art/generated/icons/resources/coins.svg",
       "description": "Main spend currency from clicks and passive taxes."
     },
     "residents": {
       "name": "Residents",
       "kind": "gate",
+      "iconPath": "./public/art/generated/icons/resources/residents.svg",
       "description": "Population used for unlock thresholds. Residents are not spent."
     },
     "materials": {
       "name": "Materials",
       "kind": "secondary",
+      "iconPath": "./public/art/generated/icons/resources/materials.svg",
       "description": "Construction goods generated mostly by rustic and industrial districts."
     },
     "appeal": {
       "name": "Appeal",
       "kind": "special",
+      "iconPath": "./public/art/generated/icons/resources/appeal.svg",
       "description": "Slow prestige-like civic currency from tourism and premium districts."
     }
   },
@@ -613,6 +617,7 @@ export const GAME_CONTENT = {
     {
       "id": "permit-desk",
       "name": "Permit Desk",
+      "iconPath": "./public/art/generated/icons/policies/permit-desk.svg",
       "unlock": {},
       "cost": {
         "coins": 100
@@ -629,6 +634,7 @@ export const GAME_CONTENT = {
     {
       "id": "stone-roads",
       "name": "Stone Roads",
+      "iconPath": "./public/art/generated/icons/policies/stone-roads.svg",
       "unlock": {
         "coins": 150
       },
@@ -650,6 +656,7 @@ export const GAME_CONTENT = {
     {
       "id": "census-office",
       "name": "Census Office",
+      "iconPath": "./public/art/generated/icons/policies/census-office.svg",
       "unlock": {
         "residents": 12
       },
@@ -674,6 +681,7 @@ export const GAME_CONTENT = {
     {
       "id": "builders-guild",
       "name": "Builder's Guild",
+      "iconPath": "./public/art/generated/icons/policies/builders-guild.svg",
       "unlock": {
         "materials": 8
       },
@@ -700,6 +708,7 @@ export const GAME_CONTENT = {
     {
       "id": "supply-depot",
       "name": "Supply Depot",
+      "iconPath": "./public/art/generated/icons/policies/supply-depot.svg",
       "unlock": {
         "materials": 20
       },
@@ -722,6 +731,7 @@ export const GAME_CONTENT = {
     {
       "id": "plumbing-grid",
       "name": "Plumbing & Grid",
+      "iconPath": "./public/art/generated/icons/policies/plumbing-grid.svg",
       "unlock": {
         "residents": 55,
         "materials": 35
@@ -756,6 +766,7 @@ export const GAME_CONTENT = {
     {
       "id": "heritage-program",
       "name": "Heritage Program",
+      "iconPath": "./public/art/generated/icons/policies/heritage-program.svg",
       "unlock": {
         "appeal": 1
       },
@@ -794,6 +805,7 @@ export const GAME_CONTENT = {
     {
       "id": "tourism-board",
       "name": "Tourism Board",
+      "iconPath": "./public/art/generated/icons/policies/tourism-board.svg",
       "unlock": {
         "appeal": 3
       },
@@ -815,6 +827,7 @@ export const GAME_CONTENT = {
     {
       "id": "industrial-logistics",
       "name": "Industrial Logistics",
+      "iconPath": "./public/art/generated/icons/policies/industrial-logistics.svg",
       "unlock": {
         "residents": 130,
         "materials": 80
@@ -862,6 +875,7 @@ export const GAME_CONTENT = {
     {
       "id": "zoning-reform",
       "name": "Zoning Reform",
+      "iconPath": "./public/art/generated/icons/policies/zoning-reform.svg",
       "unlock": {
         "residents": 220,
         "materials": 200,
@@ -884,6 +898,7 @@ export const GAME_CONTENT = {
     {
       "id": "skyline-campaign",
       "name": "Skyline Campaign",
+      "iconPath": "./public/art/generated/icons/policies/skyline-campaign.svg",
       "unlock": {
         "residents": 380,
         "appeal": 18
@@ -920,6 +935,7 @@ export const GAME_CONTENT = {
     {
       "id": "city-charter",
       "name": "City Charter",
+      "iconPath": "./public/art/generated/icons/policies/city-charter.svg",
       "unlock": {
         "residents": 520,
         "appeal": 28
@@ -945,7 +961,8 @@ export const GAME_CONTENT = {
       "unlockUpgradeId": "city-charter",
       "prestigeCurrency": {
         "id": "districts",
-        "name": "Districts"
+        "name": "Districts",
+        "iconPath": "./public/art/generated/icons/resources/districts.svg"
       },
       "gainFormula": "max(0, floor(peakResidents / 200) + floor(peakAppeal / 15))",
       "resetRule": "Reset buildings, upgrades, coins, residents, and materials. Keep unlocked annexation and earned districts.",

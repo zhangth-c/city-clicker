@@ -2,6 +2,7 @@
   {
     "id": "permit-desk",
     "name": "Permit Desk",
+    "iconPath": "./public/art/generated/icons/policies/permit-desk.svg",
     "unlock": {},
     "cost": {
       "coins": 100
@@ -18,6 +19,7 @@
   {
     "id": "stone-roads",
     "name": "Stone Roads",
+    "iconPath": "./public/art/generated/icons/policies/stone-roads.svg",
     "unlock": {
       "coins": 150
     },
@@ -39,6 +41,7 @@
   {
     "id": "census-office",
     "name": "Census Office",
+    "iconPath": "./public/art/generated/icons/policies/census-office.svg",
     "unlock": {
       "residents": 12
     },
@@ -63,6 +66,7 @@
   {
     "id": "builders-guild",
     "name": "Builder's Guild",
+    "iconPath": "./public/art/generated/icons/policies/builders-guild.svg",
     "unlock": {
       "materials": 8
     },
@@ -89,6 +93,7 @@
   {
     "id": "supply-depot",
     "name": "Supply Depot",
+    "iconPath": "./public/art/generated/icons/policies/supply-depot.svg",
     "unlock": {
       "materials": 20
     },
@@ -111,6 +116,7 @@
   {
     "id": "plumbing-grid",
     "name": "Plumbing & Grid",
+    "iconPath": "./public/art/generated/icons/policies/plumbing-grid.svg",
     "unlock": {
       "residents": 55,
       "materials": 35
@@ -145,6 +151,7 @@
   {
     "id": "heritage-program",
     "name": "Heritage Program",
+    "iconPath": "./public/art/generated/icons/policies/heritage-program.svg",
     "unlock": {
       "appeal": 1
     },
@@ -183,6 +190,7 @@
   {
     "id": "tourism-board",
     "name": "Tourism Board",
+    "iconPath": "./public/art/generated/icons/policies/tourism-board.svg",
     "unlock": {
       "appeal": 3
     },
@@ -204,6 +212,7 @@
   {
     "id": "industrial-logistics",
     "name": "Industrial Logistics",
+    "iconPath": "./public/art/generated/icons/policies/industrial-logistics.svg",
     "unlock": {
       "residents": 130,
       "materials": 80
@@ -251,6 +260,7 @@
   {
     "id": "zoning-reform",
     "name": "Zoning Reform",
+    "iconPath": "./public/art/generated/icons/policies/zoning-reform.svg",
     "unlock": {
       "residents": 220,
       "materials": 200,
@@ -273,6 +283,7 @@
   {
     "id": "skyline-campaign",
     "name": "Skyline Campaign",
+    "iconPath": "./public/art/generated/icons/policies/skyline-campaign.svg",
     "unlock": {
       "residents": 380,
       "appeal": 18
@@ -309,6 +320,7 @@
   {
     "id": "city-charter",
     "name": "City Charter",
+    "iconPath": "./public/art/generated/icons/policies/city-charter.svg",
     "unlock": {
       "residents": 520,
       "appeal": 28

@@ -5,7 +5,8 @@
     "unlockUpgradeId": "city-charter",
     "prestigeCurrency": {
       "id": "districts",
-      "name": "Districts"
+      "name": "Districts",
+      "iconPath": "./public/art/generated/icons/resources/districts.svg"
     },
     "gainFormula": "max(0, floor(peakResidents / 200) + floor(peakAppeal / 15))",
     "resetRule": "Reset buildings, upgrades, coins, residents, and materials. Keep unlocked annexation and earned districts.",

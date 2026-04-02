@@ -11,11 +11,10 @@ export function createRenderer({ content, elements, handlers }) {
     if (!buildingNodes.size) {
       elements.buildingsList.innerHTML = content.buildings
         .map((building) => {
-          const sprite = SPRITE_POSITIONS[building.spriteRef] || SPRITE_POSITIONS["houses-top-1"];
           return `
             <article class="market-card" data-building-card="${building.id}">
               <div class="market-card__row">
-                <div class="market-card__art" style="--sprite-x: ${sprite.x}; --sprite-y: ${sprite.y};" aria-hidden="true"></div>
+                ${renderBuildingArt(building)}
                 <div class="market-card__content">
                   <div class="market-topline">
                     <div class="market-title-stack">
@@ -62,9 +61,12 @@ export function createRenderer({ content, elements, handlers }) {
             <article class="market-card market-card--upgrade" data-upgrade-card="${upgrade.id}">
               <div class="market-card__content market-card__content--full">
                 <div class="market-topline">
-                  <div class="market-title-stack">
-                    <h3>${upgrade.name}</h3>
-                    <span class="market-badge market-badge--rose">Global</span>
+                  <div class="market-title-row">
+                    ${renderIcon(upgrade.iconPath, "market-title-icon")}
+                    <div class="market-title-stack">
+                      <h3>${upgrade.name}</h3>
+                      <span class="market-badge market-badge--rose">Global</span>
+                    </div>
                   </div>
                 </div>
                 <p class="market-copy">${upgrade.description}</p>
@@ -215,7 +217,7 @@ export function createRenderer({ content, elements, handlers }) {
       .map((currencyId) => {
         const currencyDef =
           currencyId === "districts"
-            ? { name: "Districts" }
+            ? content.systems.annexation.prestigeCurrency
             : content.currencies[currencyId];
         const value =
           currencyId === "residents"
@@ -224,7 +226,10 @@ export function createRenderer({ content, elements, handlers }) {
 
         return `
           <article class="stat-card">
-            <span>${currencyDef.name}</span>
+            <div class="stat-card__head">
+              ${renderIcon(currencyDef.iconPath, "stat-card__icon")}
+              <span>${currencyDef.name}</span>
+            </div>
             <strong>${formatNumber(value)}</strong>
           </article>
         `;
@@ -301,6 +306,27 @@ export function createRenderer({ content, elements, handlers }) {
   }
 
   return { render };
+}
+
+function renderBuildingArt(building) {
+  if (building.artPath) {
+    return `
+      <div class="market-card__art market-card__art--file" aria-hidden="true">
+        <img class="market-card__art-image" src="${building.artPath}" alt="" loading="lazy" />
+      </div>
+    `;
+  }
+
+  const sprite = SPRITE_POSITIONS[building.spriteRef] || SPRITE_POSITIONS["houses-top-1"];
+  return `<div class="market-card__art" style="--sprite-x: ${sprite.x}; --sprite-y: ${sprite.y};" aria-hidden="true"></div>`;
+}
+
+function renderIcon(iconPath, className) {
+  if (!iconPath) {
+    return "";
+  }
+
+  return `<img class="${className}" src="${iconPath}" alt="" loading="lazy" />`;
 }
 
 function describeSynergyTarget(bonus) {

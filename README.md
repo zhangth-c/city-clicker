@@ -9,6 +9,8 @@ city-clicker/
   public/
     art/
       houses.jpg
+      generated/
+        manifest.json
   content/
     base/
       game.json
@@ -21,6 +23,7 @@ city-clicker/
         districts.json
   scripts/
     content-lib.mjs
+    generate-pixel-art.mjs
     validate-content.mjs
     build-content.mjs
   src/
@@ -77,6 +80,7 @@ This split is meant to scale to many areas, districts, resources, and events by 
 Run from [`city-clicker`](/Users/tianhao/Documents/New%20project/city-clicker):
 
 ```bash
+npm run build:art
 npm run validate:content
 npm run build:content
 ```
@@ -84,9 +88,12 @@ npm run build:content
 Or directly:
 
 ```bash
+node scripts/generate-pixel-art.mjs
 node scripts/validate-content.mjs
 node scripts/build-content.mjs
 ```
+
+`build:art` regenerates the SVG pixel assets under [`public/art/generated/`](/Users/tianhao/Documents/New%20project/city-clicker/public/art/generated) and refreshes the generated art manifest.
 
 ## Adding Another Area
 

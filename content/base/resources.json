@@ -2,21 +2,25 @@
   "coins": {
     "name": "Coins",
     "kind": "primary",
+    "iconPath": "./public/art/generated/icons/resources/coins.svg",
     "description": "Main spend currency from clicks and passive taxes."
   },
   "residents": {
     "name": "Residents",
     "kind": "gate",
+    "iconPath": "./public/art/generated/icons/resources/residents.svg",
     "description": "Population used for unlock thresholds. Residents are not spent."
   },
   "materials": {
     "name": "Materials",
     "kind": "secondary",
+    "iconPath": "./public/art/generated/icons/resources/materials.svg",
     "description": "Construction goods generated mostly by rustic and industrial districts."
   },
   "appeal": {
     "name": "Appeal",
     "kind": "special",
+    "iconPath": "./public/art/generated/icons/resources/appeal.svg",
     "description": "Slow prestige-like civic currency from tourism and premium districts."
   }
 }

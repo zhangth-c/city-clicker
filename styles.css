@@ -153,12 +153,27 @@ button {
 }
 
 .stat-card {
+  display: grid;
+  gap: 10px;
   padding: 18px 18px 16px;
   border-radius: 16px;
   border: 1px solid rgba(86, 57, 27, 0.14);
   background: #ffffff;
   box-shadow: none;
   transition: none;
+}
+
+.stat-card__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-card__icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  image-rendering: pixelated;
 }
 
 .stat-card:hover {
@@ -442,6 +457,21 @@ button {
   box-shadow: none;
 }
 
+.market-card__art--file {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.market-card__art-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
 .market-card__content {
   display: grid;
   gap: 12px;
@@ -461,6 +491,13 @@ button {
   margin: 0;
 }
 
+.market-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
 .market-title-stack {
   display: flex;
   flex-wrap: wrap;
@@ -472,6 +509,13 @@ button {
 .market-topline h3 {
   margin: 0;
   font-size: 1.35rem;
+}
+
+.market-title-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  image-rendering: pixelated;
 }
 
 .market-badge {
