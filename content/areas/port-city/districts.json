@@ -50,7 +50,7 @@
     "spriteRef": "houses-top-2",
     "category": "dockyard",
     "unlock": {
-      "crew": 6
+      "crew": 4
     },
     "baseCost": {
       "coins": 110
@@ -95,8 +95,8 @@
     "spriteRef": "houses-top-3",
     "category": "fishery",
     "unlock": {
-      "crew": 14,
-      "catch": 8
+      "crew": 10,
+      "catch": 10
     },
     "baseCost": {
       "coins": 220,
@@ -142,8 +142,8 @@
     "spriteRef": "houses-top-4",
     "category": "dockyard",
     "unlock": {
-      "crew": 20,
-      "lumber": 16,
+      "crew": 14,
+      "lumber": 20,
       "catch": 18
     },
     "baseCost": {
@@ -190,9 +190,9 @@
     "spriteRef": "houses-top-5",
     "category": "dockyard",
     "unlock": {
-      "crew": 28,
-      "cargo": 6,
-      "lumber": 20
+      "crew": 18,
+      "cargo": 10,
+      "lumber": 28
     },
     "baseCost": {
       "coins": 520,
@@ -239,9 +239,9 @@
     "spriteRef": "houses-top-6",
     "category": "customs",
     "unlock": {
-      "crew": 36,
-      "cargo": 14,
-      "masonry": 12
+      "crew": 24,
+      "cargo": 18,
+      "masonry": 16
     },
     "baseCost": {
       "coins": 700,
@@ -290,9 +290,9 @@
     "spriteRef": "houses-bottom-1",
     "category": "dockyard",
     "unlock": {
-      "crew": 52,
-      "masonry": 28,
-      "cargo": 24
+      "crew": 32,
+      "masonry": 36,
+      "cargo": 32
     },
     "baseCost": {
       "coins": 1100,
@@ -339,9 +339,10 @@
     "spriteRef": "houses-bottom-2",
     "category": "customs",
     "unlock": {
-      "crew": 64,
-      "cargo": 34,
-      "harbor_capacity": 10
+      "crew": 40,
+      "cargo": 46,
+      "harbor_capacity": 20,
+      "masonry": 24
     },
     "baseCost": {
       "coins": 1500,
@@ -390,10 +391,10 @@
     "spriteRef": "houses-bottom-3",
     "category": "customs",
     "unlock": {
-      "crew": 80,
-      "cargo": 52,
-      "masonry": 34,
-      "harbor_capacity": 18
+      "crew": 48,
+      "cargo": 80,
+      "masonry": 80,
+      "harbor_capacity": 34
     },
     "baseCost": {
       "coins": 2600,
@@ -443,10 +444,11 @@
     "spriteRef": "houses-bottom-4",
     "category": "landmark",
     "unlock": {
-      "crew": 98,
-      "charts": 8,
-      "harbor_capacity": 24,
-      "cargo": 70
+      "crew": 58,
+      "charts": 16,
+      "harbor_capacity": 48,
+      "cargo": 120,
+      "masonry": 140
     },
     "baseCost": {
       "coins": 3400,
@@ -496,10 +498,11 @@
     "spriteRef": "houses-bottom-5",
     "category": "landmark",
     "unlock": {
-      "crew": 124,
-      "renown": 5,
-      "harbor_capacity": 32,
-      "charts": 18
+      "crew": 68,
+      "renown": 10,
+      "harbor_capacity": 62,
+      "charts": 36,
+      "cargo": 140
     },
     "baseCost": {
       "coins": 4500,
@@ -550,11 +553,12 @@
     "spriteRef": "houses-bottom-6",
     "category": "landmark",
     "unlock": {
-      "crew": 156,
-      "renown": 16,
-      "charts": 30,
-      "harbor_capacity": 48,
-      "cargo": 110
+      "crew": 82,
+      "renown": 24,
+      "charts": 54,
+      "harbor_capacity": 90,
+      "cargo": 220,
+      "masonry": 180
     },
     "baseCost": {
       "coins": 6500,

@@ -9,6 +9,7 @@ export function buildStateSnapshot(state) {
 function buildEmptyAreaState(content, areaId) {
   const area = content.areas.find((entry) => entry.id === areaId);
   return {
+    districts: 0,
     currencies: Object.fromEntries(
       Object.keys(area.localCurrencies || {}).map((currencyId) => [
         currencyId,
@@ -51,7 +52,8 @@ export function createInitialState(content) {
       masteredBuildingIds: []
     },
     systems: {
-      annexationUnlocked: false
+      annexationUnlocked: false,
+      utilityLocks: {}
     },
     stats: {
       peakCurrenciesByArea,
@@ -149,6 +151,7 @@ export function normalizeState(content, candidate) {
         ...(sourceArea.currencies || {})
       }
     };
+    merged.areas[area.id].districts = Math.max(0, Number(merged.areas[area.id].districts || 0));
     Object.keys(merged.areas[area.id].currencies).forEach((currencyId) => {
       merged.areas[area.id].currencies[currencyId] = Math.max(
         0,
@@ -170,6 +173,9 @@ export function normalizeState(content, candidate) {
   Object.keys(merged.sharedCurrencies).forEach((currencyId) => {
     merged.sharedCurrencies[currencyId] = Math.max(0, Number(merged.sharedCurrencies[currencyId] || 0));
   });
+  merged.sharedCurrencies.districts = content.areas.reduce((total, area) => {
+    return total + Number(merged.areas?.[area.id]?.districts || 0);
+  }, 0);
   Object.keys(merged.ownedBuildings).forEach((buildingId) => {
     merged.ownedBuildings[buildingId] = Math.max(0, Number(merged.ownedBuildings[buildingId] || 0));
   });

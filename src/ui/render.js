@@ -573,16 +573,20 @@ export function createRenderer({ content, elements, handlers }) {
       return;
     }
 
+    const activeAreaId = state.areas.activeAreaId;
+    const activeArea = getAreaById(content, activeAreaId);
     const gain = calculateAnnexationGain(content, state);
     const prestigeCurrencyId = getPrestigeCurrencyId(content);
-    const districts = Number(state.sharedCurrencies[prestigeCurrencyId] || 0);
+    const totalDistricts = Number(state.sharedCurrencies[prestigeCurrencyId] || 0);
+    const areaDistricts = Number(state.areas?.[activeAreaId]?.districts || 0);
 
     elements.annexationSummary.innerHTML = `
-      <h3>${formatNumber(districts)} Districts</h3>
-      <p>${gain > 0 ? `${formatNumber(gain)} ready to claim.` : "No district claim is ready yet."}</p>
+      <h3>${activeArea?.name || "Area"}: ${formatNumber(areaDistricts)} Districts</h3>
+      <p>${gain > 0 ? `${formatNumber(gain)} ready to claim from this area.` : "No district claim is ready in this area yet."}</p>
       <dl>
-        <div><dt>Current</dt><dd>${formatNumber(districts)}</dd></div>
+        <div><dt>This area</dt><dd>${formatNumber(areaDistricts)}</dd></div>
         <div><dt>Next gain</dt><dd>${formatNumber(gain)}</dd></div>
+        <div><dt>Total</dt><dd>${formatNumber(totalDistricts)}</dd></div>
       </dl>
     `;
     elements.annexButton.disabled = gain <= 0;

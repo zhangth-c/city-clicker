@@ -1,16 +1,18 @@
 import GAME_CONTENT from "../src/content-runtime/generated-content.js";
 import { createInitialState } from "../src/core/state.js";
-import { calculateDerivedState, getAreaById, getBuildingCost } from "../src/systems/economy.js";
+import { addCurrency, calculateDerivedState, getAreaById, getBuildingCost, updateUtilityLocks } from "../src/systems/economy.js";
 import { calculateAnnexationGain, getNextBuildingUnlockHint, syncProgressState } from "../src/systems/progression.js";
 
 const content = GAME_CONTENT;
 
 function recalc(state) {
   let derived = calculateDerivedState(content, state);
+  updateUtilityLocks(content, state, derived);
   syncProgressState(content, state, derived);
   derived = calculateDerivedState(content, state);
+  updateUtilityLocks(content, state, derived);
   syncProgressState(content, state, derived);
-  return derived;
+  return calculateDerivedState(content, state);
 }
 
 function grantAreaCurrencies(state, areaId, entries) {
@@ -80,6 +82,16 @@ function getCostAffordabilitySeconds(state, derived, areaId, cost) {
   }, 0);
 }
 
+function getCostAffordabilityBreakdown(state, derived, areaId, cost) {
+  return Object.entries(cost || {}).map(([currencyId, amount]) => {
+    const have = getCurrencyBalance(state, areaId, currencyId);
+    const deficit = Math.max(0, Number(amount) - have);
+    const rate = Number(derived.passivePerSecond[currencyId] || 0);
+    const seconds = deficit <= 0 ? 0 : rate > 0 ? deficit / rate : Infinity;
+    return { currencyId, deficit, seconds };
+  });
+}
+
 function runScenario(name, buildState, check) {
   const state = createInitialState(content);
   buildState(state);
@@ -129,9 +141,89 @@ runScenario(
   },
   (state, derived) => {
     const blockers = printHint("patchwork-borough", state, derived);
+    const boroughArea = getAreaById(content, "patchwork-borough");
+    const brickFactoryCost = getBuildingCost(
+      content,
+      state,
+      derived,
+      boroughArea.buildings.find((building) => building.id === "brick-factory")
+    );
+    const powerAuthorityCost = content.policies.find((policy) => policy.id === "power-authority").cost;
+    const brickBreakdown = getCostAffordabilityBreakdown(state, derived, "patchwork-borough", brickFactoryCost)
+      .sort((left, right) => right.seconds - left.seconds);
+    const powerAuthorityBreakdown = getCostAffordabilityBreakdown(state, derived, "patchwork-borough", powerAuthorityCost)
+      .sort((left, right) => right.seconds - left.seconds);
+    const observatoryBreakdown = getCostAffordabilityBreakdown(
+      state,
+      derived,
+      "patchwork-borough",
+      getBuildingCost(
+        content,
+        state,
+        derived,
+        boroughArea.buildings.find((building) => building.id === "cube-villa")
+      )
+    ).sort((left, right) => right.seconds - left.seconds);
+    const pagodaBreakdown = getCostAffordabilityBreakdown(
+      state,
+      derived,
+      "patchwork-borough",
+      getBuildingCost(
+        content,
+        state,
+        derived,
+        boroughArea.buildings.find((building) => building.id === "grand-manor")
+      )
+    ).sort((left, right) => right.seconds - left.seconds);
+
+    console.log(
+      `- brick-factory wait leaders: ${brickBreakdown
+        .slice(0, 3)
+        .map((entry) => `${entry.currencyId}:${entry.seconds.toFixed(1)}s`)
+        .join(", ")}`
+    );
+    console.log(
+      `- power-authority wait leaders: ${powerAuthorityBreakdown
+        .slice(0, 3)
+        .map((entry) => `${entry.currencyId}:${entry.seconds.toFixed(1)}s`)
+        .join(", ")}`
+    );
+    console.log(
+      `- observatory-villa wait leaders: ${observatoryBreakdown
+        .slice(0, 3)
+        .map((entry) => `${entry.currencyId}:${entry.seconds.toFixed(1)}s`)
+        .join(", ")}`
+    );
+    console.log(
+      `- pagoda-estate wait leaders: ${pagodaBreakdown
+        .slice(0, 3)
+        .map((entry) => `${entry.currencyId}:${entry.seconds.toFixed(1)}s`)
+        .join(", ")}`
+    );
+
     assert(
       blockers.some((currencyId) => ["stone", "goods", "knowledge", "power", "appeal", "influence"].includes(currencyId)),
       "Borough midgame is still gated only by coins."
+    );
+    assert(
+      !blockers.includes("residents"),
+      "Borough midgame reveal path is still dominated by residents instead of the intended local bottlenecks."
+    );
+    assert(
+      brickBreakdown[0]?.currencyId !== "coins",
+      "Brick Factory is still mainly a coin wait in the representative borough midgame state."
+    );
+    assert(
+      powerAuthorityBreakdown[0]?.currencyId !== "coins",
+      "Power Authority is still mainly a coin wait in the representative borough midgame state."
+    );
+    assert(
+      observatoryBreakdown[0]?.currencyId !== "coins",
+      "Observatory Villa is still mainly a coin wait in the representative borough midgame state."
+    );
+    assert(
+      pagodaBreakdown[0]?.currencyId !== "coins",
+      "Pagoda Estate is still mainly a coin wait in the representative borough midgame state."
     );
   }
 );
@@ -200,8 +292,12 @@ runScenario(
   (state, derived) => {
     const blockers = printHint("port-city", state, derived);
     assert(
-      blockers.some((currencyId) => ["cargo", "harbor_capacity", "charts", "renown"].includes(currencyId)),
+      blockers.some((currencyId) => ["masonry", "cargo", "harbor_capacity", "charts", "renown"].includes(currencyId)),
       "Port midgame is missing its intended harbor bottlenecks."
+    );
+    assert(
+      !blockers.includes("crew"),
+      "Port midgame reveal path is still dominated by crew instead of cargo, berths, and navigation resources."
     );
   }
 );
@@ -238,6 +334,56 @@ runScenario(
     const gain = calculateAnnexationGain(content, state);
     console.log(`- annexation gain: ${gain}`);
     assert(gain > 0, "Annexation gain should be positive in the late smoke scenario.");
+  }
+);
+
+runScenario(
+  "annexation-area-scope",
+  (state) => {
+    state.areas.unlockedAreaIds = ["patchwork-borough", "port-city"];
+    state.areas["patchwork-borough"].districts = 5;
+    state.areas["port-city"].districts = 0;
+    state.sharedCurrencies.districts = 5;
+    grantShared(state, { coins: 1000 });
+    grantAreaCurrencies(state, "patchwork-borough", {
+      food: 100,
+      timber: 100,
+      stone: 100,
+      goods: 100,
+      power: 100,
+      knowledge: 100,
+      appeal: 100,
+      influence: 100
+    });
+    grantAreaCurrencies(state, "port-city", {
+      catch: 100,
+      lumber: 100,
+      masonry: 100,
+      cargo: 100,
+      harbor_capacity: 100,
+      charts: 100,
+      renown: 100
+    });
+    own(state, "brick-factory", 2);
+    own(state, "borough-exchange", 1);
+    own(state, "bonded-warehouse", 1);
+  },
+  (state, derived) => {
+    const boroughExchange = derived.perBuilding["borough-exchange"];
+    const bondedWarehouse = derived.perBuilding["bonded-warehouse"];
+    console.log(
+      `- borough exchange coins ${Number(boroughExchange?.outputs?.coins || 0).toFixed(2)} | bonded warehouse coins ${Number(
+        bondedWarehouse?.outputs?.coins || 0
+      ).toFixed(2)}`
+    );
+    assert(
+      Number(boroughExchange?.outputs?.coins || 0) > 4.8,
+      "Patchwork Borough districts are not boosting borough coin income."
+    );
+    assert(
+      Math.abs(Number(bondedWarehouse?.outputs?.coins || 0) - 4.2) < 0.001,
+      "Patchwork Borough districts are leaking annexation bonuses into Port City."
+    );
   }
 );
 
@@ -642,6 +788,62 @@ runScenario(
     );
     assert(glassCondo?.operatingMultiplier === 0, "Glass Highrise should shut down when power is empty.");
     assert(Number(glassCondo?.outputs?.coins || 0) === 0, "Glass Highrise should produce no coins during a power outage.");
+  }
+);
+
+runScenario(
+  "shortage-recovery-buffer",
+  (state) => {
+    grantShared(state, { coins: 20000, districts: 2 });
+    grantAreaCurrencies(state, "patchwork-borough", {
+      residents: 320,
+      food: 300,
+      timber: 200,
+      stone: 800,
+      goods: 600,
+      power: 0,
+      knowledge: 200,
+      appeal: 80,
+      influence: 80
+    });
+    Object.entries({
+      "suburban-duplex": 20,
+      "red-cottage": 16,
+      "timber-cabin": 10,
+      farmstead: 12,
+      "quarry-yard": 10,
+      "cube-villa": 10,
+      "freight-depot": 8,
+      "brick-factory": 5,
+      "borough-exchange": 4,
+      "public-archive": 3,
+      "glass-condo": 1
+    }).forEach(([buildingId, count]) => own(state, buildingId, count));
+    [
+      "census-registry",
+      "public-schools",
+      "masons-guild",
+      "quarry-standards",
+      "workshop-standards",
+      "stone-roads",
+      "merchants-union"
+    ].forEach((policyId) => adopt(state, policyId));
+  },
+  (state) => {
+    let derived = recalc(state);
+    addCurrency(content, state, "power", 1);
+    derived = recalc(state);
+    const exchangeDuringBuffer = derived.perBuilding["borough-exchange"];
+    console.log(
+      `- borough exchange after small recovery: net power ${Number(derived.passivePerSecond?.power || 0).toFixed(2)} | multiplier ${Number(
+        exchangeDuringBuffer?.operatingMultiplier || 0
+      ).toFixed(2)}`
+    );
+    assert(Number(derived.passivePerSecond?.power || 0) < 0, "Test state should still have negative net power after a tiny recovery.");
+    assert(
+      Number(exchangeDuringBuffer?.operatingMultiplier || 0) === 0,
+      "Powered buildings should stay offline while total power generation is still below demand."
+    );
   }
 );
 

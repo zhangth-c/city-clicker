@@ -12,7 +12,8 @@ import {
   getBuildingCost,
   getPolicyBlockedReason,
   getPolicyById,
-  spendCost
+  spendCost,
+  updateUtilityLocks
 } from "./systems/economy.js";
 import {
   arePolicyPrerequisitesMet,
@@ -156,9 +157,12 @@ function render(force) {
 
 function recalculate() {
   derived = calculateDerivedState(content, state);
+  updateUtilityLocks(content, state, derived);
   syncProgressState(content, state, derived);
   derived = calculateDerivedState(content, state);
+  updateUtilityLocks(content, state, derived);
   syncProgressState(content, state, derived);
+  derived = calculateDerivedState(content, state);
 }
 
 function simulate(seconds) {
@@ -440,6 +444,8 @@ function openEncyclopedia() {
 }
 
 function annexDistrict() {
+  const areaId = state.areas.activeAreaId;
+  const area = getAreaById(content, areaId);
   const gain = calculateAnnexationGain(content, state);
   if (gain <= 0) {
     return;
@@ -447,16 +453,20 @@ function annexDistrict() {
 
   const previous = state;
   state = createInitialState(content);
-  state.sharedCurrencies.districts = Number(previous.sharedCurrencies.districts || 0) + gain;
   state.areas.unlockedAreaIds = Array.from(new Set(previous.areas.unlockedAreaIds || [content.defaultAreaId]));
   state.areas.activeAreaId = content.defaultAreaId;
+  content.areas.forEach((entry) => {
+    state.areas[entry.id].districts = Number(previous.areas?.[entry.id]?.districts || 0);
+  });
+  state.areas[areaId].districts += gain;
   state.encyclopedia = JSON.parse(JSON.stringify(previous.encyclopedia));
   state.systems.annexationUnlocked = true;
+  state.systems.utilityLocks = {};
   state.stats.lifetimeBuiltByBuildingId = JSON.parse(JSON.stringify(previous.stats.lifetimeBuiltByBuildingId));
   state.stats.totalClicks = previous.stats.totalClicks;
   state.stats.totalAnnexations = Number(previous.stats.totalAnnexations || 0) + 1;
   recalculate();
-  statusMessage = `Annexed for ${formatNumber(gain)} districts.`;
+  statusMessage = `Annexed ${area?.name || "area"} for ${formatNumber(gain)} districts.`;
   render(true);
 }
 

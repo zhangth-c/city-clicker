@@ -3,8 +3,8 @@ const GAME_CONTENT = {
     "appId": "city-clicker",
     "id": "city-clicker",
     "appVersion": "2.0.0",
-    "saveVersion": 2,
-    "balanceVersion": "2.4.0",
+    "saveVersion": 3,
+    "balanceVersion": "2.7.0",
     "eyebrow": "HTML5 City Clicker",
     "name": "Patchwork Borough"
   },
@@ -28,7 +28,7 @@ const GAME_CONTENT = {
       "name": "Districts",
       "kind": "prestige",
       "iconPath": "./public/art/icon-kits/patchwork-borough/prestige/districts.png",
-      "description": "Annexation prestige shared across the whole save."
+      "description": "Total annexed districts across all areas."
     }
   },
   "areas": [
@@ -327,6 +327,24 @@ const GAME_CONTENT = {
           "gain": 1
         }
       ],
+      "annexationBonuses": [
+        {
+          "currencyId": "coins",
+          "multiplierPerDistrict": 0.025
+        },
+        {
+          "currencyId": "goods",
+          "multiplierPerDistrict": 0.02
+        },
+        {
+          "currencyId": "knowledge",
+          "multiplierPerDistrict": 0.02
+        },
+        {
+          "currencyId": "influence",
+          "multiplierPerDistrict": 0.015
+        }
+      ],
       "buildings": [
         {
           "id": "suburban-duplex",
@@ -512,21 +530,21 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-1",
           "category": "residential",
           "unlock": {
-            "residents": 28,
+            "residents": 22,
             "food": 8,
             "timber": 12
           },
           "baseCost": {
-            "coins": 380,
+            "coins": 220,
             "food": 10,
-            "timber": 20
+            "timber": 90
           },
           "outputPerSecond": {
             "coins": 0.44,
             "goods": 0.05
           },
           "maintenancePerSecond": {
-            "food": 0.08
+            "food": 0.42
           },
           "statsPerOwned": {
             "residents": 2
@@ -563,20 +581,20 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-2",
           "category": "rural",
           "unlock": {
-            "residents": 40,
+            "residents": 28,
             "timber": 24,
             "food": 12
           },
           "baseCost": {
-            "coins": 620,
-            "timber": 30,
+            "coins": 320,
+            "timber": 220,
             "food": 12
           },
           "outputPerSecond": {
             "stone": 0.66
           },
           "maintenancePerSecond": {
-            "food": 0.08
+            "food": 0.36
           },
           "statsPerOwned": {},
           "synergies": [
@@ -609,14 +627,14 @@ const GAME_CONTENT = {
           "artPath": "./public/art/house-kits/patchwork-borough/current/observatory-villa.png",
           "category": "civic",
           "unlock": {
-            "residents": 52,
-            "timber": 30,
-            "stone": 24,
-            "goods": 8
+            "residents": 34,
+            "timber": 36,
+            "stone": 30,
+            "goods": 12
           },
           "baseCost": {
-            "coins": 820,
-            "timber": 40,
+            "coins": 420,
+            "timber": 260,
             "stone": 34,
             "goods": 14
           },
@@ -625,8 +643,8 @@ const GAME_CONTENT = {
             "knowledge": 0.22
           },
           "maintenancePerSecond": {
-            "food": 0.08,
-            "goods": 0.08
+            "food": 0.34,
+            "goods": 0.12
           },
           "statsPerOwned": {
             "residents": 1
@@ -663,22 +681,22 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-3",
           "category": "industrial",
           "unlock": {
-            "residents": 66,
-            "stone": 34,
-            "goods": 12
+            "residents": 40,
+            "stone": 52,
+            "goods": 18
           },
           "baseCost": {
-            "coins": 1050,
-            "timber": 24,
-            "stone": 52,
-            "goods": 24
+            "coins": 420,
+            "timber": 120,
+            "stone": 82,
+            "goods": 42
           },
           "outputPerSecond": {
             "goods": 0.56,
             "coins": 0.88
           },
           "maintenancePerSecond": {
-            "food": 0.08
+            "food": 0.28
           },
           "statsPerOwned": {},
           "synergies": [
@@ -712,23 +730,25 @@ const GAME_CONTENT = {
           "artPath": "./public/art/house-kits/patchwork-borough/current/pagoda-estate.png",
           "category": "prestige",
           "unlock": {
-            "residents": 82,
-            "goods": 16,
-            "knowledge": 4
+            "residents": 48,
+            "goods": 24,
+            "knowledge": 8,
+            "stone": 50
           },
           "baseCost": {
-            "coins": 1450,
-            "timber": 68,
-            "goods": 30,
-            "knowledge": 8
+            "coins": 560,
+            "timber": 420,
+            "goods": 52,
+            "knowledge": 16,
+            "stone": 40
           },
           "outputPerSecond": {
             "appeal": 0.3,
             "influence": 0.1
           },
           "maintenancePerSecond": {
-            "food": 0.18,
-            "goods": 0.08
+            "food": 0.72,
+            "goods": 0.14
           },
           "statsPerOwned": {
             "residents": 1
@@ -765,15 +785,15 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-4",
           "category": "rural",
           "unlock": {
-            "residents": 94,
-            "stone": 54,
-            "knowledge": 6
+            "residents": 56,
+            "stone": 90,
+            "knowledge": 16
           },
           "baseCost": {
-            "coins": 1850,
-            "timber": 34,
-            "stone": 78,
-            "knowledge": 12
+            "coins": 1300,
+            "timber": 40,
+            "stone": 130,
+            "knowledge": 28
           },
           "outputPerSecond": {
             "food": 1.36,
@@ -813,16 +833,16 @@ const GAME_CONTENT = {
           "artPath": "./public/art/house-kits/patchwork-borough/current/brick-factory.png",
           "category": "industrial",
           "unlock": {
-            "residents": 110,
-            "stone": 80,
-            "timber": 42,
-            "goods": 18
+            "residents": 64,
+            "stone": 140,
+            "timber": 60,
+            "goods": 28
           },
           "baseCost": {
-            "coins": 2300,
-            "stone": 160,
-            "timber": 72,
-            "goods": 38
+            "coins": 1550,
+            "stone": 280,
+            "timber": 110,
+            "goods": 88
           },
           "outputPerSecond": {
             "goods": 1.2,
@@ -867,15 +887,16 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-5",
           "category": "civic",
           "unlock": {
-            "residents": 128,
-            "goods": 40,
-            "knowledge": 10
+            "residents": 72,
+            "goods": 90,
+            "knowledge": 24,
+            "power": 4
           },
           "baseCost": {
-            "coins": 2900,
-            "stone": 180,
-            "goods": 220,
-            "knowledge": 52
+            "coins": 1800,
+            "stone": 240,
+            "goods": 420,
+            "knowledge": 120
           },
           "outputPerSecond": {
             "coins": 4.8,
@@ -917,16 +938,16 @@ const GAME_CONTENT = {
           "artPath": "./public/art/house-kits/patchwork-borough/current/lighthouse-lodge.png",
           "category": "prestige",
           "unlock": {
-            "residents": 146,
-            "appeal": 6,
-            "goods": 50,
-            "stone": 56
+            "residents": 78,
+            "appeal": 12,
+            "goods": 120,
+            "stone": 120
           },
           "baseCost": {
-            "coins": 3400,
-            "stone": 220,
-            "goods": 240,
-            "appeal": 42
+            "coins": 2200,
+            "stone": 260,
+            "goods": 360,
+            "appeal": 80
           },
           "outputPerSecond": {
             "coins": 4,
@@ -970,15 +991,18 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-6",
           "category": "civic",
           "unlock": {
-            "residents": 164,
-            "knowledge": 20,
-            "stone": 88
+            "residents": 86,
+            "knowledge": 50,
+            "stone": 180,
+            "goods": 120,
+            "power": 8
           },
           "baseCost": {
-            "coins": 4800,
-            "stone": 920,
-            "goods": 620,
-            "knowledge": 360
+            "coins": 2600,
+            "stone": 1100,
+            "goods": 900,
+            "knowledge": 520,
+            "power": 90
           },
           "outputPerSecond": {
             "knowledge": 0.9,
@@ -1019,10 +1043,10 @@ const GAME_CONTENT = {
           "artPath": "./public/art/house-kits/patchwork-borough/current/ice-dome-habitat.png",
           "category": "civic",
           "unlock": {
-            "residents": 190,
-            "power": 18,
-            "knowledge": 30,
-            "goods": 70
+            "residents": 96,
+            "power": 30,
+            "knowledge": 64,
+            "goods": 180
           },
           "baseCost": {
             "coins": 6200,
@@ -1074,10 +1098,10 @@ const GAME_CONTENT = {
           "spriteRef": "houses-bottom-1",
           "category": "industrial",
           "unlock": {
-            "residents": 212,
-            "stone": 170,
-            "goods": 84,
-            "knowledge": 26
+            "residents": 104,
+            "stone": 260,
+            "goods": 180,
+            "knowledge": 48
           },
           "baseCost": {
             "coins": 6800,
@@ -1124,10 +1148,10 @@ const GAME_CONTENT = {
           "artPath": "./public/art/house-kits/patchwork-borough/current/gothic-keep.png",
           "category": "prestige",
           "unlock": {
-            "residents": 238,
-            "appeal": 18,
-            "influence": 14,
-            "stone": 220
+            "residents": 112,
+            "appeal": 36,
+            "influence": 24,
+            "stone": 320
           },
           "baseCost": {
             "coins": 7600,
@@ -1175,10 +1199,10 @@ const GAME_CONTENT = {
           "artPath": "./public/art/house-kits/patchwork-borough/current/treehouse-retreat.png",
           "category": "prestige",
           "unlock": {
-            "residents": 266,
-            "appeal": 12,
-            "goods": 96,
-            "food": 120
+            "residents": 120,
+            "appeal": 24,
+            "goods": 180,
+            "food": 280
           },
           "baseCost": {
             "coins": 8200,
@@ -1229,10 +1253,10 @@ const GAME_CONTENT = {
           "artPath": "./public/art/house-kits/patchwork-borough/current/glass-highrise.png",
           "category": "residential",
           "unlock": {
-            "residents": 294,
-            "power": 30,
-            "knowledge": 44,
-            "influence": 20
+            "residents": 132,
+            "power": 46,
+            "knowledge": 72,
+            "influence": 34
           },
           "baseCost": {
             "coins": 9600,
@@ -1285,10 +1309,11 @@ const GAME_CONTENT = {
           "spriteRef": "houses-bottom-2",
           "category": "prestige",
           "unlock": {
-            "residents": 328,
-            "appeal": 30,
-            "influence": 32,
-            "power": 34
+            "residents": 144,
+            "appeal": 54,
+            "influence": 56,
+            "power": 52,
+            "goods": 220
           },
           "baseCost": {
             "coins": 11200,
@@ -1396,9 +1421,9 @@ const GAME_CONTENT = {
             "knowledge": 4
           },
           "cost": {
-            "coins": 1400,
-            "goods": 26,
-            "knowledge": 8
+            "coins": 900,
+            "goods": 34,
+            "knowledge": 14
           },
           "effects": [
             {
@@ -1452,9 +1477,9 @@ const GAME_CONTENT = {
             "appeal": 2
           },
           "cost": {
-            "coins": 1400,
-            "goods": 24,
-            "appeal": 6
+            "coins": 900,
+            "goods": 30,
+            "appeal": 10
           },
           "effects": [
             {
@@ -1513,10 +1538,10 @@ const GAME_CONTENT = {
             "influence": 4
           },
           "cost": {
-            "coins": 2600,
-            "goods": 54,
-            "knowledge": 28,
-            "influence": 10
+            "coins": 1400,
+            "goods": 90,
+            "knowledge": 42,
+            "influence": 18
           },
           "effects": [
             {
@@ -1571,10 +1596,10 @@ const GAME_CONTENT = {
             "appeal": 10
           },
           "cost": {
-            "coins": 2700,
-            "stone": 120,
-            "goods": 58,
-            "appeal": 22
+            "coins": 1500,
+            "stone": 180,
+            "goods": 96,
+            "appeal": 32
           },
           "effects": [
             {
@@ -1727,9 +1752,9 @@ const GAME_CONTENT = {
             "food": 10
           },
           "cost": {
-            "coins": 1200,
-            "food": 24,
-            "timber": 22
+            "coins": 800,
+            "food": 34,
+            "timber": 30
           },
           "effects": [
             {
@@ -1780,9 +1805,9 @@ const GAME_CONTENT = {
             "stone": 18
           },
           "cost": {
-            "coins": 1250,
-            "timber": 28,
-            "stone": 30
+            "coins": 820,
+            "timber": 38,
+            "stone": 46
           },
           "effects": [
             {
@@ -1834,10 +1859,10 @@ const GAME_CONTENT = {
             "goods": 20
           },
           "cost": {
-            "coins": 2600,
-            "goods": 52,
-            "timber": 48,
-            "stone": 78
+            "coins": 1300,
+            "goods": 90,
+            "timber": 62,
+            "stone": 120
           },
           "effects": [
             {
@@ -1902,10 +1927,10 @@ const GAME_CONTENT = {
             "power": 6
           },
           "cost": {
-            "coins": 2800,
-            "stone": 120,
-            "goods": 66,
-            "knowledge": 32
+            "coins": 1400,
+            "stone": 180,
+            "goods": 110,
+            "knowledge": 48
           },
           "effects": [
             {
@@ -1956,11 +1981,11 @@ const GAME_CONTENT = {
             "goods": 40
           },
           "cost": {
-            "coins": 7000,
-            "stone": 900,
-            "goods": 520,
-            "power": 180,
-            "knowledge": 160
+            "coins": 3200,
+            "stone": 980,
+            "goods": 760,
+            "power": 260,
+            "knowledge": 240
           },
           "effects": [
             {
@@ -2676,6 +2701,24 @@ const GAME_CONTENT = {
           "gain": 1
         }
       ],
+      "annexationBonuses": [
+        {
+          "currencyId": "coins",
+          "multiplierPerDistrict": 0.025
+        },
+        {
+          "currencyId": "cargo",
+          "multiplierPerDistrict": 0.02
+        },
+        {
+          "currencyId": "charts",
+          "multiplierPerDistrict": 0.02
+        },
+        {
+          "currencyId": "renown",
+          "multiplierPerDistrict": 0.015
+        }
+      ],
       "buildings": [
         {
           "id": "fisher-huts",
@@ -2729,7 +2772,7 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-2",
           "category": "dockyard",
           "unlock": {
-            "crew": 6
+            "crew": 4
           },
           "baseCost": {
             "coins": 110
@@ -2775,8 +2818,8 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-3",
           "category": "fishery",
           "unlock": {
-            "crew": 14,
-            "catch": 8
+            "crew": 10,
+            "catch": 10
           },
           "baseCost": {
             "coins": 220,
@@ -2823,8 +2866,8 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-4",
           "category": "dockyard",
           "unlock": {
-            "crew": 20,
-            "lumber": 16,
+            "crew": 14,
+            "lumber": 20,
             "catch": 18
           },
           "baseCost": {
@@ -2872,9 +2915,9 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-5",
           "category": "dockyard",
           "unlock": {
-            "crew": 28,
-            "cargo": 6,
-            "lumber": 20
+            "crew": 18,
+            "cargo": 10,
+            "lumber": 28
           },
           "baseCost": {
             "coins": 520,
@@ -2922,9 +2965,9 @@ const GAME_CONTENT = {
           "spriteRef": "houses-top-6",
           "category": "customs",
           "unlock": {
-            "crew": 36,
-            "cargo": 14,
-            "masonry": 12
+            "crew": 24,
+            "cargo": 18,
+            "masonry": 16
           },
           "baseCost": {
             "coins": 700,
@@ -2974,9 +3017,9 @@ const GAME_CONTENT = {
           "spriteRef": "houses-bottom-1",
           "category": "dockyard",
           "unlock": {
-            "crew": 52,
-            "masonry": 28,
-            "cargo": 24
+            "crew": 32,
+            "masonry": 36,
+            "cargo": 32
           },
           "baseCost": {
             "coins": 1100,
@@ -3024,9 +3067,10 @@ const GAME_CONTENT = {
           "spriteRef": "houses-bottom-2",
           "category": "customs",
           "unlock": {
-            "crew": 64,
-            "cargo": 34,
-            "harbor_capacity": 10
+            "crew": 40,
+            "cargo": 46,
+            "harbor_capacity": 20,
+            "masonry": 24
           },
           "baseCost": {
             "coins": 1500,
@@ -3076,10 +3120,10 @@ const GAME_CONTENT = {
           "spriteRef": "houses-bottom-3",
           "category": "customs",
           "unlock": {
-            "crew": 80,
-            "cargo": 52,
-            "masonry": 34,
-            "harbor_capacity": 18
+            "crew": 48,
+            "cargo": 80,
+            "masonry": 80,
+            "harbor_capacity": 34
           },
           "baseCost": {
             "coins": 2600,
@@ -3130,10 +3174,11 @@ const GAME_CONTENT = {
           "spriteRef": "houses-bottom-4",
           "category": "landmark",
           "unlock": {
-            "crew": 98,
-            "charts": 8,
-            "harbor_capacity": 24,
-            "cargo": 70
+            "crew": 58,
+            "charts": 16,
+            "harbor_capacity": 48,
+            "cargo": 120,
+            "masonry": 140
           },
           "baseCost": {
             "coins": 3400,
@@ -3184,10 +3229,11 @@ const GAME_CONTENT = {
           "spriteRef": "houses-bottom-5",
           "category": "landmark",
           "unlock": {
-            "crew": 124,
-            "renown": 5,
-            "harbor_capacity": 32,
-            "charts": 18
+            "crew": 68,
+            "renown": 10,
+            "harbor_capacity": 62,
+            "charts": 36,
+            "cargo": 140
           },
           "baseCost": {
             "coins": 4500,
@@ -3239,11 +3285,12 @@ const GAME_CONTENT = {
           "spriteRef": "houses-bottom-6",
           "category": "landmark",
           "unlock": {
-            "crew": 156,
-            "renown": 16,
-            "charts": 30,
-            "harbor_capacity": 48,
-            "cargo": 110
+            "crew": 82,
+            "renown": 24,
+            "charts": 54,
+            "harbor_capacity": 90,
+            "cargo": 220,
+            "masonry": 180
           },
           "baseCost": {
             "coins": 6500,
@@ -4187,21 +4234,21 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-1",
       "category": "residential",
       "unlock": {
-        "residents": 28,
+        "residents": 22,
         "food": 8,
         "timber": 12
       },
       "baseCost": {
-        "coins": 380,
+        "coins": 220,
         "food": 10,
-        "timber": 20
+        "timber": 90
       },
       "outputPerSecond": {
         "coins": 0.44,
         "goods": 0.05
       },
       "maintenancePerSecond": {
-        "food": 0.08
+        "food": 0.42
       },
       "statsPerOwned": {
         "residents": 2
@@ -4238,20 +4285,20 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-2",
       "category": "rural",
       "unlock": {
-        "residents": 40,
+        "residents": 28,
         "timber": 24,
         "food": 12
       },
       "baseCost": {
-        "coins": 620,
-        "timber": 30,
+        "coins": 320,
+        "timber": 220,
         "food": 12
       },
       "outputPerSecond": {
         "stone": 0.66
       },
       "maintenancePerSecond": {
-        "food": 0.08
+        "food": 0.36
       },
       "statsPerOwned": {},
       "synergies": [
@@ -4284,14 +4331,14 @@ const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/observatory-villa.png",
       "category": "civic",
       "unlock": {
-        "residents": 52,
-        "timber": 30,
-        "stone": 24,
-        "goods": 8
+        "residents": 34,
+        "timber": 36,
+        "stone": 30,
+        "goods": 12
       },
       "baseCost": {
-        "coins": 820,
-        "timber": 40,
+        "coins": 420,
+        "timber": 260,
         "stone": 34,
         "goods": 14
       },
@@ -4300,8 +4347,8 @@ const GAME_CONTENT = {
         "knowledge": 0.22
       },
       "maintenancePerSecond": {
-        "food": 0.08,
-        "goods": 0.08
+        "food": 0.34,
+        "goods": 0.12
       },
       "statsPerOwned": {
         "residents": 1
@@ -4338,22 +4385,22 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-3",
       "category": "industrial",
       "unlock": {
-        "residents": 66,
-        "stone": 34,
-        "goods": 12
+        "residents": 40,
+        "stone": 52,
+        "goods": 18
       },
       "baseCost": {
-        "coins": 1050,
-        "timber": 24,
-        "stone": 52,
-        "goods": 24
+        "coins": 420,
+        "timber": 120,
+        "stone": 82,
+        "goods": 42
       },
       "outputPerSecond": {
         "goods": 0.56,
         "coins": 0.88
       },
       "maintenancePerSecond": {
-        "food": 0.08
+        "food": 0.28
       },
       "statsPerOwned": {},
       "synergies": [
@@ -4387,23 +4434,25 @@ const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/pagoda-estate.png",
       "category": "prestige",
       "unlock": {
-        "residents": 82,
-        "goods": 16,
-        "knowledge": 4
+        "residents": 48,
+        "goods": 24,
+        "knowledge": 8,
+        "stone": 50
       },
       "baseCost": {
-        "coins": 1450,
-        "timber": 68,
-        "goods": 30,
-        "knowledge": 8
+        "coins": 560,
+        "timber": 420,
+        "goods": 52,
+        "knowledge": 16,
+        "stone": 40
       },
       "outputPerSecond": {
         "appeal": 0.3,
         "influence": 0.1
       },
       "maintenancePerSecond": {
-        "food": 0.18,
-        "goods": 0.08
+        "food": 0.72,
+        "goods": 0.14
       },
       "statsPerOwned": {
         "residents": 1
@@ -4440,15 +4489,15 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-4",
       "category": "rural",
       "unlock": {
-        "residents": 94,
-        "stone": 54,
-        "knowledge": 6
+        "residents": 56,
+        "stone": 90,
+        "knowledge": 16
       },
       "baseCost": {
-        "coins": 1850,
-        "timber": 34,
-        "stone": 78,
-        "knowledge": 12
+        "coins": 1300,
+        "timber": 40,
+        "stone": 130,
+        "knowledge": 28
       },
       "outputPerSecond": {
         "food": 1.36,
@@ -4488,16 +4537,16 @@ const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/brick-factory.png",
       "category": "industrial",
       "unlock": {
-        "residents": 110,
-        "stone": 80,
-        "timber": 42,
-        "goods": 18
+        "residents": 64,
+        "stone": 140,
+        "timber": 60,
+        "goods": 28
       },
       "baseCost": {
-        "coins": 2300,
-        "stone": 160,
-        "timber": 72,
-        "goods": 38
+        "coins": 1550,
+        "stone": 280,
+        "timber": 110,
+        "goods": 88
       },
       "outputPerSecond": {
         "goods": 1.2,
@@ -4542,15 +4591,16 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-5",
       "category": "civic",
       "unlock": {
-        "residents": 128,
-        "goods": 40,
-        "knowledge": 10
+        "residents": 72,
+        "goods": 90,
+        "knowledge": 24,
+        "power": 4
       },
       "baseCost": {
-        "coins": 2900,
-        "stone": 180,
-        "goods": 220,
-        "knowledge": 52
+        "coins": 1800,
+        "stone": 240,
+        "goods": 420,
+        "knowledge": 120
       },
       "outputPerSecond": {
         "coins": 4.8,
@@ -4592,16 +4642,16 @@ const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/lighthouse-lodge.png",
       "category": "prestige",
       "unlock": {
-        "residents": 146,
-        "appeal": 6,
-        "goods": 50,
-        "stone": 56
+        "residents": 78,
+        "appeal": 12,
+        "goods": 120,
+        "stone": 120
       },
       "baseCost": {
-        "coins": 3400,
-        "stone": 220,
-        "goods": 240,
-        "appeal": 42
+        "coins": 2200,
+        "stone": 260,
+        "goods": 360,
+        "appeal": 80
       },
       "outputPerSecond": {
         "coins": 4,
@@ -4645,15 +4695,18 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-6",
       "category": "civic",
       "unlock": {
-        "residents": 164,
-        "knowledge": 20,
-        "stone": 88
+        "residents": 86,
+        "knowledge": 50,
+        "stone": 180,
+        "goods": 120,
+        "power": 8
       },
       "baseCost": {
-        "coins": 4800,
-        "stone": 920,
-        "goods": 620,
-        "knowledge": 360
+        "coins": 2600,
+        "stone": 1100,
+        "goods": 900,
+        "knowledge": 520,
+        "power": 90
       },
       "outputPerSecond": {
         "knowledge": 0.9,
@@ -4694,10 +4747,10 @@ const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/ice-dome-habitat.png",
       "category": "civic",
       "unlock": {
-        "residents": 190,
-        "power": 18,
-        "knowledge": 30,
-        "goods": 70
+        "residents": 96,
+        "power": 30,
+        "knowledge": 64,
+        "goods": 180
       },
       "baseCost": {
         "coins": 6200,
@@ -4749,10 +4802,10 @@ const GAME_CONTENT = {
       "spriteRef": "houses-bottom-1",
       "category": "industrial",
       "unlock": {
-        "residents": 212,
-        "stone": 170,
-        "goods": 84,
-        "knowledge": 26
+        "residents": 104,
+        "stone": 260,
+        "goods": 180,
+        "knowledge": 48
       },
       "baseCost": {
         "coins": 6800,
@@ -4799,10 +4852,10 @@ const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/gothic-keep.png",
       "category": "prestige",
       "unlock": {
-        "residents": 238,
-        "appeal": 18,
-        "influence": 14,
-        "stone": 220
+        "residents": 112,
+        "appeal": 36,
+        "influence": 24,
+        "stone": 320
       },
       "baseCost": {
         "coins": 7600,
@@ -4850,10 +4903,10 @@ const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/treehouse-retreat.png",
       "category": "prestige",
       "unlock": {
-        "residents": 266,
-        "appeal": 12,
-        "goods": 96,
-        "food": 120
+        "residents": 120,
+        "appeal": 24,
+        "goods": 180,
+        "food": 280
       },
       "baseCost": {
         "coins": 8200,
@@ -4904,10 +4957,10 @@ const GAME_CONTENT = {
       "artPath": "./public/art/house-kits/patchwork-borough/current/glass-highrise.png",
       "category": "residential",
       "unlock": {
-        "residents": 294,
-        "power": 30,
-        "knowledge": 44,
-        "influence": 20
+        "residents": 132,
+        "power": 46,
+        "knowledge": 72,
+        "influence": 34
       },
       "baseCost": {
         "coins": 9600,
@@ -4960,10 +5013,11 @@ const GAME_CONTENT = {
       "spriteRef": "houses-bottom-2",
       "category": "prestige",
       "unlock": {
-        "residents": 328,
-        "appeal": 30,
-        "influence": 32,
-        "power": 34
+        "residents": 144,
+        "appeal": 54,
+        "influence": 56,
+        "power": 52,
+        "goods": 220
       },
       "baseCost": {
         "coins": 11200,
@@ -5061,7 +5115,7 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-2",
       "category": "dockyard",
       "unlock": {
-        "crew": 6
+        "crew": 4
       },
       "baseCost": {
         "coins": 110
@@ -5107,8 +5161,8 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-3",
       "category": "fishery",
       "unlock": {
-        "crew": 14,
-        "catch": 8
+        "crew": 10,
+        "catch": 10
       },
       "baseCost": {
         "coins": 220,
@@ -5155,8 +5209,8 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-4",
       "category": "dockyard",
       "unlock": {
-        "crew": 20,
-        "lumber": 16,
+        "crew": 14,
+        "lumber": 20,
         "catch": 18
       },
       "baseCost": {
@@ -5204,9 +5258,9 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-5",
       "category": "dockyard",
       "unlock": {
-        "crew": 28,
-        "cargo": 6,
-        "lumber": 20
+        "crew": 18,
+        "cargo": 10,
+        "lumber": 28
       },
       "baseCost": {
         "coins": 520,
@@ -5254,9 +5308,9 @@ const GAME_CONTENT = {
       "spriteRef": "houses-top-6",
       "category": "customs",
       "unlock": {
-        "crew": 36,
-        "cargo": 14,
-        "masonry": 12
+        "crew": 24,
+        "cargo": 18,
+        "masonry": 16
       },
       "baseCost": {
         "coins": 700,
@@ -5306,9 +5360,9 @@ const GAME_CONTENT = {
       "spriteRef": "houses-bottom-1",
       "category": "dockyard",
       "unlock": {
-        "crew": 52,
-        "masonry": 28,
-        "cargo": 24
+        "crew": 32,
+        "masonry": 36,
+        "cargo": 32
       },
       "baseCost": {
         "coins": 1100,
@@ -5356,9 +5410,10 @@ const GAME_CONTENT = {
       "spriteRef": "houses-bottom-2",
       "category": "customs",
       "unlock": {
-        "crew": 64,
-        "cargo": 34,
-        "harbor_capacity": 10
+        "crew": 40,
+        "cargo": 46,
+        "harbor_capacity": 20,
+        "masonry": 24
       },
       "baseCost": {
         "coins": 1500,
@@ -5408,10 +5463,10 @@ const GAME_CONTENT = {
       "spriteRef": "houses-bottom-3",
       "category": "customs",
       "unlock": {
-        "crew": 80,
-        "cargo": 52,
-        "masonry": 34,
-        "harbor_capacity": 18
+        "crew": 48,
+        "cargo": 80,
+        "masonry": 80,
+        "harbor_capacity": 34
       },
       "baseCost": {
         "coins": 2600,
@@ -5462,10 +5517,11 @@ const GAME_CONTENT = {
       "spriteRef": "houses-bottom-4",
       "category": "landmark",
       "unlock": {
-        "crew": 98,
-        "charts": 8,
-        "harbor_capacity": 24,
-        "cargo": 70
+        "crew": 58,
+        "charts": 16,
+        "harbor_capacity": 48,
+        "cargo": 120,
+        "masonry": 140
       },
       "baseCost": {
         "coins": 3400,
@@ -5516,10 +5572,11 @@ const GAME_CONTENT = {
       "spriteRef": "houses-bottom-5",
       "category": "landmark",
       "unlock": {
-        "crew": 124,
-        "renown": 5,
-        "harbor_capacity": 32,
-        "charts": 18
+        "crew": 68,
+        "renown": 10,
+        "harbor_capacity": 62,
+        "charts": 36,
+        "cargo": 140
       },
       "baseCost": {
         "coins": 4500,
@@ -5571,11 +5628,12 @@ const GAME_CONTENT = {
       "spriteRef": "houses-bottom-6",
       "category": "landmark",
       "unlock": {
-        "crew": 156,
-        "renown": 16,
-        "charts": 30,
-        "harbor_capacity": 48,
-        "cargo": 110
+        "crew": 82,
+        "renown": 24,
+        "charts": 54,
+        "harbor_capacity": 90,
+        "cargo": 220,
+        "masonry": 180
       },
       "baseCost": {
         "coins": 6500,
@@ -5683,9 +5741,9 @@ const GAME_CONTENT = {
         "knowledge": 4
       },
       "cost": {
-        "coins": 1400,
-        "goods": 26,
-        "knowledge": 8
+        "coins": 900,
+        "goods": 34,
+        "knowledge": 14
       },
       "effects": [
         {
@@ -5739,9 +5797,9 @@ const GAME_CONTENT = {
         "appeal": 2
       },
       "cost": {
-        "coins": 1400,
-        "goods": 24,
-        "appeal": 6
+        "coins": 900,
+        "goods": 30,
+        "appeal": 10
       },
       "effects": [
         {
@@ -5800,10 +5858,10 @@ const GAME_CONTENT = {
         "influence": 4
       },
       "cost": {
-        "coins": 2600,
-        "goods": 54,
-        "knowledge": 28,
-        "influence": 10
+        "coins": 1400,
+        "goods": 90,
+        "knowledge": 42,
+        "influence": 18
       },
       "effects": [
         {
@@ -5858,10 +5916,10 @@ const GAME_CONTENT = {
         "appeal": 10
       },
       "cost": {
-        "coins": 2700,
-        "stone": 120,
-        "goods": 58,
-        "appeal": 22
+        "coins": 1500,
+        "stone": 180,
+        "goods": 96,
+        "appeal": 32
       },
       "effects": [
         {
@@ -6014,9 +6072,9 @@ const GAME_CONTENT = {
         "food": 10
       },
       "cost": {
-        "coins": 1200,
-        "food": 24,
-        "timber": 22
+        "coins": 800,
+        "food": 34,
+        "timber": 30
       },
       "effects": [
         {
@@ -6067,9 +6125,9 @@ const GAME_CONTENT = {
         "stone": 18
       },
       "cost": {
-        "coins": 1250,
-        "timber": 28,
-        "stone": 30
+        "coins": 820,
+        "timber": 38,
+        "stone": 46
       },
       "effects": [
         {
@@ -6121,10 +6179,10 @@ const GAME_CONTENT = {
         "goods": 20
       },
       "cost": {
-        "coins": 2600,
-        "goods": 52,
-        "timber": 48,
-        "stone": 78
+        "coins": 1300,
+        "goods": 90,
+        "timber": 62,
+        "stone": 120
       },
       "effects": [
         {
@@ -6189,10 +6247,10 @@ const GAME_CONTENT = {
         "power": 6
       },
       "cost": {
-        "coins": 2800,
-        "stone": 120,
-        "goods": 66,
-        "knowledge": 32
+        "coins": 1400,
+        "stone": 180,
+        "goods": 110,
+        "knowledge": 48
       },
       "effects": [
         {
@@ -6243,11 +6301,11 @@ const GAME_CONTENT = {
         "goods": 40
       },
       "cost": {
-        "coins": 7000,
-        "stone": 900,
-        "goods": 520,
-        "power": 180,
-        "knowledge": 160
+        "coins": 3200,
+        "stone": 980,
+        "goods": 760,
+        "power": 260,
+        "knowledge": 240
       },
       "effects": [
         {
@@ -7238,29 +7296,7 @@ const GAME_CONTENT = {
       "name": "Annexation",
       "unlockPolicyId": "city-charter",
       "prestigeCurrencyId": "districts",
-      "resetRule": "Reset buildings, policies, and all non-prestige resources. Keep earned districts and unlocked areas.",
-      "permanentBonuses": [
-        {
-          "type": "incomeMultiplierPerPrestige",
-          "currency": "coins",
-          "multiplierPerPoint": 0.03
-        },
-        {
-          "type": "incomeMultiplierPerPrestige",
-          "currency": "knowledge",
-          "multiplierPerPoint": 0.015
-        },
-        {
-          "type": "incomeMultiplierPerPrestige",
-          "currency": "cargo",
-          "multiplierPerPoint": 0.02
-        },
-        {
-          "type": "incomeMultiplierPerPrestige",
-          "currency": "charts",
-          "multiplierPerPoint": 0.015
-        }
-      ]
+      "resetRule": "Reset buildings, policies, and all non-prestige resources. Keep earned districts by area and unlocked areas."
     },
     "shortages": {
       "food": {
@@ -7276,7 +7312,9 @@ const GAME_CONTENT = {
       "power": {
         "threshold": 0,
         "outputMultiplier": 0,
-        "label": "Power outage"
+        "label": "Power outage",
+        "mode": "supplyGate",
+        "maintainConsumption": true
       },
       "catch": {
         "threshold": 0,
@@ -7291,7 +7329,9 @@ const GAME_CONTENT = {
       "harbor_capacity": {
         "threshold": 0.999,
         "outputMultiplier": 0,
-        "label": "No berths available"
+        "label": "Berth shortage",
+        "mode": "bufferedShutdown",
+        "recoveryThreshold": 3
       }
     }
   },
@@ -7336,7 +7376,7 @@ const GAME_CONTENT = {
         "name": "Districts",
         "kind": "prestige",
         "iconPath": "./public/art/icon-kits/patchwork-borough/prestige/districts.png",
-        "description": "Annexation prestige shared across the whole save.",
+        "description": "Total annexed districts across all areas.",
         "scope": "shared",
         "areaId": null
       },

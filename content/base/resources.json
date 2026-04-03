@@ -12,7 +12,7 @@
       "name": "Districts",
       "kind": "prestige",
       "iconPath": "./public/art/icon-kits/patchwork-borough/prestige/districts.png",
-      "description": "Annexation prestige shared across the whole save."
+      "description": "Total annexed districts across all areas."
     }
   }
 }

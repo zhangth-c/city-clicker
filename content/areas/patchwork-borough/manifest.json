@@ -292,5 +292,23 @@
       "per": 8,
       "gain": 1
     }
+  ],
+  "annexationBonuses": [
+    {
+      "currencyId": "coins",
+      "multiplierPerDistrict": 0.025
+    },
+    {
+      "currencyId": "goods",
+      "multiplierPerDistrict": 0.02
+    },
+    {
+      "currencyId": "knowledge",
+      "multiplierPerDistrict": 0.02
+    },
+    {
+      "currencyId": "influence",
+      "multiplierPerDistrict": 0.015
+    }
   ]
 }

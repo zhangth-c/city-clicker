@@ -6,6 +6,10 @@ export function getBuildingById(content, buildingId) {
   return content.buildings.find((building) => building.id === buildingId) || null;
 }
 
+export function getAreaDistricts(state, areaId) {
+  return Math.max(0, Number(state.areas?.[areaId]?.districts || 0));
+}
+
 export function getPolicyById(content, policyId) {
   return content.policies.find((policy) => policy.id === policyId) || null;
 }
@@ -134,6 +138,7 @@ export function calculateDerivedState(content, state) {
     return currencyId !== "districts" && !isPopulationCurrency(content, currencyId);
   });
   const grossPerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
+  const rawSupplyPerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
   const maintenancePerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
   const passivePerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
   const populationByArea = Object.fromEntries(content.areas.map((area) => [area.id, 0]));
@@ -171,6 +176,9 @@ export function calculateDerivedState(content, state) {
         getIncomeMultiplier(content, state, effects, building, currencyId) *
         getTargetMultiplier(synergyState.outputMultipliers, currencyId);
       rawOutputs[currencyId] = amountPerBuilding;
+      if (activeAreaIds.has(building.areaId)) {
+        rawSupplyPerSecond[currencyId] += amountPerBuilding * count;
+      }
     });
 
     Object.entries(building.maintenancePerSecond || {}).forEach(([currencyId, baseAmount]) => {
@@ -194,7 +202,7 @@ export function calculateDerivedState(content, state) {
     });
   });
 
-  const activeShortages = getActiveShortages(content, state, maintenanceDemandPerSecond);
+  const activeShortages = getActiveShortages(content, state, maintenanceDemandPerSecond, rawSupplyPerSecond);
 
   rawBuildingStates.forEach(({ building, count, rawOutputs, rawMaintenance, population, synergies }) => {
     const shortageState = getBuildingShortageState(activeShortages, rawMaintenance);
@@ -212,7 +220,8 @@ export function calculateDerivedState(content, state) {
     });
 
     Object.entries(rawMaintenance).forEach(([currencyId, amountPerBuilding]) => {
-      const scaledAmount = Number(amountPerBuilding) * operatingMultiplier;
+      const maintenanceMultiplier = Number(shortageState.maintenanceMultipliers?.[currencyId] ?? operatingMultiplier);
+      const scaledAmount = Number(amountPerBuilding) * maintenanceMultiplier;
       maintenance[currencyId] = scaledAmount;
       if (activeAreaIds.has(building.areaId)) {
         maintenancePerSecond[currencyId] += scaledAmount * count;
@@ -254,7 +263,9 @@ export function calculateDerivedState(content, state) {
     effects,
     passivePerSecond,
     grossPerSecond,
+    rawSupplyPerSecond,
     maintenancePerSecond,
+    rawMaintenanceDemandPerSecond: maintenanceDemandPerSecond,
     activeShortages,
     populationByArea,
     perBuilding,
@@ -262,9 +273,48 @@ export function calculateDerivedState(content, state) {
   };
 }
 
-function getActiveShortages(content, state, maintenanceDemandPerSecond) {
+export function updateUtilityLocks(content, state, derived) {
+  const shortageRules = content.systems?.shortages || {};
+  const nextLocks = {
+    ...(state.systems?.utilityLocks || {})
+  };
+
+  Object.entries(shortageRules).forEach(([currencyId, rule]) => {
+    if (rule.mode !== "bufferedShutdown") {
+      return;
+    }
+
+    const demand = Number(derived?.rawMaintenanceDemandPerSecond?.[currencyId] || 0);
+    const threshold = Number(rule.threshold || 0);
+    const amount = getCurrencyAmount(content, state, null, currencyId);
+    const currentlyLocked = Boolean(nextLocks[currencyId]);
+    const recoveryThreshold = getRecoveryThreshold(rule, demand);
+
+    if (demand <= 0) {
+      nextLocks[currencyId] = false;
+      return;
+    }
+
+    if (amount <= threshold) {
+      nextLocks[currencyId] = true;
+      return;
+    }
+
+    if (!currentlyLocked) {
+      nextLocks[currencyId] = false;
+      return;
+    }
+
+    nextLocks[currencyId] = amount < recoveryThreshold;
+  });
+
+  state.systems.utilityLocks = nextLocks;
+}
+
+function getActiveShortages(content, state, maintenanceDemandPerSecond, rawSupplyPerSecond) {
   const shortageRules = content.systems?.shortages || {};
   const activeShortages = {};
+  const utilityLocks = state.systems?.utilityLocks || {};
 
   Object.entries(shortageRules).forEach(([currencyId, rule]) => {
     const demand = Number(maintenanceDemandPerSecond[currencyId] || 0);
@@ -274,14 +324,25 @@ function getActiveShortages(content, state, maintenanceDemandPerSecond) {
 
     const threshold = Number(rule.threshold || 0);
     const amount = getCurrencyAmount(content, state, null, currencyId);
-    if (amount > threshold) {
+    const locked = Boolean(utilityLocks[currencyId]);
+    if (rule.mode === "supplyGate") {
+      const supply = Number(rawSupplyPerSecond?.[currencyId] || 0);
+      if (amount > threshold && supply >= demand) {
+        return;
+      }
+    } else if (rule.mode === "bufferedShutdown") {
+      if (!locked && amount > threshold) {
+        return;
+      }
+    } else if (amount > threshold) {
       return;
     }
 
     activeShortages[currencyId] = {
       currencyId,
       label: String(rule.label || `${titleCaseLabel(currencyId)} shortage`),
-      outputMultiplier: clampShortageMultiplier(rule.outputMultiplier)
+      outputMultiplier: clampShortageMultiplier(rule.outputMultiplier),
+      maintainConsumption: Boolean(rule.maintainConsumption)
     };
   });
 
@@ -291,19 +352,38 @@ function getActiveShortages(content, state, maintenanceDemandPerSecond) {
 function getBuildingShortageState(activeShortages, maintenance) {
   const reasons = [];
   let outputMultiplier = 1;
+  let hasShortage = false;
+  const maintenanceMultipliers = Object.fromEntries(
+    Object.keys(maintenance || {}).map((currencyId) => [currencyId, 1])
+  );
 
   Object.entries(maintenance || {}).forEach(([currencyId, amount]) => {
     if (Number(amount || 0) <= 0 || !activeShortages[currencyId]) {
       return;
     }
     const shortage = activeShortages[currencyId];
+    hasShortage = true;
     outputMultiplier = Math.min(outputMultiplier, shortage.outputMultiplier);
     reasons.push(shortage);
   });
 
+  Object.entries(maintenance || {}).forEach(([currencyId, amount]) => {
+    if (Number(amount || 0) <= 0) {
+      return;
+    }
+    if (activeShortages[currencyId]?.maintainConsumption) {
+      maintenanceMultipliers[currencyId] = 1;
+      return;
+    }
+    if (hasShortage) {
+      maintenanceMultipliers[currencyId] = outputMultiplier;
+    }
+  });
+
   return {
     outputMultiplier,
-    reasons
+    reasons,
+    maintenanceMultipliers
   };
 }
 
@@ -313,6 +393,14 @@ function clampShortageMultiplier(value) {
     return 0;
   }
   return Math.max(0, Math.min(1, numericValue));
+}
+
+function getRecoveryThreshold(rule, demand) {
+  return Math.max(
+    Number(rule.threshold || 0),
+    Number(rule.recoveryThreshold || 0),
+    Number(demand || 0) * Number(rule.recoveryBufferSeconds || 0)
+  );
 }
 
 function titleCaseLabel(currencyId) {
@@ -379,7 +467,7 @@ function getIncomeMultiplierForAction(content, state, effects, areaId, currencyI
 }
 
 function getIncomeMultiplier(content, state, effects, building, currencyId) {
-  let multiplier = 1 + getPrestigeMultiplier(content, state, currencyId);
+  let multiplier = 1 + getPrestigeMultiplier(content, state, building.areaId, currencyId);
 
   effects.forEach((effect) => {
     if (effect.type !== "incomeMultiplier") {
@@ -400,13 +488,17 @@ function getIncomeMultiplier(content, state, effects, building, currencyId) {
   return multiplier;
 }
 
-function getPrestigeMultiplier(content, state, currencyId) {
-  const districts = Number(state.sharedCurrencies?.districts || 0);
-  return (content.systems.annexation?.permanentBonuses || []).reduce((total, bonus) => {
-    if (bonus.type !== "incomeMultiplierPerPrestige" || bonus.currency !== currencyId) {
+function getPrestigeMultiplier(content, state, areaId, currencyId) {
+  const area = getAreaById(content, areaId);
+  if (!area) {
+    return 0;
+  }
+  const districts = getAreaDistricts(state, areaId);
+  return (area.annexationBonuses || []).reduce((total, bonus) => {
+    if (bonus.currencyId !== currencyId) {
       return total;
     }
-    return total + districts * Number(bonus.multiplierPerPoint || 0);
+    return total + districts * Number(bonus.multiplierPerDistrict || 0);
   }, 0);
 }
 

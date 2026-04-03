@@ -41,6 +41,9 @@ export function syncProgressState(content, state, derived) {
   }
 
   state.areas.unlockedAreaIds = Array.from(unlockedAreas);
+  state.sharedCurrencies.districts = content.areas.reduce((total, area) => {
+    return total + Number(state.areas?.[area.id]?.districts || 0);
+  }, 0);
 
   const seenBuildingIds = new Set(state.encyclopedia?.seenBuildingIds || []);
   const seenPolicyIds = new Set();
@@ -97,13 +100,16 @@ export function syncProgressState(content, state, derived) {
 }
 
 export function calculateAnnexationGain(content, state) {
-  return content.areas.reduce((total, area) => {
-    const config = area.prestigeScoreConfig || [];
-    const peaks = state.stats?.peakCurrenciesByArea?.[area.id] || {};
-    const subtotal = config.reduce((running, entry) => {
-      return running + Math.floor(Number(peaks[entry.currencyId] || 0) / Number(entry.per || 1)) * Number(entry.gain || 0);
-    }, 0);
-    return total + subtotal;
+  const areaId = state.areas?.activeAreaId || content.defaultAreaId;
+  const area = getAreaById(content, areaId);
+  if (!area) {
+    return 0;
+  }
+
+  const config = area.prestigeScoreConfig || [];
+  const peaks = state.stats?.peakCurrenciesByArea?.[area.id] || {};
+  return config.reduce((running, entry) => {
+    return running + Math.floor(Number(peaks[entry.currencyId] || 0) / Number(entry.per || 1)) * Number(entry.gain || 0);
   }, 0);
 }
 

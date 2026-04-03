@@ -57,9 +57,9 @@
       "knowledge": 4
     },
     "cost": {
-      "coins": 1400,
-      "goods": 26,
-      "knowledge": 8
+      "coins": 900,
+      "goods": 34,
+      "knowledge": 14
     },
     "effects": [
       {
@@ -110,9 +110,9 @@
       "appeal": 2
     },
     "cost": {
-      "coins": 1400,
-      "goods": 24,
-      "appeal": 6
+      "coins": 900,
+      "goods": 30,
+      "appeal": 10
     },
     "effects": [
       {
@@ -168,10 +168,10 @@
       "influence": 4
     },
     "cost": {
-      "coins": 2600,
-      "goods": 54,
-      "knowledge": 28,
-      "influence": 10
+      "coins": 1400,
+      "goods": 90,
+      "knowledge": 42,
+      "influence": 18
     },
     "effects": [
       {
@@ -223,10 +223,10 @@
       "appeal": 10
     },
     "cost": {
-      "coins": 2700,
-      "stone": 120,
-      "goods": 58,
-      "appeal": 22
+      "coins": 1500,
+      "stone": 180,
+      "goods": 96,
+      "appeal": 32
     },
     "effects": [
       {
@@ -372,9 +372,9 @@
       "food": 10
     },
     "cost": {
-      "coins": 1200,
-      "food": 24,
-      "timber": 22
+      "coins": 800,
+      "food": 34,
+      "timber": 30
     },
     "effects": [
       {
@@ -422,9 +422,9 @@
       "stone": 18
     },
     "cost": {
-      "coins": 1250,
-      "timber": 28,
-      "stone": 30
+      "coins": 820,
+      "timber": 38,
+      "stone": 46
     },
     "effects": [
       {
@@ -473,10 +473,10 @@
       "goods": 20
     },
     "cost": {
-      "coins": 2600,
-      "goods": 52,
-      "timber": 48,
-      "stone": 78
+      "coins": 1300,
+      "goods": 90,
+      "timber": 62,
+      "stone": 120
     },
     "effects": [
       {
@@ -537,10 +537,10 @@
       "power": 6
     },
     "cost": {
-      "coins": 2800,
-      "stone": 120,
-      "goods": 66,
-      "knowledge": 32
+      "coins": 1400,
+      "stone": 180,
+      "goods": 110,
+      "knowledge": 48
     },
     "effects": [
       {
@@ -588,11 +588,11 @@
       "goods": 40
     },
     "cost": {
-      "coins": 7000,
-      "stone": 900,
-      "goods": 520,
-      "power": 180,
-      "knowledge": 160
+      "coins": 3200,
+      "stone": 980,
+      "goods": 760,
+      "power": 260,
+      "knowledge": 240
     },
     "effects": [
       {

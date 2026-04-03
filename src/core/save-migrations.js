@@ -49,7 +49,8 @@ export function migrateSaveEnvelope(content, candidate) {
 
 const SAVE_MIGRATIONS = {
   0: migrateV0ToV1,
-  1: migrateV1ToV2
+  1: migrateV1ToV2,
+  2: migrateV2ToV3
 };
 
 function normalizeEnvelope(content, candidate) {
@@ -193,6 +194,36 @@ function migrateV1ToV2(content, envelope) {
         lastSavedAt: Number(source.stats?.lastSavedAt || Date.now())
       }
     }
+  };
+}
+
+function migrateV2ToV3(content, envelope) {
+  const source = cloneRecord(envelope.state || {});
+  const defaultAreaId = content.defaultAreaId;
+  const previousTotalDistricts = Number(source.sharedCurrencies?.districts || 0);
+  let assignedDistricts = 0;
+
+  content.areas.forEach((area) => {
+    source.areas ||= {};
+    source.areas[area.id] ||= {};
+    const current = Math.max(0, Number(source.areas[area.id].districts || 0));
+    source.areas[area.id].districts = current;
+    assignedDistricts += current;
+  });
+
+  if (assignedDistricts <= 0 && previousTotalDistricts > 0) {
+    source.areas[defaultAreaId] ||= {};
+    source.areas[defaultAreaId].districts = previousTotalDistricts;
+    assignedDistricts = previousTotalDistricts;
+  }
+
+  source.sharedCurrencies ||= {};
+  source.sharedCurrencies.districts = assignedDistricts;
+
+  return {
+    ...envelope,
+    saveVersion: 3,
+    state: source
   };
 }
 

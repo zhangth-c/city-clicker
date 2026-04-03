@@ -271,5 +271,23 @@
       "per": 10,
       "gain": 1
     }
+  ],
+  "annexationBonuses": [
+    {
+      "currencyId": "coins",
+      "multiplierPerDistrict": 0.025
+    },
+    {
+      "currencyId": "cargo",
+      "multiplierPerDistrict": 0.02
+    },
+    {
+      "currencyId": "charts",
+      "multiplierPerDistrict": 0.02
+    },
+    {
+      "currencyId": "renown",
+      "multiplierPerDistrict": 0.015
+    }
   ]
 }
