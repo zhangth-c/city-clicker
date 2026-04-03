@@ -1,15 +1,77 @@
 {
   "id": "patchwork-borough",
-  "runtimeId": "patchwork-borough-v1",
+  "runtimeId": "patchwork-borough-v2",
   "name": "Patchwork Borough",
-  "theme": "A mixed-neighborhood city builder clicker built around interlocking supplies, prestige districts, and specialized borough roles.",
+  "theme": "A layered inland borough where housing, supply, industry, and prestige districts compete for space.",
   "goalText": "Grow a small borough into a city worth remembering.",
-  "artReference": {
-    "file": "public/art/curated-houses/",
-    "note": "District art now mixes the original `houses.jpg` sprites with curated standalone renders selected from the expanded house reference sheets."
+  "populationCurrencyId": "residents",
+  "areaUnlockPolicyId": null,
+  "localCurrencies": {
+    "residents": {
+      "id": "residents",
+      "name": "Residents",
+      "kind": "population",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/residents.png",
+      "description": "Population capacity that unlocks more ambitious borough projects."
+    },
+    "food": {
+      "id": "food",
+      "name": "Food",
+      "kind": "supply",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/food.png",
+      "description": "Daily provisions consumed by homes, estates, and civic districts."
+    },
+    "timber": {
+      "id": "timber",
+      "name": "Timber",
+      "kind": "supply",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/timber.png",
+      "description": "Framing, lumber, and raw wood for housing and civic works."
+    },
+    "stone": {
+      "id": "stone",
+      "name": "Stone",
+      "kind": "supply",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/stone.png",
+      "description": "Masonry for terraces, civic halls, and late industrial works."
+    },
+    "goods": {
+      "id": "goods",
+      "name": "Goods",
+      "kind": "trade",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/goods.png",
+      "description": "Crafted wares that support trade, public services, and prestige districts."
+    },
+    "power": {
+      "id": "power",
+      "name": "Power",
+      "kind": "utility",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/power.png",
+      "description": "Mechanical and electrical capacity for advanced borough infrastructure."
+    },
+    "knowledge": {
+      "id": "knowledge",
+      "name": "Knowledge",
+      "kind": "research",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/knowledge.png",
+      "description": "Surveying, schooling, and technical skill."
+    },
+    "appeal": {
+      "id": "appeal",
+      "name": "Appeal",
+      "kind": "prestige",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/appeal.png",
+      "description": "Cultural draw created by landmarks, estates, and civic scenery."
+    },
+    "influence": {
+      "id": "influence",
+      "name": "Influence",
+      "kind": "prestige",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/influence.png",
+      "description": "Political leverage created by civic institutions and prestige districts."
+    }
   },
-  "startingState": {
-    "coins": 0,
+  "startingCurrencies": {
     "residents": 0,
     "food": 0,
     "timber": 0,
@@ -23,195 +85,212 @@
   "manualActions": [
     {
       "id": "collect-taxes",
+      "areaId": "patchwork-borough",
       "name": "Collect Taxes",
       "currency": "coins",
-      "baseAmount": 1.25,
-      "applyGlobalMultiplier": true,
-      "residentScaling": {
-        "perResidents": 20,
+      "baseAmount": 1.3,
+      "applyIncomeMultiplier": true,
+      "populationScaling": {
+        "perPopulation": 20,
         "amount": 1
       }
     },
     {
       "id": "gather-harvest",
+      "areaId": "patchwork-borough",
       "name": "Gather Harvest",
       "currency": "food",
-      "unlockUpgradeId": "builders-guild",
-      "baseAmount": 1.45,
-      "applyGlobalMultiplier": true,
+      "unlockBuildingId": "farmstead",
+      "unlockBuildingCount": 2,
+      "unlockPolicyId": "granary-cooperative",
+      "baseAmount": 1.25,
+      "applyIncomeMultiplier": true,
       "buildingScaling": [
         {
           "buildingId": "farmstead",
           "amountPerOwned": 0.32
         },
         {
-          "buildingId": "palm-bungalow",
-          "amountPerOwned": 0.1
+          "buildingId": "greenhouse-terrace",
+          "amountPerOwned": 0.28
         }
       ]
     },
     {
       "id": "fell-timber",
+      "areaId": "patchwork-borough",
       "name": "Fell Timber",
       "currency": "timber",
-      "unlockUpgradeId": "supply-depot",
-      "baseAmount": 1,
-      "applyGlobalMultiplier": true,
+      "unlockBuildingId": "timber-cabin",
+      "unlockBuildingCount": 2,
+      "unlockPolicyId": "quarry-standards",
+      "baseAmount": 1.05,
+      "applyIncomeMultiplier": true,
       "buildingScaling": [
         {
           "buildingId": "timber-cabin",
-          "amountPerOwned": 0.24
+          "amountPerOwned": 0.2
         },
         {
-          "buildingId": "farmstead",
-          "amountPerOwned": 0.05
-        }
-      ]
-    },
-    {
-      "id": "quarry-stone",
-      "name": "Quarry Stone",
-      "currency": "stone",
-      "unlockUpgradeId": "supply-depot",
-      "baseAmount": 0.75,
-      "applyGlobalMultiplier": true,
-      "buildingScaling": [
-        {
-          "buildingId": "timber-cabin",
-          "amountPerOwned": 0.16
-        },
-        {
-          "buildingId": "brick-factory",
+          "buildingId": "quarry-yard",
           "amountPerOwned": 0.1
         }
       ]
     },
     {
+      "id": "quarry-stone",
+      "areaId": "patchwork-borough",
+      "name": "Quarry Stone",
+      "currency": "stone",
+      "unlockBuildingId": "quarry-yard",
+      "unlockPolicyId": "quarry-standards",
+      "baseAmount": 0.9,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "timber-cabin",
+          "amountPerOwned": 0.1
+        },
+        {
+          "buildingId": "quarry-yard",
+          "amountPerOwned": 0.24
+        }
+      ]
+    },
+    {
       "id": "pack-goods",
+      "areaId": "patchwork-borough",
       "name": "Pack Goods",
       "currency": "goods",
-      "unlockUpgradeId": "plumbing-grid",
-      "baseAmount": 0.75,
-      "applyGlobalMultiplier": true,
+      "unlockBuildingId": "freight-depot",
+      "unlockBuildingCount": 2,
+      "unlockPolicyId": "workshop-standards",
+      "baseAmount": 0.82,
+      "applyIncomeMultiplier": true,
       "buildingScaling": [
         {
           "buildingId": "red-cottage",
-          "amountPerOwned": 0.09
-        },
-        {
-          "buildingId": "brick-factory",
-          "amountPerOwned": 0.14
-        }
-      ]
-    },
-    {
-      "id": "stage-festival",
-      "name": "Stage Festival",
-      "currency": "appeal",
-      "unlockUpgradeId": "tourism-board",
-      "baseAmount": 0.22,
-      "applyGlobalMultiplier": true,
-      "buildingScaling": [
-        {
-          "buildingId": "grand-manor",
-          "amountPerOwned": 0.04
-        },
-        {
-          "buildingId": "hillside-lodge",
-          "amountPerOwned": 0.04
-        },
-        {
-          "buildingId": "stone-keep",
-          "amountPerOwned": 0.03
-        },
-        {
-          "buildingId": "palm-bungalow",
-          "amountPerOwned": 0.05
-        }
-      ]
-    },
-    {
-      "id": "survey-archives",
-      "name": "Survey Archives",
-      "currency": "knowledge",
-      "unlockUpgradeId": "heritage-program",
-      "baseAmount": 0.38,
-      "applyGlobalMultiplier": true,
-      "buildingScaling": [
-        {
-          "buildingId": "cube-villa",
-          "amountPerOwned": 0.08
-        },
-        {
-          "buildingId": "dome-habitat",
           "amountPerOwned": 0.06
         },
         {
-          "buildingId": "glass-condo",
-          "amountPerOwned": 0.05
+          "buildingId": "freight-depot",
+          "amountPerOwned": 0.18
+        },
+        {
+          "buildingId": "brick-factory",
+          "amountPerOwned": 0.18
+        }
+      ]
+    },
+    {
+      "id": "survey-records",
+      "areaId": "patchwork-borough",
+      "name": "Survey Records",
+      "currency": "knowledge",
+      "unlockBuildingId": "cube-villa",
+      "unlockBuildingCount": 2,
+      "unlockPolicyId": "public-schools",
+      "baseAmount": 0.42,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "cube-villa",
+          "amountPerOwned": 0.1
+        },
+        {
+          "buildingId": "public-archive",
+          "amountPerOwned": 0.14
+        },
+        {
+          "buildingId": "dome-habitat",
+          "amountPerOwned": 0.08
         }
       ]
     },
     {
       "id": "route-current",
+      "areaId": "patchwork-borough",
       "name": "Route Current",
       "currency": "power",
-      "unlockUpgradeId": "industrial-logistics",
-      "baseAmount": 0.5,
-      "applyGlobalMultiplier": true,
+      "unlockBuildingId": "summit-powerhouse",
+      "unlockPolicyId": "power-authority",
+      "baseAmount": 0.48,
+      "applyIncomeMultiplier": true,
       "buildingScaling": [
         {
           "buildingId": "brick-factory",
+          "amountPerOwned": 0.05
+        },
+        {
+          "buildingId": "summit-powerhouse",
+          "amountPerOwned": 0.2
+        }
+      ]
+    },
+    {
+      "id": "stage-festival",
+      "areaId": "patchwork-borough",
+      "name": "Stage Festival",
+      "currency": "appeal",
+      "unlockBuildingId": "grand-manor",
+      "unlockPolicyId": "festival-office",
+      "baseAmount": 0.2,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "grand-manor",
+          "amountPerOwned": 0.05
+        },
+        {
+          "buildingId": "hillside-lodge",
+          "amountPerOwned": 0.07
+        },
+        {
+          "buildingId": "skyline-galleria",
           "amountPerOwned": 0.08
-        },
-        {
-          "buildingId": "dome-habitat",
-          "amountPerOwned": 0.12
-        },
-        {
-          "buildingId": "glass-condo",
-          "amountPerOwned": 0.04
         }
       ]
     },
     {
       "id": "broker-favors",
+      "areaId": "patchwork-borough",
       "name": "Broker Favors",
       "currency": "influence",
-      "unlockUpgradeId": "skyline-campaign",
-      "baseAmount": 0.16,
-      "applyGlobalMultiplier": true,
+      "unlockBuildingId": "borough-exchange",
+      "unlockPolicyId": "guild-brokers",
+      "baseAmount": 0.18,
+      "applyIncomeMultiplier": true,
       "buildingScaling": [
         {
-          "buildingId": "grand-manor",
-          "amountPerOwned": 0.03
-        },
-        {
-          "buildingId": "hillside-lodge",
-          "amountPerOwned": 0.03
-        },
-        {
-          "buildingId": "stone-keep",
+          "buildingId": "borough-exchange",
           "amountPerOwned": 0.05
         },
         {
-          "buildingId": "glass-condo",
-          "amountPerOwned": 0.03
+          "buildingId": "stone-keep",
+          "amountPerOwned": 0.08
+        },
+        {
+          "buildingId": "skyline-galleria",
+          "amountPerOwned": 0.05
         }
       ]
     }
   ],
-  "formulas": {
-    "buildingCostGrowth": 1.18,
-    "buildingCostFormula": "floor(baseCost[currency] * pow(buildingCostGrowth, owned))",
-    "manualActionFormula": "baseAmount + resident scaling + owned-building scaling, then optional global income multipliers and click bonuses",
-    "tickRateMs": 100,
-    "autosaveMs": 10000,
-    "offlineProgressCapSeconds": 14400
-  },
-  "pacing": {
-    "firstMinuteGoal": "Establish housing, quarry supplies, and a food source before upkeep catches up.",
-    "midgameShift": "The economy branches into stone, goods, power, and knowledge, forcing real specialization decisions.",
-    "lateGameIdentity": "Influence, appeal, and infrastructure turn the borough from a tax base into a civic machine."
-  }
+  "prestigeScoreConfig": [
+    {
+      "currencyId": "residents",
+      "per": 160,
+      "gain": 1
+    },
+    {
+      "currencyId": "appeal",
+      "per": 10,
+      "gain": 1
+    },
+    {
+      "currencyId": "influence",
+      "per": 8,
+      "gain": 1
+    }
+  ]
 }

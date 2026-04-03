@@ -1,93 +1,30 @@
 {
-  "source": "/Users/tianhao/Documents/New project/gemini-art-lab/output/collections/patchwork-borough-current/patchwork-borough-current-v1.png",
-  "rows": 2,
-  "columns": 5,
-  "insetX": 44,
-  "insetY": 28,
-  "width": 2752,
-  "height": 1536,
-  "cellWidth": 550,
-  "cellHeight": 768,
-  "manifest": [
-    {
-      "name": "clockhouse-duplex",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/clockhouse-duplex.png",
-      "offsetX": 44,
-      "offsetY": 28,
-      "cropWidth": 462,
-      "cropHeight": 712
-    },
-    {
-      "name": "hearth-grotto",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/hearth-grotto.png",
-      "offsetX": 594,
-      "offsetY": 28,
-      "cropWidth": 462,
-      "cropHeight": 712
-    },
-    {
-      "name": "windmill-homestead",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/windmill-homestead.png",
-      "offsetX": 1144,
-      "offsetY": 28,
-      "cropWidth": 462,
-      "cropHeight": 712
-    },
-    {
-      "name": "observatory-villa",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/observatory-villa.png",
-      "offsetX": 1694,
-      "offsetY": 28,
-      "cropWidth": 462,
-      "cropHeight": 712
-    },
-    {
-      "name": "pagoda-estate",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/pagoda-estate.png",
-      "offsetX": 2244,
-      "offsetY": 28,
-      "cropWidth": 462,
-      "cropHeight": 712
-    },
-    {
-      "name": "lighthouse-lodge",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/lighthouse-lodge.png",
-      "offsetX": 44,
-      "offsetY": 796,
-      "cropWidth": 462,
-      "cropHeight": 712
-    },
-    {
-      "name": "ice-dome-habitat",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/ice-dome-habitat.png",
-      "offsetX": 594,
-      "offsetY": 796,
-      "cropWidth": 462,
-      "cropHeight": 712
-    },
-    {
-      "name": "gothic-keep",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/gothic-keep.png",
-      "offsetX": 1144,
-      "offsetY": 796,
-      "cropWidth": 462,
-      "cropHeight": 712
-    },
-    {
-      "name": "treehouse-retreat",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/treehouse-retreat.png",
-      "offsetX": 1694,
-      "offsetY": 796,
-      "cropWidth": 462,
-      "cropHeight": 712
-    },
-    {
-      "name": "glass-highrise",
-      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/house-kits/patchwork-borough/current/glass-highrise.png",
-      "offsetX": 2244,
-      "offsetY": 796,
-      "cropWidth": 462,
-      "cropHeight": 712
-    }
+  "kitId": "patchwork-borough-current",
+  "sources": [
+    "./public/art/house-kits/patchwork-borough/library/current-lineup-source.png",
+    "./public/art/house-kits/patchwork-borough/library/completion-source.png",
+    "./public/art/house-kits/patchwork-borough/library/infill-source.png"
+  ],
+  "assets": [
+    "clockhouse-duplex",
+    "red-cottage",
+    "hearth-grotto",
+    "windmill-homestead",
+    "lane-bungalow",
+    "quarry-yard",
+    "observatory-villa",
+    "freight-depot",
+    "pagoda-estate",
+    "greenhouse-terrace",
+    "brick-factory",
+    "borough-exchange",
+    "lighthouse-lodge",
+    "public-archive",
+    "ice-dome-habitat",
+    "summit-powerhouse",
+    "gothic-keep",
+    "treehouse-retreat",
+    "glass-highrise",
+    "skyline-galleria"
   ]
 }

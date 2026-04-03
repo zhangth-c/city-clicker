@@ -1,0 +1,602 @@
+[
+  {
+    "id": "fisher-huts",
+    "name": "Fisher Huts",
+    "artPath": "./public/art/house-kits/port-city/current/fisher-huts.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-top-1",
+    "category": "fishery",
+    "unlock": {},
+    "baseCost": {
+      "coins": 40
+    },
+    "outputPerSecond": {
+      "catch": 0.46
+    },
+    "maintenancePerSecond": {
+      "coins": 0.03
+    },
+    "statsPerOwned": {
+      "crew": 2
+    },
+    "synergies": [
+      {
+        "label": "Salt contracts",
+        "targetType": "output",
+        "target": "catch",
+        "sourceBuildingIds": [
+          "salt-smokehouse"
+        ],
+        "perOwned": 1,
+        "bonus": 0.08,
+        "cap": 0.4
+      }
+    ],
+    "description": "The first harbor district. It feeds the docks and establishes the first crews on the shoreline.",
+    "codex": {
+      "family": "fishery",
+      "tier": 1,
+      "summary": "Starter fishery that establishes the catch economy.",
+      "lore": "The fisher huts are older than the harbor plan itself. If there is a port-city to build, it starts here.",
+      "masteryTarget": 12,
+      "sortKey": 10
+    }
+  },
+  {
+    "id": "driftwood-yard",
+    "name": "Driftwood Yard",
+    "artPath": "./public/art/house-kits/port-city/current/driftwood-yard.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-top-2",
+    "category": "dockyard",
+    "unlock": {
+      "crew": 6
+    },
+    "baseCost": {
+      "coins": 110
+    },
+    "outputPerSecond": {
+      "lumber": 0.3
+    },
+    "maintenancePerSecond": {
+      "coins": 0.03
+    },
+    "statsPerOwned": {
+      "crew": 1
+    },
+    "synergies": [
+      {
+        "label": "Pier orders",
+        "targetType": "output",
+        "target": "lumber",
+        "sourceBuildingIds": [
+          "timber-pier"
+        ],
+        "perOwned": 1,
+        "bonus": 0.08,
+        "cap": 0.4
+      }
+    ],
+    "description": "A rough-cut yard that turns shoreline scrap and cut timber into usable dock lumber.",
+    "codex": {
+      "family": "dockyard",
+      "tier": 1,
+      "summary": "Starter lumber producer for the harbor.",
+      "lore": "Before the harbor can think about terminals or towers, someone has to drag good wood out of the tide line and make it square.",
+      "masteryTarget": 12,
+      "sortKey": 20
+    }
+  },
+  {
+    "id": "salt-smokehouse",
+    "name": "Salt Smokehouse",
+    "artPath": "./public/art/house-kits/port-city/current/salt-smokehouse.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-top-3",
+    "category": "fishery",
+    "unlock": {
+      "crew": 14,
+      "catch": 8
+    },
+    "baseCost": {
+      "coins": 220,
+      "lumber": 12,
+      "catch": 14
+    },
+    "outputPerSecond": {
+      "catch": 0.92,
+      "cargo": 0.1
+    },
+    "maintenancePerSecond": {
+      "coins": 0.05
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Net turnover",
+        "targetType": "output",
+        "target": "cargo",
+        "sourceBuildingIds": [
+          "fisher-huts"
+        ],
+        "perOwned": 2,
+        "bonus": 0.08,
+        "cap": 0.4
+      }
+    ],
+    "description": "The harbor's first preserved export. It keeps more fish moving and starts the cargo economy.",
+    "codex": {
+      "family": "smokehouse",
+      "tier": 1,
+      "summary": "Early processor that turns catch into reliable cargo.",
+      "lore": "A smokehouse makes the day's catch last long enough to leave the dock. That is the entire difference between subsistence and trade.",
+      "masteryTarget": 12,
+      "sortKey": 30
+    }
+  },
+  {
+    "id": "timber-pier",
+    "name": "Timber Pier",
+    "artPath": "./public/art/house-kits/port-city/current/timber-pier.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-top-4",
+    "category": "dockyard",
+    "unlock": {
+      "crew": 20,
+      "lumber": 16,
+      "catch": 18
+    },
+    "baseCost": {
+      "coins": 360,
+      "lumber": 24,
+      "catch": 20
+    },
+    "outputPerSecond": {
+      "cargo": 0.28,
+      "harbor_capacity": 0.1
+    },
+    "maintenancePerSecond": {
+      "coins": 0.06
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Measured berths",
+        "targetType": "output",
+        "target": "harbor_capacity",
+        "sourceBuildingIds": [
+          "driftwood-yard"
+        ],
+        "perOwned": 1,
+        "bonus": 0.1,
+        "cap": 0.4
+      }
+    ],
+    "description": "A working pier that creates the harbor's first real berth space and organized loading capacity.",
+    "codex": {
+      "family": "pier",
+      "tier": 2,
+      "summary": "Early dock infrastructure that starts the berth economy.",
+      "lore": "A timber pier is a promise that ships can arrive and find somewhere deliberate to stand.",
+      "masteryTarget": 10,
+      "sortKey": 40
+    }
+  },
+  {
+    "id": "barge-masons",
+    "name": "Barge Masons",
+    "artPath": "./public/art/house-kits/port-city/current/barge-masons.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-top-5",
+    "category": "dockyard",
+    "unlock": {
+      "crew": 28,
+      "cargo": 6,
+      "lumber": 20
+    },
+    "baseCost": {
+      "coins": 520,
+      "lumber": 32,
+      "cargo": 10
+    },
+    "outputPerSecond": {
+      "masonry": 0.42,
+      "cargo": 0.1
+    },
+    "maintenancePerSecond": {
+      "catch": 0.12,
+      "cargo": 0.08
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Dredge contracts",
+        "targetType": "output",
+        "target": "masonry",
+        "sourceBuildingIds": [
+          "dredger-works"
+        ],
+        "perOwned": 1,
+        "bonus": 0.08,
+        "cap": 0.32
+      }
+    ],
+    "description": "Stone crews on barges that finally let the port build durable harbor works instead of temporary timber fixes.",
+    "codex": {
+      "family": "masonry",
+      "tier": 2,
+      "summary": "Mid-opening masonry district for durable port construction.",
+      "lore": "Barge masons do not make a harbor pretty; they make it survive the weather.",
+      "masteryTarget": 10,
+      "sortKey": 50
+    }
+  },
+  {
+    "id": "chandlery-market",
+    "name": "Chandlery Market",
+    "artPath": "./public/art/house-kits/port-city/current/chandlery-market.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-top-6",
+    "category": "customs",
+    "unlock": {
+      "crew": 36,
+      "cargo": 14,
+      "masonry": 12
+    },
+    "baseCost": {
+      "coins": 700,
+      "lumber": 24,
+      "masonry": 24,
+      "cargo": 22
+    },
+    "outputPerSecond": {
+      "coins": 2.8,
+      "cargo": 0.2
+    },
+    "maintenancePerSecond": {
+      "catch": 0.18,
+      "cargo": 0.25
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Harbor demand",
+        "targetType": "output",
+        "target": "coins",
+        "sourceBuildingIds": [
+          "timber-pier",
+          "bonded-warehouse"
+        ],
+        "perOwned": 2,
+        "bonus": 0.08,
+        "cap": 0.4
+      }
+    ],
+    "description": "The first serious trade district, turning cargo movement into shared money for both cities.",
+    "codex": {
+      "family": "customs",
+      "tier": 2,
+      "summary": "Early customs-market district that monetizes port trade.",
+      "lore": "The chandlery market is where the harbor stops selling fish and starts selling the right to keep sailing.",
+      "masteryTarget": 10,
+      "sortKey": 60
+    }
+  },
+  {
+    "id": "dredger-works",
+    "name": "Dredger Works",
+    "artPath": "./public/art/house-kits/port-city/current/dredger-works.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-bottom-1",
+    "category": "dockyard",
+    "unlock": {
+      "crew": 52,
+      "masonry": 28,
+      "cargo": 24
+    },
+    "baseCost": {
+      "coins": 1100,
+      "masonry": 50,
+      "cargo": 40
+    },
+    "outputPerSecond": {
+      "harbor_capacity": 0.48,
+      "cargo": 0.16
+    },
+    "maintenancePerSecond": {
+      "catch": 0.16,
+      "cargo": 0.35
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Stone channels",
+        "targetType": "output",
+        "target": "harbor_capacity",
+        "sourceBuildingIds": [
+          "barge-masons"
+        ],
+        "perOwned": 1,
+        "bonus": 0.1,
+        "cap": 0.4
+      }
+    ],
+    "description": "Heavy harbor infrastructure that makes berth space the port's central strategic resource.",
+    "codex": {
+      "family": "dredger",
+      "tier": 3,
+      "summary": "Core infrastructure district for midgame berth growth.",
+      "lore": "The dredger works is the point where the harbor stops accepting its coastline and begins editing it.",
+      "masteryTarget": 8,
+      "sortKey": 70
+    }
+  },
+  {
+    "id": "chart-house",
+    "name": "Chart House",
+    "artPath": "./public/art/house-kits/port-city/current/chart-house.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-bottom-2",
+    "category": "customs",
+    "unlock": {
+      "crew": 64,
+      "cargo": 34,
+      "harbor_capacity": 10
+    },
+    "baseCost": {
+      "coins": 1500,
+      "masonry": 34,
+      "cargo": 52,
+      "harbor_capacity": 14
+    },
+    "outputPerSecond": {
+      "charts": 0.34,
+      "coins": 2.5
+    },
+    "maintenancePerSecond": {
+      "catch": 0.2,
+      "cargo": 0.4,
+      "harbor_capacity": 0.12
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Warehouse logs",
+        "targetType": "output",
+        "target": "charts",
+        "sourceBuildingIds": [
+          "bonded-warehouse"
+        ],
+        "perOwned": 1,
+        "bonus": 0.08,
+        "cap": 0.32
+      }
+    ],
+    "description": "A navigational office that turns cargo and berth space into route knowledge.",
+    "codex": {
+      "family": "charts",
+      "tier": 3,
+      "summary": "Midgame research district for route planning and navigation.",
+      "lore": "The chart house is where the harbor learns that distance can be planned instead of endured.",
+      "masteryTarget": 8,
+      "sortKey": 80
+    }
+  },
+  {
+    "id": "bonded-warehouse",
+    "name": "Bonded Warehouse",
+    "artPath": "./public/art/house-kits/port-city/current/bonded-warehouse.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-bottom-3",
+    "category": "customs",
+    "unlock": {
+      "crew": 80,
+      "cargo": 52,
+      "masonry": 34,
+      "harbor_capacity": 18
+    },
+    "baseCost": {
+      "coins": 2600,
+      "masonry": 320,
+      "cargo": 520,
+      "harbor_capacity": 260
+    },
+    "outputPerSecond": {
+      "cargo": 0.84,
+      "coins": 4.2
+    },
+    "maintenancePerSecond": {
+      "catch": 0.28,
+      "cargo": 0.8,
+      "harbor_capacity": 0.28
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Pier turnover",
+        "targetType": "output",
+        "target": "cargo",
+        "sourceBuildingIds": [
+          "timber-pier",
+          "chandlery-market"
+        ],
+        "perOwned": 2,
+        "bonus": 0.08,
+        "cap": 0.4
+      }
+    ],
+    "description": "A large logistics district that stabilizes cargo growth and turns port throughput into a true economy.",
+    "codex": {
+      "family": "warehouse",
+      "tier": 3,
+      "summary": "Late-mid customs warehouse that becomes a major cargo engine.",
+      "lore": "Bonded warehouses make a harbor feel larger than it is because they let trade wait for the world to catch up.",
+      "masteryTarget": 8,
+      "sortKey": 90
+    }
+  },
+  {
+    "id": "customs-tower",
+    "name": "Customs Tower",
+    "artPath": "./public/art/house-kits/port-city/current/customs-tower.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-bottom-4",
+    "category": "landmark",
+    "unlock": {
+      "crew": 98,
+      "charts": 8,
+      "harbor_capacity": 24,
+      "cargo": 70
+    },
+    "baseCost": {
+      "coins": 3400,
+      "masonry": 720,
+      "cargo": 920,
+      "harbor_capacity": 520,
+      "charts": 220
+    },
+    "outputPerSecond": {
+      "renown": 0.34,
+      "coins": 5.2
+    },
+    "maintenancePerSecond": {
+      "catch": 0.3,
+      "cargo": 0.6,
+      "harbor_capacity": 0.35
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Harbor spectacle",
+        "targetType": "output",
+        "target": "renown",
+        "sourceBuildingIds": [
+          "regatta-quay"
+        ],
+        "perOwned": 1,
+        "bonus": 0.08,
+        "cap": 0.4
+      }
+    ],
+    "description": "A maritime landmark that turns planning and berth space into civic prestige and reliable tariffs.",
+    "codex": {
+      "family": "tower",
+      "tier": 4,
+      "summary": "Late port landmark for renown and stable coin income.",
+      "lore": "From the customs tower, the harbor can see who is arriving, what they are carrying, and how loudly to charge them.",
+      "masteryTarget": 6,
+      "sortKey": 100
+    }
+  },
+  {
+    "id": "regatta-quay",
+    "name": "Regatta Quay",
+    "artPath": "./public/art/house-kits/port-city/current/regatta-quay.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-bottom-5",
+    "category": "landmark",
+    "unlock": {
+      "crew": 124,
+      "renown": 5,
+      "harbor_capacity": 32,
+      "charts": 18
+    },
+    "baseCost": {
+      "coins": 4500,
+      "lumber": 260,
+      "cargo": 900,
+      "harbor_capacity": 760,
+      "charts": 320,
+      "renown": 180
+    },
+    "outputPerSecond": {
+      "renown": 0.48,
+      "coins": 6.8
+    },
+    "maintenancePerSecond": {
+      "catch": 0.36,
+      "cargo": 0.8,
+      "harbor_capacity": 0.45
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Tower attention",
+        "targetType": "output",
+        "target": "renown",
+        "sourceBuildingIds": [
+          "customs-tower"
+        ],
+        "perOwned": 1,
+        "bonus": 0.08,
+        "cap": 0.32
+      }
+    ],
+    "description": "A civic shoreline build that converts port maturity into spectacle and public reputation.",
+    "codex": {
+      "family": "regatta",
+      "tier": 4,
+      "summary": "Late civic harbor district for renown growth.",
+      "lore": "The regatta quay exists so the harbor can show off the traffic it has already earned.",
+      "masteryTarget": 6,
+      "sortKey": 110
+    }
+  },
+  {
+    "id": "grand-terminal",
+    "name": "Grand Terminal",
+    "artPath": "./public/art/house-kits/port-city/current/grand-terminal.png",
+    "spriteSheetPath": "./public/art/houses2.png",
+    "spriteRef": "houses-bottom-6",
+    "category": "landmark",
+    "unlock": {
+      "crew": 156,
+      "renown": 16,
+      "charts": 30,
+      "harbor_capacity": 48,
+      "cargo": 110
+    },
+    "baseCost": {
+      "coins": 6500,
+      "masonry": 1200,
+      "cargo": 1800,
+      "harbor_capacity": 1500,
+      "charts": 620,
+      "renown": 360
+    },
+    "outputPerSecond": {
+      "coins": 12.8,
+      "renown": 0.6,
+      "cargo": 0.48
+    },
+    "maintenancePerSecond": {
+      "catch": 0.45,
+      "cargo": 1.2,
+      "harbor_capacity": 0.7
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Through-line",
+        "targetType": "output",
+        "target": "coins",
+        "sourceBuildingIds": [
+          "bonded-warehouse",
+          "customs-tower"
+        ],
+        "perOwned": 2,
+        "bonus": 0.08,
+        "cap": 0.32
+      }
+    ],
+    "description": "The port's capstone district, built on berth space, routing, and civic reputation rather than raw cash alone.",
+    "codex": {
+      "family": "terminal",
+      "tier": 5,
+      "summary": "Port capstone that spends cargo, capacity, charts, and renown together.",
+      "lore": "The grand terminal is the harbor proving that it no longer needs to ask whether ships will come. The question is where to put them all.",
+      "masteryTarget": 4,
+      "sortKey": 120
+    }
+  }
+]

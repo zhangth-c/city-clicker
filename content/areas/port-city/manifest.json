@@ -1,0 +1,275 @@
+{
+  "id": "port-city",
+  "runtimeId": "port-city-v2",
+  "name": "Port City",
+  "theme": "A trade harbor where fisheries, docks, customs, and maritime prestige all fight over berths.",
+  "goalText": "Turn a working harbor into a city of ships, charts, and public spectacle.",
+  "populationCurrencyId": "crew",
+  "areaUnlockPolicyId": "harbor-charter",
+  "localCurrencies": {
+    "crew": {
+      "id": "crew",
+      "name": "Crew",
+      "kind": "population",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/residents.png",
+      "description": "Dockhands, fishers, and sailors who staff the harbor."
+    },
+    "catch": {
+      "id": "catch",
+      "name": "Catch",
+      "kind": "supply",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/food.png",
+      "description": "Fresh fish and sea harvests that feed the harbor economy."
+    },
+    "lumber": {
+      "id": "lumber",
+      "name": "Lumber",
+      "kind": "supply",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/timber.png",
+      "description": "Pier timber, masts, and cut dock lumber."
+    },
+    "masonry": {
+      "id": "masonry",
+      "name": "Masonry",
+      "kind": "supply",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/stone.png",
+      "description": "Stonework for breakwaters, towers, and bonded yards."
+    },
+    "cargo": {
+      "id": "cargo",
+      "name": "Cargo",
+      "kind": "trade",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/goods.png",
+      "description": "Packed trade volume moving through the port."
+    },
+    "harbor_capacity": {
+      "id": "harbor_capacity",
+      "name": "Berths",
+      "kind": "utility",
+      "displayMode": "integer",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/power.png",
+      "description": "Available berths for advanced harbor construction and late port operations."
+    },
+    "charts": {
+      "id": "charts",
+      "name": "Charts",
+      "kind": "research",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/knowledge.png",
+      "description": "Route maps, pilot records, and navigational knowledge."
+    },
+    "renown": {
+      "id": "renown",
+      "name": "Renown",
+      "kind": "prestige",
+      "iconPath": "./public/art/icon-kits/patchwork-borough/resources/appeal.png",
+      "description": "Maritime prestige earned through civic spectacle and port reputation."
+    }
+  },
+  "startingCurrencies": {
+    "crew": 0,
+    "catch": 0,
+    "lumber": 0,
+    "masonry": 0,
+    "cargo": 0,
+    "harbor_capacity": 0,
+    "charts": 0,
+    "renown": 0
+  },
+  "manualActions": [
+    {
+      "id": "collect-tariffs",
+      "areaId": "port-city",
+      "name": "Collect Tariffs",
+      "currency": "coins",
+      "baseAmount": 1.15,
+      "applyIncomeMultiplier": true,
+      "populationScaling": {
+        "perPopulation": 18,
+        "amount": 1
+      },
+      "buildingScaling": [
+        {
+          "buildingId": "chandlery-market",
+          "amountPerOwned": 0.16
+        },
+        {
+          "buildingId": "grand-terminal",
+          "amountPerOwned": 0.18
+        }
+      ]
+    },
+    {
+      "id": "haul-catch",
+      "areaId": "port-city",
+      "name": "Haul Catch",
+      "currency": "catch",
+      "unlockBuildingId": "fisher-huts",
+      "unlockBuildingCount": 2,
+      "unlockPolicyId": "fish-auctions",
+      "baseAmount": 1.15,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "fisher-huts",
+          "amountPerOwned": 0.28
+        },
+        {
+          "buildingId": "salt-smokehouse",
+          "amountPerOwned": 0.22
+        }
+      ]
+    },
+    {
+      "id": "cut-lumber",
+      "areaId": "port-city",
+      "name": "Cut Lumber",
+      "currency": "lumber",
+      "unlockBuildingId": "driftwood-yard",
+      "unlockBuildingCount": 2,
+      "unlockPolicyId": "dock-ledgers",
+      "baseAmount": 0.95,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "driftwood-yard",
+          "amountPerOwned": 0.2
+        },
+        {
+          "buildingId": "timber-pier",
+          "amountPerOwned": 0.1
+        }
+      ]
+    },
+    {
+      "id": "quarry-masonry",
+      "areaId": "port-city",
+      "name": "Quarry Masonry",
+      "currency": "masonry",
+      "unlockBuildingId": "barge-masons",
+      "unlockBuildingCount": 2,
+      "unlockPolicyId": "dock-ledgers",
+      "baseAmount": 0.78,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "barge-masons",
+          "amountPerOwned": 0.22
+        },
+        {
+          "buildingId": "dredger-works",
+          "amountPerOwned": 0.1
+        }
+      ]
+    },
+    {
+      "id": "load-cargo",
+      "areaId": "port-city",
+      "name": "Load Cargo",
+      "currency": "cargo",
+      "unlockBuildingId": "bonded-warehouse",
+      "unlockPolicyId": "bonded-logistics",
+      "baseAmount": 0.92,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "timber-pier",
+          "amountPerOwned": 0.1
+        },
+        {
+          "buildingId": "bonded-warehouse",
+          "amountPerOwned": 0.2
+        },
+        {
+          "buildingId": "grand-terminal",
+          "amountPerOwned": 0.18
+        }
+      ]
+    },
+    {
+      "id": "dredge-harbor",
+      "areaId": "port-city",
+      "name": "Dredge Harbor",
+      "currency": "harbor_capacity",
+      "unlockBuildingId": "dredger-works",
+      "unlockPolicyId": "longshift-piers",
+      "baseAmount": 0.38,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "timber-pier",
+          "amountPerOwned": 0.05
+        },
+        {
+          "buildingId": "dredger-works",
+          "amountPerOwned": 0.15
+        }
+      ]
+    },
+    {
+      "id": "chart-routes",
+      "areaId": "port-city",
+      "name": "Chart Routes",
+      "currency": "charts",
+      "unlockBuildingId": "chart-house",
+      "unlockPolicyId": "chart-academy",
+      "baseAmount": 0.28,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "chart-house",
+          "amountPerOwned": 0.1
+        },
+        {
+          "buildingId": "customs-tower",
+          "amountPerOwned": 0.07
+        }
+      ]
+    },
+    {
+      "id": "host-regatta",
+      "areaId": "port-city",
+      "name": "Host Regatta",
+      "currency": "renown",
+      "unlockBuildingId": "regatta-quay",
+      "unlockPolicyId": "regatta-commission",
+      "baseAmount": 0.16,
+      "applyIncomeMultiplier": true,
+      "buildingScaling": [
+        {
+          "buildingId": "customs-tower",
+          "amountPerOwned": 0.04
+        },
+        {
+          "buildingId": "regatta-quay",
+          "amountPerOwned": 0.08
+        },
+        {
+          "buildingId": "grand-terminal",
+          "amountPerOwned": 0.05
+        }
+      ]
+    }
+  ],
+  "prestigeScoreConfig": [
+    {
+      "currencyId": "crew",
+      "per": 120,
+      "gain": 1
+    },
+    {
+      "currencyId": "harbor_capacity",
+      "per": 24,
+      "gain": 1
+    },
+    {
+      "currencyId": "charts",
+      "per": 18,
+      "gain": 1
+    },
+    {
+      "currencyId": "renown",
+      "per": 10,
+      "gain": 1
+    }
+  ]
+}

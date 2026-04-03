@@ -1,15 +1,24 @@
 import GAME_CONTENT from "./content-runtime/generated-content.js";
 import { MAX_FRAME_MS, RENDER_INTERVAL_MS } from "./core/config.js";
-import { buildStateSnapshot, createInitialState, normalizeState, snapshotCurrencies } from "./core/state.js";
-import { formatNumber } from "./core/format.js";
+import { formatCurrencyAmount, formatNumber, labelForCurrency, titleCase } from "./core/format.js";
 import { buildSaveEnvelope } from "./core/save-migrations.js";
-import { calculateDerivedState, canAfford, getBuildingCost, spendCost } from "./systems/economy.js";
+import { buildStateSnapshot, createInitialState, normalizeState, snapshotCurrencies } from "./core/state.js";
 import {
-  applyUpgradeSystemUnlocks,
+  addCurrency,
+  calculateDerivedState,
+  canAfford,
+  getAreaById,
+  getBuildingById,
+  getBuildingCost,
+  getPolicyBlockedReason,
+  getPolicyById,
+  spendCost
+} from "./systems/economy.js";
+import {
+  arePolicyPrerequisitesMet,
   calculateAnnexationGain,
-  discoverBuildings,
-  discoverUpgrades,
-  getPrestigeCurrencyId
+  requirementsMet,
+  syncProgressState
 } from "./systems/progression.js";
 import { getElements } from "./ui/elements.js";
 import { createRenderer } from "./ui/render.js";
@@ -17,19 +26,30 @@ import { createRenderer } from "./ui/render.js";
 const content = GAME_CONTENT;
 const elements = getElements(document);
 const storageKey = `${content.meta.id}-save`;
-const eventLog = [];
+const legacyStorageKeys = ["patchwork-borough-v1-save", "patchwork-borough-save"];
+const uiState = {
+  screen: "area",
+  encyclopediaKind: "buildings",
+  encyclopediaArea: content.defaultAreaId,
+  encyclopediaFamily: "all",
+  encyclopediaCategory: "all",
+  encyclopediaProgress: "all"
+};
+
 const renderer = createRenderer({
   content,
   elements,
   handlers: {
     onRunManualAction: runManualAction,
     onBuyBuilding: buyBuilding,
-    onBuyUpgrade: buyUpgrade
+    onBuyPolicy: buyPolicy,
+    onSelectArea: selectArea,
+    onOpenEncyclopedia: openEncyclopedia
   }
 });
 
 let state = createInitialState(content);
-let derived = null;
+let derived = calculateDerivedState(content, state);
 let lastFrameMs = 0;
 let lastRenderMs = 0;
 let saveAccumulatorMs = 0;
@@ -51,136 +71,50 @@ function init() {
 
 function hydrateStaticCopy() {
   document.title = content.meta.name;
-  elements.eyebrow.textContent = content.meta.eyebrow;
   elements.title.textContent = content.meta.name;
-  elements.goalLine.textContent = content.meta.goalText;
-  elements.versionLine.textContent = `v${content.meta.appVersion} · save ${content.meta.saveVersion} · balance ${content.meta.balanceVersion}`;
 }
 
 function bindEvents() {
   elements.saveButton.addEventListener("click", () => {
     if (saveState("Progress saved locally.")) {
-      pushLog("Manual save created.", "Your borough snapshot has been written to local storage.");
       render(true);
     }
   });
   elements.exportButton.addEventListener("click", exportSave);
-  elements.importButton.addEventListener("click", () => {
-    elements.importInput.click();
-  });
+  elements.importButton.addEventListener("click", () => elements.importInput.click());
   elements.importInput.addEventListener("change", importSave);
   elements.resetButton.addEventListener("click", hardReset);
   elements.annexButton.addEventListener("click", annexDistrict);
+
+  elements.codexKindFilter.addEventListener("change", () => {
+    uiState.encyclopediaKind = elements.codexKindFilter.value;
+    uiState.encyclopediaFamily = "all";
+    uiState.encyclopediaCategory = "all";
+    uiState.encyclopediaProgress = "all";
+    render(true);
+  });
+  elements.codexAreaFilter.addEventListener("change", () => {
+    uiState.encyclopediaArea = elements.codexAreaFilter.value;
+    uiState.encyclopediaFamily = "all";
+    uiState.encyclopediaCategory = "all";
+    render(true);
+  });
+  elements.codexFamilyFilter.addEventListener("change", () => {
+    uiState.encyclopediaFamily = elements.codexFamilyFilter.value;
+    render(true);
+  });
+  elements.codexCategoryFilter.addEventListener("change", () => {
+    uiState.encyclopediaCategory = elements.codexCategoryFilter.value;
+    render(true);
+  });
+  elements.codexProgressFilter.addEventListener("change", () => {
+    uiState.encyclopediaProgress = elements.codexProgressFilter.value;
+    render(true);
+  });
+
   window.addEventListener("beforeunload", () => {
     saveState();
   });
-}
-
-function loadState() {
-  try {
-    const raw = window.localStorage.getItem(storageKey);
-    if (!raw) {
-      pushLog("Welcome to Patchwork Borough.", "Start by collecting taxes and buying your first duplex.");
-      return createInitialState(content);
-    }
-
-    const parsed = JSON.parse(raw);
-    const merged = normalizeState(content, parsed);
-    pushLog("Save restored.", "The borough is ready to grow again.");
-    return merged;
-  } catch (error) {
-    console.error(error);
-    pushLog("Save recovery failed.", "A fresh borough has been created.");
-    statusMessage = "Save recovery failed. Starting a new borough.";
-    return createInitialState(content);
-  }
-}
-
-function saveState(customMessage) {
-  try {
-    const record = buildSaveEnvelope(content, buildStateSnapshot(state));
-    window.localStorage.setItem(storageKey, JSON.stringify(record));
-    if (typeof customMessage === "string") {
-      statusMessage = customMessage;
-    }
-    return true;
-  } catch (error) {
-    console.error(error);
-    statusMessage = "Saving failed. Local storage may be unavailable.";
-    return false;
-  }
-}
-
-function buildExportPayload() {
-  return {
-    exportVersion: 2,
-    exportedAt: new Date().toISOString(),
-    ...buildSaveEnvelope(content, buildStateSnapshot(state))
-  };
-}
-
-function exportSave() {
-  try {
-    const payload = buildExportPayload();
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-    const anchor = document.createElement("a");
-    const timestamp = new Date().toISOString().replace(/[:]/g, "-").replace(/\..+$/, "");
-    const url = URL.createObjectURL(blob);
-
-    anchor.href = url;
-    anchor.download = `${content.meta.id}-save-${timestamp}.json`;
-    anchor.style.display = "none";
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 0);
-
-    window.localStorage.setItem(storageKey, JSON.stringify(buildSaveEnvelope(content, buildStateSnapshot(state))));
-    statusMessage = "Save exported to a JSON file.";
-    pushLog("Save exported.", "A portable borough save file was downloaded.");
-    render(true);
-  } catch (error) {
-    console.error(error);
-    statusMessage = "Export failed.";
-    pushLog("Export failed.", "The save file could not be generated.");
-    render(true);
-  }
-}
-
-function importSave(event) {
-  const file = event.target.files && event.target.files[0];
-  if (!file) {
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const parsed = JSON.parse(String(reader.result || ""));
-      const nextState = normalizeState(content, parsed);
-      nextState.stats.lastSavedAt = Date.now();
-      state = nextState;
-      eventLog.length = 0;
-      pushLog("Save imported.", "The borough state was loaded from file.");
-      saveState("Imported save loaded.");
-      recalculate();
-      render(true);
-    } catch (error) {
-      console.error(error);
-      statusMessage = error instanceof Error ? error.message : "Import failed.";
-      pushLog("Import failed.", "The selected file was not a valid Patchwork Borough save.");
-      render(true);
-    } finally {
-      elements.importInput.value = "";
-    }
-  };
-  reader.onerror = () => {
-    statusMessage = "Import failed while reading the file.";
-    pushLog("Import failed.", "The selected file could not be read.");
-    elements.importInput.value = "";
-    render(true);
-  };
-  reader.readAsText(file);
 }
 
 function frame(nowMs) {
@@ -207,16 +141,135 @@ function frame(nowMs) {
   requestAnimationFrame(frame);
 }
 
+function render(force) {
+  renderer.render({
+    content,
+    state,
+    derived,
+    activeAreaId: state.areas.activeAreaId,
+    screen: uiState.screen,
+    uiState,
+    statusMessage,
+    force
+  });
+}
+
+function recalculate() {
+  derived = calculateDerivedState(content, state);
+  syncProgressState(content, state, derived);
+  derived = calculateDerivedState(content, state);
+  syncProgressState(content, state, derived);
+}
+
 function simulate(seconds) {
   if (seconds <= 0) {
     return;
   }
 
-  recalculate();
   Object.entries(derived.passivePerSecond).forEach(([currencyId, rate]) => {
-    state.currencies[currencyId] = Math.max(0, (state.currencies[currencyId] || 0) + rate * seconds);
+    addCurrency(content, state, currencyId, Number(rate || 0) * seconds);
   });
   recalculate();
+}
+
+function loadState() {
+  try {
+    const candidates = [storageKey, ...legacyStorageKeys]
+      .map((key) => window.localStorage.getItem(key))
+      .filter(Boolean);
+    if (!candidates.length) {
+      statusMessage = "A new city has been founded.";
+      return createInitialState(content);
+    }
+
+    const parsed = JSON.parse(candidates[0]);
+    const merged = normalizeState(content, parsed);
+    statusMessage = "Save restored.";
+    return merged;
+  } catch (error) {
+    console.error(error);
+    statusMessage = "Save recovery failed. Starting a new city.";
+    return createInitialState(content);
+  }
+}
+
+function saveState(customMessage) {
+  try {
+    const record = buildSaveEnvelope(content, buildStateSnapshot(state));
+    window.localStorage.setItem(storageKey, JSON.stringify(record));
+    if (typeof customMessage === "string") {
+      statusMessage = customMessage;
+    }
+    return true;
+  } catch (error) {
+    console.error(error);
+    statusMessage = "Saving failed.";
+    return false;
+  }
+}
+
+function buildExportPayload() {
+  return {
+    exportVersion: 3,
+    exportedAt: new Date().toISOString(),
+    ...buildSaveEnvelope(content, buildStateSnapshot(state))
+  };
+}
+
+function exportSave() {
+  try {
+    const payload = buildExportPayload();
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const anchor = document.createElement("a");
+    const timestamp = new Date().toISOString().replace(/[:]/g, "-").replace(/\..+$/, "");
+    const url = URL.createObjectURL(blob);
+
+    anchor.href = url;
+    anchor.download = `${content.meta.id}-save-${timestamp}.json`;
+    anchor.style.display = "none";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+
+    statusMessage = "Save exported.";
+    render(true);
+  } catch (error) {
+    console.error(error);
+    statusMessage = "Export failed.";
+    render(true);
+  }
+}
+
+function importSave(event) {
+  const file = event.target.files?.[0];
+  if (!file) {
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(String(reader.result || ""));
+      state = normalizeState(content, parsed);
+      state.stats.lastSavedAt = Date.now();
+      recalculate();
+      saveState("Imported save loaded.");
+      render(true);
+    } catch (error) {
+      console.error(error);
+      statusMessage = error instanceof Error ? error.message : "Import failed.";
+      render(true);
+    } finally {
+      elements.importInput.value = "";
+    }
+  };
+  reader.onerror = () => {
+    statusMessage = "Import failed while reading the file.";
+    elements.importInput.value = "";
+    render(true);
+  };
+  reader.readAsText(file);
 }
 
 function applyOfflineProgress() {
@@ -227,227 +280,200 @@ function applyOfflineProgress() {
     return;
   }
 
-  const chunkSeconds = cappedSeconds > 120 ? 1 : content.formulas.tickRateMs / 1000;
-  let remaining = cappedSeconds;
   const before = snapshotCurrencies(state);
+  let remaining = cappedSeconds;
+  const stepSize = cappedSeconds > 120 ? 1 : content.formulas.tickRateMs / 1000;
 
   while (remaining > 0) {
-    const step = Math.min(chunkSeconds, remaining);
+    const step = Math.min(stepSize, remaining);
     simulate(step);
     remaining -= step;
   }
 
-  const gains = Object.fromEntries(
-    Object.keys(content.currencies).map((currencyId) => [
-      currencyId,
-      Number(state.currencies[currencyId] || 0) - Number(before[currencyId] || 0)
-    ])
-  );
-  const offlineMinutes = Math.round(cappedSeconds / 60);
-  statusMessage = `Offline progress applied for ${offlineMinutes} min.`;
-  const gainSummary = Object.entries(gains)
-    .filter(([currencyId, amount]) => currencyId !== "residents" && amount > 0.01)
+  const after = snapshotCurrencies(state);
+  const gains = Object.entries(after)
+    .map(([key, amount]) => ({
+      key,
+      amount: Number(amount || 0) - Number(before[key] || 0)
+    }))
+    .filter((entry) => entry.amount > 0.01)
+    .sort((left, right) => right.amount - left.amount)
     .slice(0, 4)
-    .map(([currencyId, amount]) => `+${formatNumber(amount)} ${content.currencies[currencyId].name}`)
+    .map((entry) => {
+      const currencyId = describeSnapshotCurrencyId(entry.key);
+      return `+${formatCurrencyAmount(content, currencyId, entry.amount, { rate: true })} ${labelForCurrency(content, currencyId)}`;
+    })
     .join(", ");
-  pushLog(
-    "Offline progress applied.",
-    gainSummary || "The borough continued ticking while you were away."
-  );
+
+  statusMessage = gains
+    ? `Offline progress: ${gains}.`
+    : `Offline progress applied for ${Math.round(cappedSeconds / 60)} min.`;
 }
 
-function recalculate() {
-  derived = calculateDerivedState(content, state);
-  const discoveredBuilding = discoverBuildings(content, state, derived);
-  const discoveredUpgrade = discoverUpgrades(content, state, derived);
-  state.currencies.residents = derived.residents;
-  state.stats.peakResidents = Math.max(state.stats.peakResidents || 0, derived.residents);
-  state.stats.peakAppeal = Math.max(state.stats.peakAppeal || 0, state.currencies.appeal || 0);
-
-  if (discoveredUpgrade) {
-    statusMessage = `New policy drafted: ${discoveredUpgrade.name}.`;
-    pushLog("New policy drafted.", `${discoveredUpgrade.name} is now available.`);
-  } else if (discoveredBuilding) {
-    statusMessage = `Surveyors uncovered ${discoveredBuilding.name}.`;
-    pushLog("New district surveyed.", `${discoveredBuilding.name} is now ready for construction.`);
+function describeSnapshotKey(key) {
+  if (!key.includes(":")) {
+    return labelForCurrency(content, key);
   }
+  const [, currencyId] = key.split(":");
+  return labelForCurrency(content, currencyId);
 }
 
-function runManualAction(actionId, event) {
+function describeSnapshotCurrencyId(key) {
+  if (!key.includes(":")) {
+    return key;
+  }
+  const [, currencyId] = key.split(":");
+  return currencyId;
+}
+
+function runManualAction(actionId) {
+  const areaId = state.areas.activeAreaId;
+  const action = (derived.manualActionsByArea[areaId] || []).find((item) => item.id === actionId);
+  if (!action || !action.unlocked) {
+    return { granted: false };
+  }
+
+  addCurrency(content, state, action.currency, action.amount);
+  state.stats.totalClicks += 1;
+  statusMessage = "";
   recalculate();
-  const action = derived.manualActions.find((item) => item.id === actionId && item.unlocked);
-  if (!action) {
-    statusMessage = "That manual action is not available yet.";
-    render();
-    return;
-  }
+  render(true);
 
-  state.currencies[action.currency] = Number(state.currencies[action.currency] || 0) + Number(action.amount || 0);
-  state.stats.totalClicks = Number(state.stats.totalClicks || 0) + 1;
-  recalculate();
-  spawnActionBurst(event, `+${formatNumber(action.amount)} ${content.currencies[action.currency].name}`);
-  render();
-}
-
-function spawnActionBurst(event, label) {
-  const target = event && event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
-  if (!target) {
-    return;
-  }
-
-  const burst = document.createElement("span");
-  const rect = target.getBoundingClientRect();
-  const burstX = event && typeof event.clientX === "number" ? event.clientX - rect.left : rect.width / 2;
-  const burstY = event && typeof event.clientY === "number" ? event.clientY - rect.top : rect.height / 2;
-  burst.className = "tax-burst";
-  burst.textContent = label;
-  burst.style.left = `${burstX}px`;
-  burst.style.top = `${burstY}px`;
-  target.appendChild(burst);
-  burst.addEventListener("animationend", () => burst.remove(), { once: true });
+  return {
+    granted: true,
+    currencyId: action.currency,
+    label: `+${formatCurrencyAmount(content, action.currency, action.amount, { rate: true })} ${labelForCurrency(
+      content,
+      action.currency
+    )}`
+  };
 }
 
 function buyBuilding(buildingId) {
-  const building = content.buildings.find((item) => item.id === buildingId);
-  if (!building) {
-    return;
-  }
-
-  if (!state.discoveredBuildings.includes(building.id)) {
-    statusMessage = `${building.name} has not been surveyed yet.`;
-    render();
+  const building = getBuildingById(content, buildingId);
+  if (!building || building.areaId !== state.areas.activeAreaId) {
     return;
   }
 
   const cost = getBuildingCost(content, state, derived, building);
-  if (!canAfford(state, cost)) {
-    statusMessage = `Not enough resources to build ${building.name}.`;
-    render();
+  if (!canAfford(content, state, derived, cost)) {
+    statusMessage = `${building.name} needs more resources.`;
+    render(true);
     return;
   }
 
-  spendCost(state, cost);
+  spendCost(content, state, cost);
   state.ownedBuildings[building.id] = Number(state.ownedBuildings[building.id] || 0) + 1;
+  state.stats.lifetimeBuiltByBuildingId[building.id] =
+    Number(state.stats.lifetimeBuiltByBuildingId[building.id] || 0) + 1;
+  statusMessage = `${building.name} built.`;
   recalculate();
-  pushLog("District expanded.", `Built ${building.name}.`);
+  render(true);
+}
+
+function buyPolicy(policyId) {
+  const policy = getPolicyById(content, policyId);
+  const policyName = getPolicyName(policy);
+  if (!policy || policy.areaId !== state.areas.activeAreaId) {
+    return;
+  }
+  if ((state.purchasedPolicies || []).includes(policy.id)) {
+    return;
+  }
+
+  const blockedReason = getPolicyBlockedReason(content, state, policy);
+  if (blockedReason) {
+    statusMessage = blockedReason;
+    render(true);
+    return;
+  }
+  if (!arePolicyPrerequisitesMet(state, policy)) {
+    statusMessage = `${policyName} needs earlier policies first.`;
+    render(true);
+    return;
+  }
+  if (!requirementsMet(content, state, derived, policy.areaId, policy.unlock || {})) {
+    statusMessage = `${policyName} has not been unlocked yet.`;
+    render(true);
+    return;
+  }
+  if (!canAfford(content, state, derived, policy.cost || {})) {
+    statusMessage = `${policyName} needs more resources.`;
+    render(true);
+    return;
+  }
+
+  spendCost(content, state, policy.cost || {});
+  state.purchasedPolicies.push(policy.id);
+  if (policy.exclusiveGroupId) {
+    state.policyChoices[policy.exclusiveGroupId] = policy.id;
+  }
+
+  const unlockedAreaEffect = (policy.effects || []).find((effect) => effect.type === "unlockArea");
+  recalculate();
+
+  if (unlockedAreaEffect?.areaId && state.areas.unlockedAreaIds.includes(unlockedAreaEffect.areaId)) {
+    state.areas.activeAreaId = unlockedAreaEffect.areaId;
+    uiState.screen = "area";
+    statusMessage = `${titleCase(unlockedAreaEffect.areaId.replace(/-/g, " "))} unlocked.`;
+  } else {
+    statusMessage = `${policyName} adopted.`;
+  }
+
+  render(true);
+}
+
+function selectArea(areaId) {
+  if (!(state.areas.unlockedAreaIds || []).includes(areaId)) {
+    return;
+  }
+  state.areas.activeAreaId = areaId;
+  uiState.screen = "area";
   statusMessage = "";
   render(true);
 }
 
-function buyUpgrade(upgradeId) {
-  const upgrade = content.globalUpgrades.find((item) => item.id === upgradeId);
-  if (!upgrade || state.purchasedUpgrades.includes(upgrade.id)) {
-    return;
-  }
-
-  if (!state.discoveredUpgrades.includes(upgrade.id)) {
-    statusMessage = `${upgrade.name} is not available yet.`;
-    render();
-    return;
-  }
-
-  if (!canAfford(state, upgrade.cost || {})) {
-    statusMessage = `Not enough resources to adopt ${upgrade.name}.`;
-    render();
-    return;
-  }
-
-  spendCost(state, upgrade.cost || {});
-  state.purchasedUpgrades.push(upgrade.id);
-  applyUpgradeSystemUnlocks(content, state, upgrade);
-  recalculate();
-  pushLog("Upgrade enacted.", `${upgrade.name} is now active city-wide.`);
-  statusMessage = "";
+function openEncyclopedia() {
+  uiState.screen = "encyclopedia";
+  uiState.encyclopediaArea = state.areas.activeAreaId;
   render(true);
 }
 
 function annexDistrict() {
-  if (!state.systems.annexationUnlocked) {
-    statusMessage = "Annexation unlocks after purchasing City Charter.";
-    render();
-    return;
-  }
-
-  const gain = calculateAnnexationGain(state);
+  const gain = calculateAnnexationGain(content, state);
   if (gain <= 0) {
-    statusMessage = "Grow the borough further before annexing.";
-    render();
     return;
   }
 
-  const confirmed = window.confirm(
-    `Annex the current borough for ${gain} Districts?\n\nThis resets buildings, upgrades, and all non-prestige resources.`
-  );
-
-  if (!confirmed) {
-    return;
-  }
-
-  const prestigeCurrencyId = getPrestigeCurrencyId(content);
-  const priorAnnexations = Number(state.stats.totalAnnexations || 0);
-  const totalDistricts = Number(state.currencies[prestigeCurrencyId] || 0) + gain;
-
+  const previous = state;
   state = createInitialState(content);
-  state.currencies[prestigeCurrencyId] = totalDistricts;
+  state.sharedCurrencies.districts = Number(previous.sharedCurrencies.districts || 0) + gain;
+  state.areas.unlockedAreaIds = Array.from(new Set(previous.areas.unlockedAreaIds || [content.defaultAreaId]));
+  state.areas.activeAreaId = content.defaultAreaId;
+  state.encyclopedia = JSON.parse(JSON.stringify(previous.encyclopedia));
   state.systems.annexationUnlocked = true;
-  state.stats.totalAnnexations = priorAnnexations + 1;
-  state.stats.lastSavedAt = Date.now();
-
-  pushLog("Annexation completed.", `You gained ${gain} Districts for future runs.`);
-  statusMessage = `Annexed successfully. ${gain} Districts secured.`;
+  state.stats.lifetimeBuiltByBuildingId = JSON.parse(JSON.stringify(previous.stats.lifetimeBuiltByBuildingId));
+  state.stats.totalClicks = previous.stats.totalClicks;
+  state.stats.totalAnnexations = Number(previous.stats.totalAnnexations || 0) + 1;
   recalculate();
+  statusMessage = `Annexed for ${formatNumber(gain)} districts.`;
   render(true);
 }
 
 function hardReset() {
-  const confirmed = window.confirm(
-    "Delete the current local save and restart Patchwork Borough from the beginning?"
-  );
+  const confirmed = window.confirm("Reset the current save? This clears local progress for the current version.");
   if (!confirmed) {
     return;
   }
 
-  try {
-    window.localStorage.removeItem(storageKey);
-  } catch (error) {
-    console.error(error);
-  }
-
   state = createInitialState(content);
-  eventLog.length = 0;
-  pushLog("Save cleared.", "The borough has been reset to its founding day.");
+  uiState.screen = "area";
+  window.localStorage.removeItem(storageKey);
   statusMessage = "Local save reset.";
   recalculate();
   render(true);
 }
 
-function pushLog(title, body) {
-  eventLog.unshift({
-    title,
-    body,
-    time: new Date().toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit"
-    })
-  });
-  if (eventLog.length > 8) {
-    eventLog.length = 8;
-  }
-}
-
-function render(force) {
-  if (!force && !derived) {
-    return;
-  }
-  if (!derived) {
-    recalculate();
-  }
-  renderer.render({
-    state,
-    derived,
-    statusMessage
-  });
-  if (force) {
-    lastRenderMs = performance.now();
-  }
+function getPolicyName(policy) {
+  return policy?.name || titleCase(String(policy?.id || "policy").replace(/-/g, " "));
 }

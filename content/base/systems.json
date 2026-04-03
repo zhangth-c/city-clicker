@@ -2,30 +2,62 @@
   "annexation": {
     "id": "annexation",
     "name": "Annexation",
-    "unlockUpgradeId": "city-charter",
-    "prestigeCurrency": {
-      "id": "districts",
-      "name": "Districts",
-      "iconPath": "./public/art/icon-kits/patchwork-borough/prestige/districts.png"
-    },
-    "gainFormula": "max(0, floor(peakResidents / 200) + floor(peakAppeal / 15))",
-    "resetRule": "Reset buildings, upgrades, and all non-prestige resources. Keep annexation access and earned districts.",
+    "unlockPolicyId": "city-charter",
+    "prestigeCurrencyId": "districts",
+    "resetRule": "Reset buildings, policies, and all non-prestige resources. Keep earned districts and unlocked areas.",
     "permanentBonuses": [
       {
         "type": "incomeMultiplierPerPrestige",
         "currency": "coins",
-        "multiplierPerPoint": 0.04
-      },
-      {
-        "type": "incomeMultiplierPerPrestige",
-        "currency": "food",
         "multiplierPerPoint": 0.03
       },
       {
         "type": "incomeMultiplierPerPrestige",
         "currency": "knowledge",
+        "multiplierPerPoint": 0.015
+      },
+      {
+        "type": "incomeMultiplierPerPrestige",
+        "currency": "cargo",
         "multiplierPerPoint": 0.02
+      },
+      {
+        "type": "incomeMultiplierPerPrestige",
+        "currency": "charts",
+        "multiplierPerPoint": 0.015
       }
     ]
+  },
+  "shortages": {
+    "food": {
+      "threshold": 0,
+      "outputMultiplier": 0.4,
+      "label": "Food shortage"
+    },
+    "goods": {
+      "threshold": 0,
+      "outputMultiplier": 0.35,
+      "label": "Goods shortage"
+    },
+    "power": {
+      "threshold": 0,
+      "outputMultiplier": 0,
+      "label": "Power outage"
+    },
+    "catch": {
+      "threshold": 0,
+      "outputMultiplier": 0.5,
+      "label": "Catch shortage"
+    },
+    "cargo": {
+      "threshold": 0,
+      "outputMultiplier": 0.35,
+      "label": "Cargo backlog"
+    },
+    "harbor_capacity": {
+      "threshold": 0.999,
+      "outputMultiplier": 0,
+      "label": "No berths available"
+    }
   }
 }

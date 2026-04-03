@@ -2,25 +2,63 @@ export function currencyUnit() {
   return "s";
 }
 
+export function getCurrencyDefinition(content, currencyId) {
+  return content.indexes.currencyIndex[currencyId] || null;
+}
+
 export function labelForCurrency(content, currencyId) {
-  if (currencyId === "districts") {
-    return "Districts";
+  return getCurrencyDefinition(content, currencyId)?.name || titleCase(currencyId.replace(/_/g, " "));
+}
+
+export function formatCurrencyAmount(content, currencyId, value, options = {}) {
+  const numeric = Number(value || 0);
+  const currency = getCurrencyDefinition(content, currencyId);
+
+  if (currency?.displayMode === "integer" && !options.rate) {
+    const rounded =
+      options.ceil && numeric >= 0 ? Math.ceil(numeric) : numeric >= 0 ? Math.floor(numeric) : Math.ceil(numeric);
+    return formatNumber(rounded);
   }
-  return content.currencies[currencyId].name;
+
+  return formatNumber(numeric);
 }
 
 export function formatPercent(value) {
   return `${formatNumber(Number(value || 0) * 100)}%`;
 }
 
+export function titleCase(value) {
+  return String(value || "")
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 export function formatNumber(value) {
   const numeric = Number(value || 0);
   const absolute = Math.abs(numeric);
 
+  if (absolute >= 1_000_000_000) {
+    return new Intl.NumberFormat("en-US", {
+      notation: "compact",
+      maximumSignificantDigits: 3
+    })
+      .format(numeric)
+      .replace(/\s+/g, "");
+  }
+
   if (absolute >= 1_000_000) {
     return new Intl.NumberFormat("en-US", {
       notation: "compact",
-      maximumSignificantDigits: absolute >= 1_000_000_000 ? 3 : 4
+      maximumFractionDigits: 1
+    })
+      .format(numeric)
+      .replace(/\s+/g, "");
+  }
+
+  if (absolute >= 100_000) {
+    return new Intl.NumberFormat("en-US", {
+      notation: "compact",
+      maximumFractionDigits: 0
     })
       .format(numeric)
       .replace(/\s+/g, "");
@@ -43,7 +81,7 @@ export function formatNumber(value) {
 
   if (absolute >= 100) {
     return new Intl.NumberFormat("en-US", {
-      maximumFractionDigits: 0
+      maximumFractionDigits: 1
     }).format(numeric);
   }
 

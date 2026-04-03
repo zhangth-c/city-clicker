@@ -1,8 +1,19 @@
 {
   "appId": "city-clicker",
-  "appVersion": "1.0.0",
-  "saveVersion": 1,
-  "balanceVersion": "1.0.0",
+  "appVersion": "2.0.0",
+  "saveVersion": 2,
+  "balanceVersion": "2.4.0",
   "eyebrow": "HTML5 City Clicker",
-  "activeAreaId": "patchwork-borough"
+  "name": "Patchwork Borough",
+  "defaultAreaId": "patchwork-borough",
+  "startingSharedCurrencies": {
+    "coins": 0,
+    "districts": 0
+  },
+  "formulas": {
+    "buildingCostGrowth": 1.19,
+    "tickRateMs": 100,
+    "autosaveMs": 10000,
+    "offlineProgressCapSeconds": 14400
+  }
 }

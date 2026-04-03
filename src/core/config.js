@@ -1,4 +1,4 @@
-export const RENDER_INTERVAL_MS = 200;
+export const RENDER_INTERVAL_MS = 220;
 export const MAX_FRAME_MS = 1000;
 
 export const SPRITE_POSITIONS = {
@@ -14,15 +14,4 @@ export const SPRITE_POSITIONS = {
   "houses-bottom-4": { x: "60%", y: "100%" },
   "houses-bottom-5": { x: "80%", y: "100%" },
   "houses-bottom-6": { x: "100%", y: "100%" }
-};
-
-export const CATEGORY_LABELS = {
-  residential: "Residential",
-  rural: "Rural",
-  modern: "Modern",
-  prestige: "Prestige",
-  tourism: "Tourism",
-  industrial: "Industrial",
-  future: "Future",
-  heritage: "Heritage"
 };

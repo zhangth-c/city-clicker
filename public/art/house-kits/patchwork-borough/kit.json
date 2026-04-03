@@ -3,6 +3,7 @@
   "currentKit": {
     "sourceSheet": "./public/art/house-kits/patchwork-borough/library/current-lineup-source.png",
     "supplementalSourceSheet": "./public/art/house-kits/patchwork-borough/library/completion-source.png",
+    "infillSourceSheet": "./public/art/house-kits/patchwork-borough/library/infill-source.png",
     "assetFolder": "./public/art/house-kits/patchwork-borough/current",
     "selectedVariant": "patchwork-borough-current-v1",
     "districtAssets": [
@@ -10,14 +11,22 @@
       "red-cottage",
       "hearth-grotto",
       "windmill-homestead",
+      "lane-bungalow",
+      "quarry-yard",
       "observatory-villa",
+      "freight-depot",
       "pagoda-estate",
+      "greenhouse-terrace",
       "lighthouse-lodge",
       "brick-factory",
+      "borough-exchange",
+      "public-archive",
       "ice-dome-habitat",
+      "summit-powerhouse",
       "gothic-keep",
       "treehouse-retreat",
-      "glass-highrise"
+      "glass-highrise",
+      "skyline-galleria"
     ]
   },
   "futureLibrary": {

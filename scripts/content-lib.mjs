@@ -12,6 +12,88 @@ async function readJson(relativePath) {
   return JSON.parse(raw);
 }
 
+function collectCurrencyIndex(content) {
+  const index = {};
+
+  Object.entries(content.resources.sharedCurrencies || {}).forEach(([currencyId, currency]) => {
+    index[currencyId] = {
+      ...currency,
+      id: currencyId,
+      scope: "shared",
+      areaId: null
+    };
+  });
+
+  content.areas.forEach((area) => {
+    Object.entries(area.manifest.localCurrencies || {}).forEach(([currencyId, currency]) => {
+      index[currencyId] = {
+        ...currency,
+        id: currencyId,
+        scope: "local",
+        areaId: area.id
+      };
+    });
+  });
+
+  return index;
+}
+
+function validateResourceMap(errors, currencyIndex, areaId, value, label) {
+  const record = value || {};
+  Object.entries(record).forEach(([currencyId, amount]) => {
+    const currency = currencyIndex[currencyId];
+    if (!currency) {
+      errors.push(`${label} references unknown currency "${currencyId}".`);
+      return;
+    }
+    if (currency.scope === "local" && currency.areaId !== areaId) {
+      errors.push(`${label} illegally references ${currencyId} from area "${currency.areaId}".`);
+    }
+    if (!Number.isFinite(Number(amount))) {
+      errors.push(`${label} has non-numeric amount for "${currencyId}".`);
+    }
+  });
+}
+
+function validateCodex(errors, entityLabel, codex) {
+  if (!codex || typeof codex !== "object") {
+    errors.push(`${entityLabel} is missing codex metadata.`);
+    return;
+  }
+  for (const key of ["family", "tier", "summary", "lore", "masteryTarget", "sortKey"]) {
+    if (codex[key] === undefined || codex[key] === null || codex[key] === "") {
+      errors.push(`${entityLabel} codex is missing "${key}".`);
+    }
+  }
+}
+
+function buildPolicyTreeIndex(policies) {
+  const trees = {};
+  policies.forEach((policy) => {
+    if (!trees[policy.treeId]) {
+      trees[policy.treeId] = {
+        id: policy.treeId,
+        name: titleCase(policy.treeId.replace(/-/g, " ")),
+        tiers: {}
+      };
+    }
+    if (!trees[policy.treeId].tiers[policy.tier]) {
+      trees[policy.treeId].tiers[policy.tier] = [];
+    }
+    trees[policy.treeId].tiers[policy.tier].push(policy.id);
+  });
+
+  return Object.values(trees).map((tree) => ({
+    ...tree,
+    tiers: Object.entries(tree.tiers)
+      .sort(([left], [right]) => Number(left) - Number(right))
+      .map(([tier, policyIds]) => ({
+        tier: Number(tier),
+        policyIds: policyIds.slice()
+      }))
+  }));
+}
+
 export async function loadContent() {
   const game = await readJson("base/game.json");
   const resources = await readJson("base/resources.json");
@@ -36,6 +118,8 @@ export async function loadContent() {
     });
   }
 
+  areas.sort((left, right) => left.id.localeCompare(right.id));
+
   return {
     projectRoot,
     game,
@@ -48,9 +132,8 @@ export async function loadContent() {
 
 export function validateContent(content) {
   const errors = [];
-  const resourceIds = new Set(Object.keys(content.resources));
   const areaIds = new Set();
-  const districtIds = new Set();
+  const buildingIds = new Set();
   const policyIds = new Set();
   const manualActionIds = new Set();
 
@@ -63,199 +146,340 @@ export function validateContent(content) {
   if (!content.game.balanceVersion) {
     errors.push("Game metadata is missing balanceVersion.");
   }
+  if (!content.game.defaultAreaId) {
+    errors.push("Game metadata is missing defaultAreaId.");
+  }
+
+  if (!content.resources.sharedCurrencies?.coins) {
+    errors.push('Shared currencies must include "coins".');
+  }
+  if (!content.resources.sharedCurrencies?.districts) {
+    errors.push('Shared currencies must include "districts".');
+  }
 
   content.areas.forEach((area) => {
-    if (areaIds.has(area.manifest.id)) {
-      errors.push(`Duplicate area id "${area.manifest.id}".`);
+    if (areaIds.has(area.id)) {
+      errors.push(`Duplicate area id "${area.id}".`);
     }
-    areaIds.add(area.manifest.id);
+    areaIds.add(area.id);
+
+    if (area.manifest.id !== area.id) {
+      errors.push(`Area manifest id mismatch for "${area.id}".`);
+    }
+  });
+
+  if (!areaIds.has(content.game.defaultAreaId)) {
+    errors.push(`Default area "${content.game.defaultAreaId}" does not exist.`);
+  }
+
+  const currencyIndex = collectCurrencyIndex(content);
+  const currencyIds = new Set();
+  Object.keys(currencyIndex).forEach((currencyId) => {
+    if (currencyIds.has(currencyId)) {
+      errors.push(`Duplicate currency id "${currencyId}".`);
+    }
+    currencyIds.add(currencyId);
+  });
+
+  content.areas.forEach((area) => {
+    const localCurrencyIds = Object.keys(area.manifest.localCurrencies || {});
+    if (!localCurrencyIds.includes(area.manifest.populationCurrencyId)) {
+      errors.push(
+        `Area "${area.id}" populationCurrencyId "${area.manifest.populationCurrencyId}" is not local to the area.`
+      );
+    }
 
     for (const manualAction of area.manifest.manualActions || []) {
       if (manualActionIds.has(manualAction.id)) {
         errors.push(`Duplicate manual action id "${manualAction.id}".`);
       }
       manualActionIds.add(manualAction.id);
+      if (manualAction.areaId !== area.id) {
+        errors.push(`Manual action "${manualAction.id}" has mismatched areaId.`);
+      }
+      validateResourceMap(errors, currencyIndex, area.id, { [manualAction.currency]: 1 }, `manual action ${manualAction.id}`);
+      for (const scaling of manualAction.buildingScaling || []) {
+        if (!scaling.buildingId) {
+          errors.push(`Manual action "${manualAction.id}" contains an empty building scaling id.`);
+        }
+      }
     }
 
-    area.districts.forEach((district) => {
-      if (districtIds.has(district.id)) {
-        errors.push(`Duplicate district id "${district.id}".`);
+    for (const score of area.manifest.prestigeScoreConfig || []) {
+      validateResourceMap(errors, currencyIndex, area.id, { [score.currencyId]: 1 }, `prestige score ${area.id}`);
+      if (!Number.isFinite(Number(score.per)) || !Number.isFinite(Number(score.gain))) {
+        errors.push(`Area "${area.id}" has an invalid prestige score config entry for "${score.currencyId}".`);
       }
-      districtIds.add(district.id);
+    }
+
+    area.districts.forEach((building) => {
+      if (buildingIds.has(building.id)) {
+        errors.push(`Duplicate building id "${building.id}".`);
+      }
+      buildingIds.add(building.id);
+      validateResourceMap(errors, currencyIndex, area.id, building.unlock, `building ${building.id} unlock`);
+      validateResourceMap(errors, currencyIndex, area.id, building.baseCost, `building ${building.id} baseCost`);
+      validateResourceMap(
+        errors,
+        currencyIndex,
+        area.id,
+        building.outputPerSecond,
+        `building ${building.id} outputPerSecond`
+      );
+      validateResourceMap(
+        errors,
+        currencyIndex,
+        area.id,
+        building.maintenancePerSecond,
+        `building ${building.id} maintenancePerSecond`
+      );
+      validateCodex(errors, `building ${building.id}`, building.codex);
+
+      Object.keys(building.statsPerOwned || {}).forEach((statId) => {
+        const currency = currencyIndex[statId];
+        if (!currency) {
+          errors.push(`Building "${building.id}" references unknown stat "${statId}".`);
+        } else if (currency.scope !== "local" || currency.areaId !== area.id) {
+          errors.push(`Building "${building.id}" stat "${statId}" must be local to area "${area.id}".`);
+        }
+      });
     });
   });
 
+  const policiesById = new Map();
   content.policies.forEach((policy) => {
     if (policyIds.has(policy.id)) {
       errors.push(`Duplicate policy id "${policy.id}".`);
     }
     policyIds.add(policy.id);
-  });
+    policiesById.set(policy.id, policy);
 
-  if (!areaIds.has(content.game.activeAreaId)) {
-    errors.push(`Active area "${content.game.activeAreaId}" was not found under content/areas.`);
-  }
-
-  const validCurrencies = new Set([...resourceIds]);
-
-  for (const area of content.areas) {
-    for (const manualAction of area.manifest.manualActions || []) {
-      if (!resourceIds.has(manualAction.currency)) {
-        errors.push(`Manual action ${manualAction.id} references unknown resource "${manualAction.currency}".`);
-      }
-      if (manualAction.unlockUpgradeId && !policyIds.has(manualAction.unlockUpgradeId)) {
-        errors.push(
-          `Manual action ${manualAction.id} references unknown unlock policy "${manualAction.unlockUpgradeId}".`
-        );
-      }
-      for (const scaling of manualAction.buildingScaling || []) {
-        if (!districtIds.has(scaling.buildingId)) {
-          errors.push(
-            `Manual action ${manualAction.id} references unknown district "${scaling.buildingId}".`
-          );
-        }
-      }
+    if (!areaIds.has(policy.areaId)) {
+      errors.push(`Policy "${policy.id}" references unknown area "${policy.areaId}".`);
+    }
+    if (!policy.treeId) {
+      errors.push(`Policy "${policy.id}" is missing treeId.`);
+    }
+    if (!Number.isFinite(Number(policy.tier))) {
+      errors.push(`Policy "${policy.id}" is missing a numeric tier.`);
     }
 
-    for (const district of area.districts) {
-      validateResourceMap(errors, district.baseCost, validCurrencies, `district ${district.id} baseCost`);
-      validateResourceMap(errors, district.outputPerSecond, validCurrencies, `district ${district.id} outputPerSecond`);
-      validateResourceMap(
-        errors,
-        district.maintenancePerSecond,
-        validCurrencies,
-        `district ${district.id} maintenancePerSecond`
-      );
-      validateResourceMap(errors, district.unlock, validCurrencies, `district ${district.id} unlock`, {
-        allowResidents: true
-      });
+    validateCodex(errors, `policy ${policy.id}`, policy.codex);
+    validateResourceMap(errors, currencyIndex, policy.areaId, policy.unlock, `policy ${policy.id} unlock`);
+    validateResourceMap(errors, currencyIndex, policy.areaId, policy.cost, `policy ${policy.id} cost`);
 
-      for (const synergy of district.synergies || []) {
-        if (synergy.targetType === "output" || synergy.targetType === "maintenance") {
-          if (!validCurrencies.has(synergy.target)) {
-            errors.push(
-              `District ${district.id} synergy target "${synergy.target}" is not a known resource.`
-            );
-          }
-        }
-        if (synergy.targetType === "stat" && synergy.target !== "residents") {
-          errors.push(`District ${district.id} synergy stat target "${synergy.target}" is unsupported.`);
-        }
-
-        for (const buildingId of synergy.sourceBuildingIds || []) {
-          if (!districtIds.has(buildingId)) {
-            errors.push(`District ${district.id} synergy references unknown district "${buildingId}".`);
-          }
-        }
+    for (const prerequisiteId of policy.prerequisitePolicyIds || []) {
+      if (!policiesById.has(prerequisiteId) && !content.policies.some((item) => item.id === prerequisiteId)) {
+        errors.push(`Policy "${policy.id}" prerequisite "${prerequisiteId}" was not found.`);
       }
     }
-  }
-
-  for (const policy of content.policies) {
-    validateResourceMap(errors, policy.cost, validCurrencies, `policy ${policy.id} cost`);
-    validateResourceMap(errors, policy.unlock, validCurrencies, `policy ${policy.id} unlock`, {
-      allowResidents: true
-    });
+    for (const prerequisiteId of policy.prerequisiteAnyPolicyIds || []) {
+      if (!policiesById.has(prerequisiteId) && !content.policies.some((item) => item.id === prerequisiteId)) {
+        errors.push(`Policy "${policy.id}" prerequisiteAny "${prerequisiteId}" was not found.`);
+      }
+    }
 
     for (const effect of policy.effects || []) {
-      for (const buildingId of effect.buildingIds || []) {
-        if (!districtIds.has(buildingId)) {
-          errors.push(`Policy ${policy.id} effect references unknown district "${buildingId}".`);
-        }
+      if (effect.currency) {
+        validateResourceMap(errors, currencyIndex, policy.areaId, { [effect.currency]: 1 }, `policy ${policy.id} effect`);
       }
-
+      if (effect.sourceCurrency) {
+        validateResourceMap(
+          errors,
+          currencyIndex,
+          policy.areaId,
+          { [effect.sourceCurrency]: 1 },
+          `policy ${policy.id} effect`
+        );
+      }
+      if (effect.targetCurrency) {
+        validateResourceMap(
+          errors,
+          currencyIndex,
+          policy.areaId,
+          { [effect.targetCurrency]: 1 },
+          `policy ${policy.id} effect`
+        );
+      }
       for (const currencyId of effect.currencies || []) {
-        if (!validCurrencies.has(currencyId)) {
-          errors.push(`Policy ${policy.id} effect references unknown resource "${currencyId}".`);
+        validateResourceMap(errors, currencyIndex, policy.areaId, { [currencyId]: 1 }, `policy ${policy.id} effect`);
+      }
+      for (const buildingId of effect.buildingIds || []) {
+        if (!buildingIds.has(buildingId) && !content.areas.some((area) => area.districts.some((item) => item.id === buildingId))) {
+          errors.push(`Policy "${policy.id}" effect references unknown building "${buildingId}".`);
         }
       }
-
-      if (effect.currency && !validCurrencies.has(effect.currency)) {
-        errors.push(`Policy ${policy.id} effect references unknown resource "${effect.currency}".`);
-      }
-      if (effect.sourceCurrency && !validCurrencies.has(effect.sourceCurrency)) {
-        errors.push(`Policy ${policy.id} effect references unknown source resource "${effect.sourceCurrency}".`);
-      }
-      if (effect.targetCurrency && !validCurrencies.has(effect.targetCurrency)) {
-        errors.push(`Policy ${policy.id} effect references unknown target resource "${effect.targetCurrency}".`);
+      if (effect.type === "unlockArea" && !areaIds.has(effect.areaId)) {
+        errors.push(`Policy "${policy.id}" tries to unlock unknown area "${effect.areaId}".`);
       }
     }
+  });
+
+  content.areas.forEach((area) => {
+    if (area.manifest.areaUnlockPolicyId && !policyIds.has(area.manifest.areaUnlockPolicyId)) {
+      errors.push(`Area "${area.id}" references unknown unlock policy "${area.manifest.areaUnlockPolicyId}".`);
+    }
+
+    for (const manualAction of area.manifest.manualActions || []) {
+      if (manualAction.unlockPolicyId && !policyIds.has(manualAction.unlockPolicyId)) {
+        errors.push(`Manual action "${manualAction.id}" references unknown unlock policy "${manualAction.unlockPolicyId}".`);
+      }
+      if (
+        manualAction.unlockBuildingId &&
+        !content.areas.some((candidate) => candidate.districts.some((item) => item.id === manualAction.unlockBuildingId))
+      ) {
+        errors.push(`Manual action "${manualAction.id}" references unknown unlock building "${manualAction.unlockBuildingId}".`);
+      }
+      for (const scaling of manualAction.buildingScaling || []) {
+        if (!buildingIds.has(scaling.buildingId)) {
+          errors.push(`Manual action "${manualAction.id}" references unknown scaling building "${scaling.buildingId}".`);
+        }
+      }
+    }
+  });
+
+  if (content.systems.annexation?.unlockPolicyId && !policyIds.has(content.systems.annexation.unlockPolicyId)) {
+    errors.push(`Annexation system references unknown unlock policy "${content.systems.annexation.unlockPolicyId}".`);
   }
 
-  for (const system of Object.values(content.systems)) {
-    if (system.unlockUpgradeId && !policyIds.has(system.unlockUpgradeId)) {
-      errors.push(
-        `System ${system.id} references unknown unlock policy "${system.unlockUpgradeId}".`
-      );
+  errors.push(...validatePolicyGraphs(content.policies));
+  return errors;
+}
+
+function validatePolicyGraphs(policies) {
+  const errors = [];
+  const policyById = new Map(policies.map((policy) => [policy.id, policy]));
+  const adjacency = new Map();
+
+  policies.forEach((policy) => {
+    const dependencies = [
+      ...(policy.prerequisitePolicyIds || []),
+      ...(policy.prerequisiteAnyPolicyIds || [])
+    ];
+    adjacency.set(policy.id, dependencies.filter((id) => policyById.has(id)));
+  });
+
+  const visitState = new Map();
+  function dfs(policyId) {
+    const state = visitState.get(policyId) || "unseen";
+    if (state === "visiting") {
+      errors.push(`Policy prerequisites contain a cycle at "${policyId}".`);
+      return;
     }
+    if (state === "done") {
+      return;
+    }
+    visitState.set(policyId, "visiting");
+    for (const nextId of adjacency.get(policyId) || []) {
+      dfs(nextId);
+    }
+    visitState.set(policyId, "done");
   }
+
+  policies.forEach((policy) => dfs(policy.id));
+
+  const groups = new Map();
+  policies.forEach((policy) => {
+    if (!policy.exclusiveGroupId) {
+      return;
+    }
+    if (!groups.has(policy.exclusiveGroupId)) {
+      groups.set(policy.exclusiveGroupId, []);
+    }
+    groups.get(policy.exclusiveGroupId).push(policy);
+  });
+  groups.forEach((members, groupId) => {
+    if (members.length < 2) {
+      errors.push(`Exclusive group "${groupId}" must contain at least two policies.`);
+      return;
+    }
+    const first = members[0];
+    members.slice(1).forEach((policy) => {
+      if (policy.areaId !== first.areaId || policy.treeId !== first.treeId || Number(policy.tier) !== Number(first.tier)) {
+        errors.push(`Exclusive group "${groupId}" must stay within one area, tree, and tier.`);
+      }
+    });
+  });
 
   return errors;
 }
 
 export function buildRuntimeContent(content) {
-  const activeArea = content.areas.find((area) => area.id === content.game.activeAreaId);
-  const areas = content.areas.map((area) => area.manifest);
-  const buildings = activeArea.districts.map((district) => ({
-    ...district,
-    areaId: activeArea.id
+  const currencyIndex = collectCurrencyIndex(content);
+  const buildings = [];
+  const policies = content.policies.map((policy) => ({
+    ...policy,
+    effects: (policy.effects || []).map((effect) => ({
+      areaId: policy.areaId,
+      ...effect
+    }))
   }));
+  const policiesByArea = {};
+  const buildingsByArea = {};
+
+  content.areas.forEach((area) => {
+    const areaBuildings = area.districts.map((building) => ({
+      ...building,
+      areaId: area.id
+    }));
+    buildings.push(...areaBuildings);
+    buildingsByArea[area.id] = areaBuildings.map((building) => building.id);
+  });
+
+  content.areas.forEach((area) => {
+    policiesByArea[area.id] = policies.filter((policy) => policy.areaId === area.id).map((policy) => policy.id);
+  });
+
+  const areas = content.areas.map((area) => {
+    const areaPolicies = policies.filter((policy) => policy.areaId === area.id);
+    return {
+      ...area.manifest,
+      buildings: area.districts.map((building) => ({
+        ...building,
+        areaId: area.id
+      })),
+      policies: areaPolicies,
+      policyTrees: buildPolicyTreeIndex(areaPolicies)
+    };
+  });
 
   return {
     meta: {
       appId: content.game.appId,
-      id: activeArea.manifest.runtimeId || `${content.game.appId}-${activeArea.id}`,
+      id: content.game.appId,
       appVersion: content.game.appVersion,
       saveVersion: Number(content.game.saveVersion),
       balanceVersion: content.game.balanceVersion,
-      areaId: activeArea.id,
       eyebrow: content.game.eyebrow,
-      name: activeArea.manifest.name,
-      theme: activeArea.manifest.theme,
-      goalText: activeArea.manifest.goalText,
-      artReference: activeArea.manifest.artReference
+      name: content.game.name
     },
+    formulas: {
+      ...content.game.formulas
+    },
+    defaultAreaId: content.game.defaultAreaId,
+    sharedCurrencies: content.resources.sharedCurrencies,
     areas,
-    activeAreaId: activeArea.id,
+    buildings,
+    policies,
+    systems: content.systems,
     indexes: {
       areaIds: areas.map((area) => area.id),
-      buildingIds: buildings.map((building) => building.id),
-      upgradeIds: content.policies.map((policy) => policy.id),
-      manualActionIds: (activeArea.manifest.manualActions || []).map((action) => action.id),
-      resourceIds: Object.keys(content.resources),
-      buildingsByArea: {
-        [activeArea.id]: buildings.map((building) => building.id)
-      }
+      allCurrencyIds: Object.keys(currencyIndex),
+      currencyIndex,
+      buildingsByArea,
+      policiesByArea
     },
-    currencies: content.resources,
-    startingState: activeArea.manifest.startingState,
-    manualActions: activeArea.manifest.manualActions || [],
-    formulas: activeArea.manifest.formulas,
-    pacing: activeArea.manifest.pacing,
-    buildings,
-    globalUpgrades: content.policies,
-    systems: content.systems
+    startingSharedCurrencies: content.game.startingSharedCurrencies
   };
 }
 
 export async function writeRuntimeModule(runtimeContent) {
   const outputPath = path.join(projectRoot, "src", "content-runtime", "generated-content.js");
-  const moduleSource = `export const GAME_CONTENT = ${JSON.stringify(runtimeContent, null, 2)};\nexport default GAME_CONTENT;\n`;
-  await fs.writeFile(outputPath, moduleSource);
+  const fileBody = `const GAME_CONTENT = ${JSON.stringify(runtimeContent, null, 2)};\n\nexport default GAME_CONTENT;\n`;
+  await fs.writeFile(outputPath, fileBody, "utf8");
   return outputPath;
 }
 
-function validateResourceMap(errors, map, validCurrencies, label, options = {}) {
-  if (!map || typeof map !== "object") {
-    return;
-  }
-
-  Object.keys(map).forEach((currencyId) => {
-    if (options.allowResidents && currencyId === "residents") {
-      return;
-    }
-    if (!validCurrencies.has(currencyId)) {
-      errors.push(`${label} references unknown resource "${currencyId}".`);
-    }
-  });
+function titleCase(value) {
+  return value.replace(/\b\w/g, (letter) => letter.toUpperCase());
 }

@@ -9,10 +9,7 @@
   <body>
     <div class="shell">
       <header class="panel masthead">
-        <p class="eyebrow" id="eyebrow">HTML5 City Clicker</p>
         <h1 id="game-title">Patchwork Borough</h1>
-        <p class="goal-line" id="goal-line"></p>
-        <p class="version-line" id="version-line"></p>
 
         <div class="utility-row utility-row--top">
           <button class="utility-button" id="save-button" type="button">Save</button>
@@ -30,26 +27,68 @@
         </div>
       </header>
 
-      <section class="stats-grid" id="stats-grid" aria-label="City resources"></section>
+      <nav class="panel view-nav">
+        <div class="view-tabs" id="view-tabs"></div>
+      </nav>
 
-      <section class="panel command-center">
-        <div class="manual-actions" id="manual-actions" aria-label="Manual actions"></div>
+      <section class="panel command-center" id="area-panel">
+        <div class="section-heading section-heading--stacked">
+          <p class="section-kicker">Area</p>
+          <h2 id="area-title"></h2>
+          <p class="goal-line" id="area-goal"></p>
+        </div>
 
-        <div class="status-strip" id="status-line" hidden></div>
+        <div class="stats-grid stats-grid--local" id="local-stats"></div>
+        <div class="manual-actions" id="manual-actions"></div>
+        <p class="status-strip" id="status-line" hidden></p>
       </section>
 
-      <div class="content-grid" id="content-grid">
+      <section class="panel encyclopedia-panel" id="encyclopedia-panel" hidden>
+        <div class="section-heading section-heading--minimal">
+          <h2>Encyclopedia</h2>
+        </div>
+
+        <div class="filter-row">
+          <label class="filter-field">
+            <span>Mode</span>
+            <select id="codex-kind-filter">
+              <option value="buildings">Buildings</option>
+              <option value="policies">Policies</option>
+            </select>
+          </label>
+          <label class="filter-field">
+            <span>Area</span>
+            <select id="codex-area-filter"></select>
+          </label>
+          <label class="filter-field">
+            <span>Family / Tree</span>
+            <select id="codex-family-filter"></select>
+          </label>
+          <label class="filter-field">
+            <span>Category</span>
+            <select id="codex-category-filter"></select>
+          </label>
+          <label class="filter-field">
+            <span>Progress</span>
+            <select id="codex-progress-filter"></select>
+          </label>
+        </div>
+
+        <div class="codex-summary" id="codex-summary"></div>
+        <div class="codex-list" id="codex-list"></div>
+      </section>
+
+      <div class="content-grid" id="play-grid">
         <section class="panel market-panel">
           <div class="section-heading section-heading--minimal">
-            <h2>Districts</h2>
+            <h2>Buildings</h2>
           </div>
 
           <p class="section-hint" id="district-hint" hidden></p>
-
           <div class="card-list" id="buildings-list"></div>
         </section>
 
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar">
           <section class="panel market-panel" id="active-policies-panel" hidden>
             <div class="section-heading section-heading--minimal">
               <h2>Active Policies</h2>
@@ -60,10 +99,10 @@
 
           <section class="panel market-panel" id="policies-panel">
             <div class="section-heading section-heading--minimal">
-              <h2>Policies</h2>
+              <h2>Policy Trees</h2>
             </div>
 
-            <div class="card-list card-list--compact" id="upgrades-list"></div>
+            <div class="policy-tree-list" id="policy-trees"></div>
           </section>
 
           <section class="panel annex-panel" id="annex-panel" hidden>

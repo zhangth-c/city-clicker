@@ -2,18 +2,17 @@
   {
     "id": "suburban-duplex",
     "name": "Clockhouse Duplex",
-    "spriteRef": "houses-top-1",
     "artPath": "./public/art/house-kits/patchwork-borough/current/clockhouse-duplex.png",
     "category": "residential",
     "unlock": {},
     "baseCost": {
-      "coins": 15
+      "coins": 20
     },
     "outputPerSecond": {
-      "coins": 0.14
+      "coins": 0.16
     },
     "maintenancePerSecond": {
-      "coins": 0.02
+      "coins": 0.03
     },
     "statsPerOwned": {
       "residents": 2
@@ -31,27 +30,36 @@
         "cap": 0.25
       }
     ],
-    "description": "The clockhouse duplex is the borough's first dependable address: modest tax revenue, a few new residents, and just enough daily upkeep to make food matter immediately."
+    "description": "A dependable starter address that grows the borough's first block and gives taxes somewhere to come from.",
+    "codex": {
+      "family": "clockhouse",
+      "tier": 1,
+      "summary": "Starter housing that establishes the first resident base.",
+      "lore": "The clockhouse duplex is where the borough starts counting itself. Two families, one meter, and a street that finally keeps time.",
+      "masteryTarget": 12,
+      "sortKey": 10
+    }
   },
   {
     "id": "red-cottage",
     "name": "Red Cottage",
-    "spriteRef": "houses-top-4",
     "artPath": "./public/art/house-kits/patchwork-borough/current/red-cottage.png",
     "category": "residential",
-    "unlock": {},
+    "unlock": {
+      "residents": 6
+    },
     "baseCost": {
-      "coins": 50
+      "coins": 60
     },
     "outputPerSecond": {
-      "coins": 0.38,
-      "goods": 0.1
+      "coins": 0.24,
+      "goods": 0.08
     },
     "maintenancePerSecond": {
-      "coins": 0.06
+      "coins": 0.04
     },
     "statsPerOwned": {
-      "residents": 3
+      "residents": 2
     },
     "synergies": [
       {
@@ -66,21 +74,30 @@
         "cap": 0.4
       }
     ],
-    "description": "The red cottage is where domestic life becomes commerce. It still raises population, but porch stalls and side trades make it your first reliable source of goods."
+    "description": "Small homes start selling from the porch, turning population into the borough's first real goods stream.",
+    "codex": {
+      "family": "cottage",
+      "tier": 1,
+      "summary": "Early mixed housing that adds both residents and small trade.",
+      "lore": "Every red cottage adds a little commerce to the street. Curtains stay shut, but the porch is always open for business.",
+      "masteryTarget": 12,
+      "sortKey": 20
+    }
   },
   {
     "id": "timber-cabin",
     "name": "Hearth Grotto",
-    "spriteRef": "houses-top-2",
     "artPath": "./public/art/house-kits/patchwork-borough/current/hearth-grotto.png",
     "category": "rural",
-    "unlock": {},
+    "unlock": {
+      "residents": 10
+    },
     "baseCost": {
-      "coins": 120
+      "coins": 110
     },
     "outputPerSecond": {
       "timber": 0.2,
-      "stone": 0.14
+      "stone": 0.08
     },
     "maintenancePerSecond": {
       "coins": 0.03
@@ -95,28 +112,35 @@
           "farmstead"
         ],
         "perOwned": 1,
-        "bonus": 0.12,
-        "cap": 0.6
+        "bonus": 0.1,
+        "cap": 0.5
       }
     ],
-    "description": "The hearth grotto is not comfortable, but it is productive. It anchors the borough's first real supply chain by cutting timber and hauling stone out of the hillside."
+    "description": "A rough hillside supply camp that cuts timber and drags stone into the borough.",
+    "codex": {
+      "family": "grotto",
+      "tier": 1,
+      "summary": "Starter supply district for timber and stone.",
+      "lore": "The hearth grotto is cold, smoky, and essential. It is where the first serious building material leaves the hillside.",
+      "masteryTarget": 12,
+      "sortKey": 30
+    }
   },
   {
     "id": "farmstead",
     "name": "Windmill Homestead",
-    "spriteRef": "houses-bottom-2",
     "artPath": "./public/art/house-kits/patchwork-borough/current/windmill-homestead.png",
     "category": "rural",
     "unlock": {
-      "residents": 18
+      "residents": 18,
+      "timber": 8
     },
     "baseCost": {
-      "coins": 260,
+      "coins": 240,
       "timber": 8
     },
     "outputPerSecond": {
-      "food": 0.68,
-      "timber": 0.06
+      "food": 0.62
     },
     "maintenancePerSecond": {
       "coins": 0.05
@@ -137,36 +161,140 @@
         "cap": 0.4
       }
     ],
-    "description": "The windmill homestead keeps the borough from starving itself. It does not mint coins directly, but almost every later district depends on the food it grinds out."
+    "description": "The first food backbone. Once this comes online, later housing and civic districts stop starving the borough.",
+    "codex": {
+      "family": "homestead",
+      "tier": 1,
+      "summary": "Foundational food district that stabilizes the borough's upkeep.",
+      "lore": "The windmill homestead turns a patch of land into a promise that the next district will be fed.",
+      "masteryTarget": 12,
+      "sortKey": 40
+    }
+  },
+  {
+    "id": "lane-bungalow",
+    "name": "Lane Bungalow",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/lane-bungalow.png",
+    "spriteSheetPath": "./public/art/houses4.png",
+    "spriteRef": "houses-top-1",
+    "category": "residential",
+    "unlock": {
+      "residents": 28,
+      "food": 8,
+      "timber": 12
+    },
+    "baseCost": {
+      "coins": 380,
+      "food": 10,
+      "timber": 20
+    },
+    "outputPerSecond": {
+      "coins": 0.44,
+      "goods": 0.05
+    },
+    "maintenancePerSecond": {
+      "food": 0.08
+    },
+    "statsPerOwned": {
+      "residents": 2
+    },
+    "synergies": [
+      {
+        "label": "Block traffic",
+        "targetType": "output",
+        "target": "coins",
+        "sourceBuildingIds": [
+          "red-cottage"
+        ],
+        "perOwned": 2,
+        "bonus": 0.06,
+        "cap": 0.3
+      }
+    ],
+    "description": "Dense starter housing that trades a food burden for better tax traffic and a touch of commerce.",
+    "codex": {
+      "family": "bungalow",
+      "tier": 2,
+      "summary": "Mid-opening housing that pushes population and taxes while introducing food pressure.",
+      "lore": "A lane full of bungalows feels like growth from a distance and crowding up close. The tax office loves it either way.",
+      "masteryTarget": 10,
+      "sortKey": 50
+    }
+  },
+  {
+    "id": "quarry-yard",
+    "name": "Quarry Yard",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/quarry-yard.png",
+    "spriteSheetPath": "./public/art/houses4.png",
+    "spriteRef": "houses-top-2",
+    "category": "rural",
+    "unlock": {
+      "residents": 40,
+      "timber": 24,
+      "food": 12
+    },
+    "baseCost": {
+      "coins": 620,
+      "timber": 30,
+      "food": 12
+    },
+    "outputPerSecond": {
+      "stone": 0.66
+    },
+    "maintenancePerSecond": {
+      "food": 0.08
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Hillside haul",
+        "targetType": "output",
+        "target": "stone",
+        "sourceBuildingIds": [
+          "timber-cabin"
+        ],
+        "perOwned": 1,
+        "bonus": 0.09,
+        "cap": 0.45
+      }
+    ],
+    "description": "A dedicated stone yard that turns the early timber camp into a real construction chain.",
+    "codex": {
+      "family": "quarry",
+      "tier": 2,
+      "summary": "Dedicated stone producer for the borough's midgame bottleneck.",
+      "lore": "The quarry yard is the moment the borough stops improvising with fieldstone and starts thinking in walls, terraces, and civic facades.",
+      "masteryTarget": 10,
+      "sortKey": 60
+    }
   },
   {
     "id": "cube-villa",
     "name": "Observatory Villa",
-    "spriteRef": "houses-top-3",
     "artPath": "./public/art/house-kits/patchwork-borough/current/observatory-villa.png",
-    "category": "modern",
+    "category": "civic",
     "unlock": {
-      "residents": 42,
-      "timber": 28,
-      "stone": 22,
-      "goods": 6
-    },
-    "baseCost": {
-      "coins": 750,
+      "residents": 52,
       "timber": 30,
       "stone": 24,
       "goods": 8
     },
+    "baseCost": {
+      "coins": 820,
+      "timber": 40,
+      "stone": 34,
+      "goods": 14
+    },
     "outputPerSecond": {
-      "coins": 1.05,
-      "knowledge": 0.16
+      "coins": 0.95,
+      "knowledge": 0.22
     },
     "maintenancePerSecond": {
-      "food": 0.05,
-      "goods": 0.04
+      "food": 0.08,
+      "goods": 0.08
     },
     "statsPerOwned": {
-      "residents": 2
+      "residents": 1
     },
     "synergies": [
       {
@@ -174,45 +302,103 @@
         "targetType": "output",
         "target": "knowledge",
         "sourceBuildingIds": [
-          "timber-cabin"
+          "quarry-yard"
         ],
         "perOwned": 1,
         "bonus": 0.08,
         "cap": 0.4
       }
     ],
-    "description": "The observatory villa is the borough's first knowledge district. It still pays taxes, but its real value is converting ordinary housing and local goods into technical capability."
+    "description": "The borough's first knowledge district, turning materials and stocked wares into planning capacity.",
+    "codex": {
+      "family": "observatory",
+      "tier": 2,
+      "summary": "Early civic knowledge district with a modest tax return.",
+      "lore": "From the observatory villa, the borough starts measuring itself instead of merely surviving itself.",
+      "masteryTarget": 10,
+      "sortKey": 70
+    }
+  },
+  {
+    "id": "freight-depot",
+    "name": "Freight Depot",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/freight-depot.png",
+    "spriteSheetPath": "./public/art/houses4.png",
+    "spriteRef": "houses-top-3",
+    "category": "industrial",
+    "unlock": {
+      "residents": 66,
+      "stone": 34,
+      "goods": 12
+    },
+    "baseCost": {
+      "coins": 1050,
+      "timber": 24,
+      "stone": 52,
+      "goods": 24
+    },
+    "outputPerSecond": {
+      "goods": 0.56,
+      "coins": 0.88
+    },
+    "maintenancePerSecond": {
+      "food": 0.08
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Porch contracts",
+        "targetType": "output",
+        "target": "goods",
+        "sourceBuildingIds": [
+          "red-cottage",
+          "lane-bungalow"
+        ],
+        "perOwned": 2,
+        "bonus": 0.07,
+        "cap": 0.35
+      }
+    ],
+    "description": "A logistics district that turns local craft into organized trade and lays the groundwork for later industry.",
+    "codex": {
+      "family": "freight",
+      "tier": 2,
+      "summary": "Mid-opening logistics district that raises goods and tax flow together.",
+      "lore": "Once the freight depot opens, the borough stops carrying its economy by hand.",
+      "masteryTarget": 10,
+      "sortKey": 80
+    }
   },
   {
     "id": "grand-manor",
     "name": "Pagoda Estate",
-    "spriteRef": "houses-top-5",
     "artPath": "./public/art/house-kits/patchwork-borough/current/pagoda-estate.png",
     "category": "prestige",
     "unlock": {
-      "residents": 70,
-      "goods": 12,
-      "timber": 40
+      "residents": 82,
+      "goods": 16,
+      "knowledge": 4
     },
     "baseCost": {
-      "coins": 1200,
-      "timber": 56,
-      "goods": 20
+      "coins": 1450,
+      "timber": 68,
+      "goods": 30,
+      "knowledge": 8
     },
     "outputPerSecond": {
-      "appeal": 0.22,
-      "influence": 0.09
+      "appeal": 0.3,
+      "influence": 0.1
     },
     "maintenancePerSecond": {
-      "food": 0.1,
-      "coins": 0.08
+      "food": 0.18,
+      "goods": 0.08
     },
     "statsPerOwned": {
       "residents": 1
     },
     "synergies": [
       {
-        "label": "Ceremonial circuit",
+        "label": "Ceremonial route",
         "targetType": "output",
         "target": "appeal",
         "sourceBuildingIds": [
@@ -223,33 +409,192 @@
         "cap": 0.5
       }
     ],
-    "description": "The pagoda estate does not solve shortages; it solves reputation. It is where the borough starts producing civic gravity instead of just rent."
+    "description": "A prestige estate that starts turning growth into civic gravity instead of basic throughput.",
+    "codex": {
+      "family": "estate",
+      "tier": 3,
+      "summary": "First prestige district and an early source of appeal and influence.",
+      "lore": "The pagoda estate does not house many people, but it makes the borough feel important enough that people start taking it seriously.",
+      "masteryTarget": 8,
+      "sortKey": 90
+    }
+  },
+  {
+    "id": "greenhouse-terrace",
+    "name": "Greenhouse Terrace",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/greenhouse-terrace.png",
+    "spriteSheetPath": "./public/art/houses4.png",
+    "spriteRef": "houses-top-4",
+    "category": "rural",
+    "unlock": {
+      "residents": 94,
+      "stone": 54,
+      "knowledge": 6
+    },
+    "baseCost": {
+      "coins": 1850,
+      "timber": 34,
+      "stone": 78,
+      "knowledge": 12
+    },
+    "outputPerSecond": {
+      "food": 1.36,
+      "goods": 0.1
+    },
+    "maintenancePerSecond": {
+      "goods": 0.12
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Measured yields",
+        "targetType": "output",
+        "target": "food",
+        "sourceBuildingIds": [
+          "cube-villa"
+        ],
+        "perOwned": 1,
+        "bonus": 0.08,
+        "cap": 0.4
+      }
+    ],
+    "description": "A scientific rural build that solves midgame food pressure without giving up the supply economy.",
+    "codex": {
+      "family": "greenhouse",
+      "tier": 3,
+      "summary": "Midgame food stabilizer that depends on stone and knowledge.",
+      "lore": "The greenhouse terrace proves that a borough can apply planning to hunger and actually win.",
+      "masteryTarget": 8,
+      "sortKey": 100
+    }
+  },
+  {
+    "id": "brick-factory",
+    "name": "Brick Factory",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/brick-factory.png",
+    "category": "industrial",
+    "unlock": {
+      "residents": 110,
+      "stone": 80,
+      "timber": 42,
+      "goods": 18
+    },
+    "baseCost": {
+      "coins": 2300,
+      "stone": 160,
+      "timber": 72,
+      "goods": 38
+    },
+    "outputPerSecond": {
+      "goods": 1.2,
+      "stone": 0.72,
+      "power": 0.24
+    },
+    "maintenancePerSecond": {
+      "food": 0.14,
+      "goods": 0.12
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Quarry freight",
+        "targetType": "output",
+        "target": "power",
+        "sourceBuildingIds": [
+          "quarry-yard",
+          "freight-depot"
+        ],
+        "perOwned": 2,
+        "bonus": 0.08,
+        "cap": 0.4
+      }
+    ],
+    "description": "The industrial hinge of the borough. Goods and stone climb, and the power economy finally begins.",
+    "codex": {
+      "family": "factory",
+      "tier": 3,
+      "summary": "Industrial hinge that opens power and pushes the midgame forward.",
+      "lore": "The brick factory makes the borough loud, dirty, and suddenly much more capable.",
+      "masteryTarget": 8,
+      "sortKey": 110
+    }
+  },
+  {
+    "id": "borough-exchange",
+    "name": "Borough Exchange",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/borough-exchange.png",
+    "spriteSheetPath": "./public/art/houses4.png",
+    "spriteRef": "houses-top-5",
+    "category": "civic",
+    "unlock": {
+      "residents": 128,
+      "goods": 40,
+      "knowledge": 10
+    },
+    "baseCost": {
+      "coins": 2900,
+      "stone": 180,
+      "goods": 220,
+      "knowledge": 52
+    },
+    "outputPerSecond": {
+      "coins": 4.8,
+      "influence": 0.2
+    },
+    "maintenancePerSecond": {
+      "power": 0.32,
+      "food": 0.18,
+      "goods": 0.9
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Broker network",
+        "targetType": "output",
+        "target": "coins",
+        "sourceBuildingIds": [
+          "freight-depot"
+        ],
+        "perOwned": 1,
+        "bonus": 0.08,
+        "cap": 0.48
+      }
+    ],
+    "description": "A civic-commercial hub that converts organized trade into shared money and political leverage.",
+    "codex": {
+      "family": "exchange",
+      "tier": 3,
+      "summary": "Civic finance district that turns local trade into coins and influence.",
+      "lore": "The borough exchange is where trade stops being a local habit and becomes a political fact.",
+      "masteryTarget": 8,
+      "sortKey": 120
+    }
   },
   {
     "id": "hillside-lodge",
     "name": "Lighthouse Lodge",
-    "spriteRef": "houses-top-6",
     "artPath": "./public/art/house-kits/patchwork-borough/current/lighthouse-lodge.png",
-    "category": "tourism",
+    "category": "prestige",
     "unlock": {
-      "residents": 105,
-      "appeal": 4,
-      "goods": 22,
-      "stone": 34
+      "residents": 146,
+      "appeal": 6,
+      "goods": 50,
+      "stone": 56
     },
     "baseCost": {
-      "coins": 2200,
-      "stone": 75,
-      "goods": 30
+      "coins": 3400,
+      "stone": 220,
+      "goods": 240,
+      "appeal": 42
     },
     "outputPerSecond": {
-      "coins": 2,
-      "appeal": 0.16,
-      "influence": 0.08
+      "coins": 4,
+      "appeal": 0.3,
+      "influence": 0.1
     },
     "maintenancePerSecond": {
-      "food": 0.1,
-      "goods": 0.06
+      "food": 0.28,
+      "goods": 0.7
     },
     "statsPerOwned": {},
     "synergies": [
@@ -265,172 +610,252 @@
         "cap": 0.4
       }
     ],
-    "description": "The lighthouse lodge monetizes scenery. It is one of the first districts where coins, appeal, and influence all move together, but it needs a steady stream of stocked goods to serve visitors properly."
+    "description": "A scenic prestige district that monetizes the borough's status without doing much to solve its shortages.",
+    "codex": {
+      "family": "lodge",
+      "tier": 3,
+      "summary": "Prestige lodging that ties appeal, influence, and shared coin together.",
+      "lore": "The lodge teaches the borough a useful lesson: scenery can be converted into money if someone is willing to charge for the view.",
+      "masteryTarget": 8,
+      "sortKey": 130
+    }
   },
   {
-    "id": "brick-factory",
-    "name": "Brick Factory",
-    "spriteRef": "houses-bottom-4",
-    "artPath": "./public/art/house-kits/patchwork-borough/current/brick-factory.png",
-    "category": "industrial",
+    "id": "public-archive",
+    "name": "Public Archive",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/public-archive.png",
+    "spriteSheetPath": "./public/art/houses4.png",
+    "spriteRef": "houses-top-6",
+    "category": "civic",
     "unlock": {
-      "residents": 145,
-      "stone": 70,
-      "timber": 50,
-      "goods": 20
+      "residents": 164,
+      "knowledge": 20,
+      "stone": 88
     },
     "baseCost": {
-      "coins": 3200,
-      "stone": 120,
-      "timber": 70,
-      "goods": 30
+      "coins": 4800,
+      "stone": 920,
+      "goods": 620,
+      "knowledge": 360
     },
     "outputPerSecond": {
-      "goods": 0.8,
-      "stone": 0.62,
-      "power": 0.34
+      "knowledge": 0.9,
+      "influence": 0.12
     },
     "maintenancePerSecond": {
-      "coins": 0.28,
-      "food": 0.04
+      "power": 0.45,
+      "goods": 0.6
     },
     "statsPerOwned": {},
     "synergies": [
       {
-        "label": "Quarry freight",
-        "targetType": "output",
-        "target": "stone",
-        "sourceBuildingIds": [
-          "timber-cabin"
-        ],
-        "perOwned": 1,
-        "bonus": 0.08,
-        "cap": 0.48
-      }
-    ],
-    "description": "The brick factory is the borough's industrial hinge. It produces no population and little glamour, but it unlocks power and durable midgame throughput."
-  },
-  {
-    "id": "dome-habitat",
-    "name": "Ice Dome Habitat",
-    "spriteRef": "houses-bottom-1",
-    "artPath": "./public/art/house-kits/patchwork-borough/current/ice-dome-habitat.png",
-    "category": "future",
-    "unlock": {
-      "residents": 210,
-      "power": 12,
-      "knowledge": 10,
-      "appeal": 6,
-      "goods": 16
-    },
-    "baseCost": {
-      "coins": 5000,
-      "stone": 220,
-      "power": 36,
-      "knowledge": 26,
-      "goods": 24
-    },
-    "outputPerSecond": {
-      "power": 0.72,
-      "knowledge": 0.3
-    },
-    "maintenancePerSecond": {
-      "food": 0.12,
-      "coins": 0.35
-    },
-    "statsPerOwned": {
-      "residents": 6
-    },
-    "synergies": [
-      {
-        "label": "Research grid",
+        "label": "Survey office",
         "targetType": "output",
         "target": "knowledge",
         "sourceBuildingIds": [
-          "cube-villa",
-          "glass-condo"
+          "cube-villa"
         ],
-        "perOwned": 2,
+        "perOwned": 1,
         "bonus": 0.08,
         "cap": 0.4
       }
     ],
-    "description": "The ice dome habitat is engineered living. It adds residents, but more importantly it pushes the borough into a power-and-knowledge economy."
+    "description": "A formal archive that turns knowledge into a durable civic resource rather than a byproduct of villas.",
+    "codex": {
+      "family": "archive",
+      "tier": 4,
+      "summary": "Institutional knowledge building that supports late civic growth.",
+      "lore": "The public archive is what happens when a borough decides its records are worth protecting and its plans are worth keeping.",
+      "masteryTarget": 6,
+      "sortKey": 140
+    }
   },
   {
-    "id": "stone-keep",
-    "name": "Gothic Keep",
-    "spriteRef": "houses-bottom-3",
-    "artPath": "./public/art/house-kits/patchwork-borough/current/gothic-keep.png",
-    "category": "heritage",
+    "id": "dome-habitat",
+    "name": "Ice Dome Habitat",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/ice-dome-habitat.png",
+    "category": "civic",
     "unlock": {
-      "residents": 320,
-      "stone": 220,
-      "influence": 16,
-      "appeal": 16
+      "residents": 190,
+      "power": 18,
+      "knowledge": 30,
+      "goods": 70
     },
     "baseCost": {
-      "coins": 7000,
-      "stone": 360,
-      "influence": 28,
-      "appeal": 30
+      "coins": 6200,
+      "stone": 1180,
+      "goods": 760,
+      "power": 520,
+      "knowledge": 460
     },
     "outputPerSecond": {
-      "appeal": 0.38,
-      "influence": 0.22
+      "coins": 5.8,
+      "knowledge": 0.8,
+      "appeal": 0.15
     },
     "maintenancePerSecond": {
-      "coins": 0.35
+      "food": 0.35,
+      "power": 0.82,
+      "goods": 0.3
     },
     "statsPerOwned": {},
     "synergies": [
       {
-        "label": "Ancestral prestige",
+        "label": "Engineered climate",
+        "targetType": "output",
+        "target": "knowledge",
+        "sourceBuildingIds": [
+          "summit-powerhouse"
+        ],
+        "perOwned": 1,
+        "bonus": 0.08,
+        "cap": 0.32
+      }
+    ],
+    "description": "An engineered civic district that transforms industrial power into late borough planning capacity.",
+    "codex": {
+      "family": "dome",
+      "tier": 4,
+      "summary": "Late civic district built on power, knowledge, and goods.",
+      "lore": "The ice dome habitat is the borough announcing that it can now build for ideas, not just needs.",
+      "masteryTarget": 6,
+      "sortKey": 150
+    }
+  },
+  {
+    "id": "summit-powerhouse",
+    "name": "Summit Powerhouse",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/summit-powerhouse.png",
+    "spriteSheetPath": "./public/art/houses4.png",
+    "spriteRef": "houses-bottom-1",
+    "category": "industrial",
+    "unlock": {
+      "residents": 212,
+      "stone": 170,
+      "goods": 84,
+      "knowledge": 26
+    },
+    "baseCost": {
+      "coins": 6800,
+      "stone": 1500,
+      "goods": 920,
+      "knowledge": 420
+    },
+    "outputPerSecond": {
+      "power": 1.55,
+      "goods": 0.24
+    },
+    "maintenancePerSecond": {
+      "food": 0.18,
+      "goods": 0.32
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Industrial load",
+        "targetType": "output",
+        "target": "power",
+        "sourceBuildingIds": [
+          "brick-factory"
+        ],
+        "perOwned": 1,
+        "bonus": 0.1,
+        "cap": 0.4
+      }
+    ],
+    "description": "The late industrial backbone. Once this exists, advanced districts stop competing over scraps of utility capacity.",
+    "codex": {
+      "family": "powerhouse",
+      "tier": 4,
+      "summary": "Late industrial utility district and the borough's main power source.",
+      "lore": "The summit powerhouse is visible from almost everywhere, which is fitting because almost everything starts depending on it.",
+      "masteryTarget": 6,
+      "sortKey": 160
+    }
+  },
+  {
+    "id": "stone-keep",
+    "name": "Gothic Keep",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/gothic-keep.png",
+    "category": "prestige",
+    "unlock": {
+      "residents": 238,
+      "appeal": 18,
+      "influence": 14,
+      "stone": 220
+    },
+    "baseCost": {
+      "coins": 7600,
+      "stone": 980,
+      "goods": 460,
+      "appeal": 360,
+      "influence": 420
+    },
+    "outputPerSecond": {
+      "appeal": 0.48,
+      "influence": 0.58
+    },
+    "maintenancePerSecond": {
+      "food": 0.32,
+      "goods": 0.26
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Old authority",
         "targetType": "output",
         "target": "influence",
         "sourceBuildingIds": [
           "grand-manor"
         ],
         "perOwned": 1,
-        "bonus": 0.1,
-        "cap": 0.5
+        "bonus": 0.08,
+        "cap": 0.32
       }
     ],
-    "description": "The gothic keep is a prestige anchor. It does not carry the population count; it carries the borough's authority."
+    "description": "A severe prestige district that pushes influence harder than almost anything else in the borough.",
+    "codex": {
+      "family": "keep",
+      "tier": 4,
+      "summary": "Late prestige district centered on influence and civic weight.",
+      "lore": "The gothic keep does not need to be useful in a practical sense. Its job is to remind everyone who gets heard.",
+      "masteryTarget": 6,
+      "sortKey": 170
+    }
   },
   {
     "id": "palm-bungalow",
     "name": "Treehouse Retreat",
-    "spriteRef": "houses-bottom-5",
     "artPath": "./public/art/house-kits/patchwork-borough/current/treehouse-retreat.png",
-    "category": "tourism",
+    "category": "prestige",
     "unlock": {
-      "residents": 450,
-      "food": 36,
-      "appeal": 24,
-      "timber": 160,
-      "goods": 24
+      "residents": 266,
+      "appeal": 12,
+      "goods": 96,
+      "food": 120
     },
     "baseCost": {
-      "coins": 9000,
-      "timber": 240,
-      "food": 50,
-      "appeal": 36,
-      "goods": 30
+      "coins": 8200,
+      "timber": 420,
+      "goods": 560,
+      "food": 1200,
+      "appeal": 320
     },
     "outputPerSecond": {
-      "appeal": 0.31,
-      "food": 0.3,
-      "coins": 1.1,
-      "influence": 0.06
+      "coins": 5.4,
+      "appeal": 0.36,
+      "influence": 0.14
     },
     "maintenancePerSecond": {
-      "goods": 0.06
+      "food": 0.55,
+      "goods": 0.42
     },
-    "statsPerOwned": {},
+    "statsPerOwned": {
+      "residents": 2
+    },
     "synergies": [
       {
-        "label": "Holiday circuit",
+        "label": "Scenic circuit",
         "targetType": "output",
         "target": "appeal",
         "sourceBuildingIds": [
@@ -438,58 +863,126 @@
         ],
         "perOwned": 1,
         "bonus": 0.08,
-        "cap": 0.4
+        "cap": 0.32
       }
     ],
-    "description": "The treehouse retreat turns comfort into destination spending. It feeds itself better than most tourism districts, but still leans on the rest of the borough for goods."
+    "description": "A high-end retreat that rewards a mature food economy and turns leisure into prestige.",
+    "codex": {
+      "family": "treehouse",
+      "tier": 4,
+      "summary": "Late prestige lodging that spends food to generate scenic value.",
+      "lore": "The treehouse retreat is proof that by the late game the borough can afford to make beauty impractical on purpose.",
+      "masteryTarget": 6,
+      "sortKey": 180
+    }
   },
   {
     "id": "glass-condo",
     "name": "Glass Highrise",
-    "spriteRef": "houses-bottom-6",
     "artPath": "./public/art/house-kits/patchwork-borough/current/glass-highrise.png",
-    "category": "modern",
+    "category": "residential",
     "unlock": {
-      "residents": 620,
-      "power": 42,
-      "knowledge": 28,
-      "influence": 30,
-      "goods": 28
+      "residents": 294,
+      "power": 30,
+      "knowledge": 44,
+      "influence": 20
     },
     "baseCost": {
-      "coins": 14000,
-      "stone": 650,
-      "power": 120,
-      "knowledge": 80,
-      "influence": 110,
-      "goods": 40
+      "coins": 9600,
+      "stone": 1900,
+      "goods": 620,
+      "power": 760,
+      "knowledge": 700
     },
     "outputPerSecond": {
-      "coins": 4.6,
-      "knowledge": 0.24,
-      "influence": 0.16
+      "coins": 12.5,
+      "influence": 0.34
     },
     "maintenancePerSecond": {
-      "food": 0.16,
-      "power": 0.22,
-      "goods": 0.08
+      "food": 0.4,
+      "power": 0.95,
+      "goods": 0.28
     },
     "statsPerOwned": {
-      "residents": 10
+      "residents": 6
     },
     "synergies": [
       {
-        "label": "Vertical core",
+        "label": "Financial skyline",
         "targetType": "output",
         "target": "coins",
         "sourceBuildingIds": [
-          "cube-villa"
+          "borough-exchange"
         ],
         "perOwned": 1,
-        "bonus": 0.05,
-        "cap": 0.35
+        "bonus": 0.08,
+        "cap": 0.32
       }
     ],
-    "description": "The glass highrise is the final proof that the borough has become a city. It brings back tax revenue, but only because the rest of the economy can keep it powered and fed."
+    "description": "A late residential tax engine that turns power and knowledge into dense high-value housing.",
+    "codex": {
+      "family": "highrise",
+      "tier": 5,
+      "summary": "Late residential tower that pushes both population and shared money.",
+      "lore": "The glass highrise reflects the rest of the borough back at itself: wealthier, denser, and far more fragile if the lights go out.",
+      "masteryTarget": 4,
+      "sortKey": 190
+    }
+  },
+  {
+    "id": "skyline-galleria",
+    "name": "Skyline Galleria",
+    "artPath": "./public/art/house-kits/patchwork-borough/current/skyline-galleria.png",
+    "spriteSheetPath": "./public/art/houses4.png",
+    "spriteRef": "houses-bottom-2",
+    "category": "prestige",
+    "unlock": {
+      "residents": 328,
+      "appeal": 30,
+      "influence": 32,
+      "power": 34
+    },
+    "baseCost": {
+      "coins": 11200,
+      "stone": 1500,
+      "goods": 1500,
+      "power": 860,
+      "appeal": 960,
+      "influence": 1100
+    },
+    "outputPerSecond": {
+      "coins": 15.2,
+      "appeal": 0.66,
+      "influence": 0.36
+    },
+    "maintenancePerSecond": {
+      "food": 0.65,
+      "goods": 1.05,
+      "power": 0.62
+    },
+    "statsPerOwned": {},
+    "synergies": [
+      {
+        "label": "Skyline draw",
+        "targetType": "output",
+        "target": "appeal",
+        "sourceBuildingIds": [
+          "glass-condo",
+          "stone-keep"
+        ],
+        "perOwned": 2,
+        "bonus": 0.08,
+        "cap": 0.32
+      }
+    ],
+    "description": "A capstone prestige district that consumes the borough's late civic currencies and pays back in status and shared revenue.",
+    "codex": {
+      "family": "galleria",
+      "tier": 5,
+      "summary": "Late prestige capstone that spends power, appeal, and influence together.",
+      "lore": "The skyline galleria is the borough at its most self-aware: expensive, visible, and built mainly to prove it can exist.",
+      "masteryTarget": 4,
+      "sortKey": 200
+    }
   }
 ]

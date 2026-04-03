@@ -1,6 +1,12 @@
 # Patchwork Borough
 
-Patchwork Borough is now structured as a small content-driven game engine instead of a single script plus a single economy file. The current playable borough lives as the first `area pack`, and future areas can be added under `content/areas/` without reopening the whole runtime.
+Patchwork Borough v2 is a content-driven multi-area clicker game engine. The runtime now supports:
+
+- `2` shared currencies: `coins` and `districts`
+- area-local economies for each unlocked area
+- parallel passive production across multiple areas
+- policy trees with permanent branch choices per run
+- an encyclopedia / codex that tracks buildings and policies across areas
 
 ## Layout
 
@@ -9,21 +15,10 @@ city-clicker/
   public/
     art/
       houses.jpg
+      houses2.png
+      houses4.png
       house-kits/
-        patchwork-borough/
-          current/
-          future/
-          library/
-          kit.json
       icon-kits/
-        patchwork-borough/
-          policies/
-          prestige/
-          resources/
-          library/
-          kit.json
-      generated/
-        manifest.json
   content/
     base/
       game.json
@@ -34,17 +29,21 @@ city-clicker/
       patchwork-borough/
         manifest.json
         districts.json
+      port-city/
+        manifest.json
+        districts.json
   scripts/
     content-lib.mjs
-    generate-pixel-art.mjs
     validate-content.mjs
     build-content.mjs
+    balance-smoke.mjs
   src/
     content-runtime/
       generated-content.js
     core/
       config.js
       format.js
+      save-migrations.js
       state.js
     systems/
       economy.js
@@ -60,110 +59,155 @@ city-clicker/
 
 ## Content Model
 
-- `content/base/game.json`
-  Selects the active area and stores app-level metadata, including `appVersion`, `saveVersion`, and `balanceVersion`.
-- `content/base/resources.json`
-  Global resource definitions.
-- `content/base/policies.json`
-  Shared policy catalog.
-- `content/base/systems.json`
-  Cross-area systems such as annexation.
-- `content/areas/<area-id>/manifest.json`
-  Area identity, pacing, formulas, and starting state.
-- `content/areas/<area-id>/districts.json`
-  Area-specific district catalog.
+### `content/base/game.json`
+- app version metadata
+- save schema version
+- balance version
+- default area id
+- global formulas
 
-The browser does not read those JSON files directly. Instead, `scripts/build-content.mjs` validates and compiles them into [`src/content-runtime/generated-content.js`](/Users/tianhao/Documents/New%20project/city-clicker/src/content-runtime/generated-content.js), which is what the runtime imports.
+### `content/base/resources.json`
+- `sharedCurrencies` only
+- v2 keeps exactly `coins` and `districts` shared
 
-## Runtime Split
+### `content/base/policies.json`
+- all policies for all areas
+- required fields:
+  `areaId`, `treeId`, `tier`, `unlock`, `cost`, `effects`, `codex`
+- branch fields:
+  `exclusiveGroupId`, `exclusiveGroupLabel`, `prerequisitePolicyIds`, `prerequisiteAnyPolicyIds`
 
-- `src/core`
-  Generic app constants, formatting, and save-state normalization.
-- `src/systems`
-  Economy math, modifiers, unlock progression, and annexation logic.
-- `src/ui`
-  DOM binding and rendering only.
-- `src/main.js`
-  The app entry point and frame loop.
+### `content/areas/<area>/manifest.json`
+- area identity and goal text
+- `populationCurrencyId`
+- `localCurrencies`
+- `manualActions`
+- `areaUnlockPolicyId`
+- `prestigeScoreConfig`
 
-This split is meant to scale to many areas, districts, resources, and events by keeping gameplay data declarative and the engine generic.
+### `content/areas/<area>/districts.json`
+- all buildings for that area
+- required fields:
+  `unlock`, `baseCost`, `outputPerSecond`, `maintenancePerSecond`, `codex`
 
-## Versioning
+## Runtime Model
 
-- `appVersion`
-  The player-facing release version. Use semantic versioning such as `1.0.0`, `1.1.0`, or `2.0.0`.
-- `saveVersion`
-  The save-schema version used by the migration pipeline. Increment this when save structure changes.
-- `balanceVersion`
-  The economy/content tuning version. Increment this when costs, pacing, or formulas change substantially without necessarily breaking saves.
+`scripts/build-content.mjs` compiles the JSON files into [`src/content-runtime/generated-content.js`](/Users/tianhao/Documents/New%20project/city-clicker/src/content-runtime/generated-content.js).
 
-New saves are written as versioned envelopes, and older raw saves are migrated forward through [`src/core/save-migrations.js`](/Users/tianhao/Documents/New%20project/city-clicker/src/core/save-migrations.js).
+The runtime content shape is now:
+
+- `meta`
+- `formulas`
+- `sharedCurrencies`
+- `areas[]`
+- `buildings[]`
+- `policies[]`
+- `systems`
+- `indexes.currencyIndex`
+- `indexes.buildingsByArea`
+- `indexes.policiesByArea`
+
+## Save Model
+
+v2 bumps the save schema to `2`.
+
+Key state shape:
+
+```js
+{
+  sharedCurrencies: { coins, districts },
+  areas: {
+    activeAreaId,
+    unlockedAreaIds,
+    "patchwork-borough": { currencies: { ... } },
+    "port-city": { currencies: { ... } }
+  },
+  ownedBuildings,
+  purchasedPolicies,
+  policyChoices,
+  encyclopedia,
+  systems,
+  stats
+}
+```
+
+The migration pipeline in [`src/core/save-migrations.js`](/Users/tianhao/Documents/New%20project/city-clicker/src/core/save-migrations.js) now migrates:
+
+- raw legacy saves -> schema `1`
+- v1 borough saves -> schema `2`
+
+v1 migration keeps:
+
+- shared `coins`
+- shared `districts`
+- borough building ownership
+- major borough progress
+- codex seeding
+
+Port City remains locked on migrated v1 saves until `Harbor Charter` is purchased.
+
+## Areas
+
+### Patchwork Borough
+- `20` buildings
+- local currencies:
+  `residents`, `food`, `timber`, `stone`, `goods`, `power`, `knowledge`, `appeal`, `influence`
+- policy trees:
+  `Civic`, `Industry`, `Trade`
+
+### Port City
+- unlocked by `Harbor Charter`
+- `12` buildings
+- local currencies:
+  `crew`, `catch`, `lumber`, `masonry`, `cargo`, `harbor_capacity`, `charts`, `renown`
+- signature bottleneck:
+  `harbor_capacity`
+- policy trees:
+  `Harbor Operations`, `Maritime Society`
 
 ## Commands
 
 Run from [`city-clicker`](/Users/tianhao/Documents/New%20project/city-clicker):
 
 ```bash
-npm run build:art
 npm run validate:content
 npm run build:content
+npm run smoke:balance
 ```
 
-Or directly:
+Local static preview:
 
 ```bash
-node scripts/generate-pixel-art.mjs
-node scripts/validate-content.mjs
-node scripts/build-content.mjs
+python3 -m http.server 4173
 ```
 
-`build:art` regenerates the SVG pixel assets under [`public/art/generated/`](/Users/tianhao/Documents/New%20project/city-clicker/public/art/generated) and refreshes the generated art manifest.
+Then open [http://127.0.0.1:4173](http://127.0.0.1:4173).
 
-## House Kits
+## Validation and Safety
 
-Patchwork Borough now keeps its finalized house art in [`public/art/house-kits/patchwork-borough/`](/Users/tianhao/Documents/New%20project/city-clicker/public/art/house-kits/patchwork-borough):
+`validate:content` checks:
 
-- `current/`
-  Extracted house sprites used by the live district cards.
-- `library/`
-  The approved source sheet used to derive the live sprites.
-- `future/`
-  Curated expansion sheets and upgrade ladders for later areas or district-upgrade systems.
-- `kit.json`
-  A small manifest pointing at the approved sheet selection.
+- duplicate ids across areas
+- bad area references
+- illegal cross-area currency references
+- missing codex metadata
+- malformed exclusivity groups
+- missing unlock policies
+- invalid prestige score config
+- policy prerequisite cycles
 
-The raw generation workflow stays outside this upload folder in `gemini-art-lab`. Only approved outputs should be copied into `house-kits/`.
+`smoke:balance` is a headless sanity pass for:
 
-## Icon Kits
+- fresh borough
+- borough midgame
+- Port City unlock
+- Port City midgame
+- annexation gain
 
-Patchwork Borough also keeps its finalized HUD and policy icons in [`public/art/icon-kits/patchwork-borough/`](/Users/tianhao/Documents/New%20project/city-clicker/public/art/icon-kits/patchwork-borough):
+## Notes for Future Expansion
 
-- `resources/`
-  The live currency icons used in the top HUD and district output labels.
-- `prestige/`
-  The live annexation prestige icon.
-- `policies/`
-  The live policy icons used in the market and active-policy panel.
-- `library/`
-  The approved source sheets selected from the batch icon generations.
-- `kit.json`
-  A manifest recording which sheet variant was chosen for each icon family.
-
-As with the house kits, raw generation remains in `gemini-art-lab`; only curated sheets and exported icons belong here.
-
-## Adding Another Area
-
-1. Create `content/areas/<new-area-id>/manifest.json`.
-2. Create `content/areas/<new-area-id>/districts.json`.
-3. Point `content/base/game.json` at the new `activeAreaId`.
-4. Run `npm run validate:content`.
-5. Run `npm run build:content`.
-
-If the new area needs its own art, place it under `public/art/` and reference it from the area manifest.
-
-## Next Scaling Steps
-
-- Split lore strings from mechanics so text can be localized separately.
-- Add event catalogs under `content/areas/<area-id>/events.json`.
-- Add precomputed indexes in the build step for large district and event pools.
-- Add a headless balance simulator under `scripts/` for long-run tuning.
+- add more areas under `content/areas/`
+- keep only `coins` and `districts` shared unless the economy is intentionally re-scoped
+- keep new local currencies area-bound
+- use `codex` metadata on every new building and policy
+- add new tree branches with exclusive groups instead of extending the flat market model

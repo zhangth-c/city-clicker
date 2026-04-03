@@ -1,145 +1,443 @@
-import { getPrestigeCurrencyId } from "./progression.js";
+export function getAreaById(content, areaId) {
+  return content.areas.find((area) => area.id === areaId) || null;
+}
 
-export function calculateDerivedState(content, state) {
-  const purchasedUpgrades = getPurchasedUpgrades(content, state);
-  const purchasedUpgradeIds = new Set(purchasedUpgrades.map((upgrade) => upgrade.id));
-  const effects = purchasedUpgrades.flatMap((upgrade) => upgrade.effects || []);
-  const uniqueDistricts = content.buildings.filter(
-    (building) => Number(state.ownedBuildings[building.id] || 0) > 0
-  ).length;
-  const passiveCurrencyIds = Object.keys(content.currencies).filter((currencyId) => currencyId !== "residents");
+export function getBuildingById(content, buildingId) {
+  return content.buildings.find((building) => building.id === buildingId) || null;
+}
 
-  const residentsByBuilding = {};
-  const synergyStateByBuilding = {};
-  let residents = 0;
+export function getPolicyById(content, policyId) {
+  return content.policies.find((policy) => policy.id === policyId) || null;
+}
 
-  content.buildings.forEach((building) => {
-    const count = Number(state.ownedBuildings[building.id] || 0);
-    const baseResidents = Number((building.statsPerOwned && building.statsPerOwned.residents) || 0);
-    const synergyState = getBuildingSynergyState(content, state, building);
-    const residentMultiplier =
-      getResidentMultiplier(building.id, effects) *
-      getTargetMultiplier(synergyState.statMultipliers, "residents");
-    const totalResidents = Math.round(count * baseResidents * residentMultiplier);
-    synergyStateByBuilding[building.id] = synergyState;
-    residentsByBuilding[building.id] = totalResidents;
-    residents += totalResidents;
+export function getCurrencyDefinition(content, currencyId) {
+  return content.indexes.currencyIndex[currencyId] || null;
+}
+
+export function isPopulationCurrency(content, currencyId) {
+  return content.areas.some((area) => area.populationCurrencyId === currencyId);
+}
+
+export function getCurrencyAmount(content, state, derived, currencyId) {
+  const currency = getCurrencyDefinition(content, currencyId);
+  if (!currency) {
+    return 0;
+  }
+
+  if (currency.scope === "shared") {
+    return Number(state.sharedCurrencies?.[currencyId] || 0);
+  }
+
+  if (isPopulationCurrency(content, currencyId) && derived?.populationByArea) {
+    return Number(derived.populationByArea[currency.areaId] || 0);
+  }
+
+  return Number(state.areas?.[currency.areaId]?.currencies?.[currencyId] || 0);
+}
+
+export function addCurrency(content, state, currencyId, amount) {
+  const currency = getCurrencyDefinition(content, currencyId);
+  if (!currency) {
+    return;
+  }
+
+  if (currency.scope === "shared") {
+    state.sharedCurrencies[currencyId] = Math.max(0, Number(state.sharedCurrencies[currencyId] || 0) + Number(amount || 0));
+    return;
+  }
+
+  state.areas[currency.areaId].currencies[currencyId] = Math.max(
+    0,
+    Number(state.areas[currency.areaId].currencies[currencyId] || 0) + Number(amount || 0)
+  );
+}
+
+export function canAfford(content, state, derived, cost) {
+  return Object.entries(cost || {}).every(([currencyId, amount]) => {
+    return getCurrencyAmount(content, state, derived, currencyId) >= Number(amount);
+  });
+}
+
+export function spendCost(content, state, cost) {
+  Object.entries(cost || {}).forEach(([currencyId, amount]) => {
+    addCurrency(content, state, currencyId, -Number(amount));
+  });
+}
+
+export function getPurchasedPolicies(content, state) {
+  const purchasedSet = new Set(state.purchasedPolicies || []);
+  return content.policies.filter((policy) => purchasedSet.has(policy.id));
+}
+
+export function getPolicyBlockedReason(content, state, policy) {
+  if (!policy?.exclusiveGroupId) {
+    return "";
+  }
+  const chosenPolicyId = state.policyChoices?.[policy.exclusiveGroupId];
+  if (!chosenPolicyId || chosenPolicyId === policy.id) {
+    return "";
+  }
+  const chosenPolicy = getPolicyById(content, chosenPolicyId);
+  return chosenPolicy ? `Blocked by ${getPolicyDisplayName(chosenPolicy)}` : "Blocked by another branch";
+}
+
+function getPolicyDisplayName(policy) {
+  if (policy?.name) {
+    return policy.name;
+  }
+
+  return String(policy?.id || "another branch")
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+export function getBuildingCost(content, state, derived, building) {
+  const owned = Number(state.ownedBuildings?.[building.id] || 0);
+  const growth = Number(content.formulas?.buildingCostGrowth || 1.15);
+  const effects = derived?.effects || getPurchasedPolicies(content, state).flatMap((policy) => policy.effects || []);
+  const cost = {};
+
+  Object.entries(building.baseCost || {}).forEach(([currencyId, baseAmount]) => {
+    const multiplier = effects.reduce((running, effect) => {
+      if (
+        effect.type !== "buildingCostMultiplier" ||
+        effect.areaId !== building.areaId ||
+        effect.currency !== currencyId
+      ) {
+        return running;
+      }
+      if (Array.isArray(effect.buildingIds) && !effect.buildingIds.includes(building.id)) {
+        return running;
+      }
+      return running * Number(effect.multiplier || 1);
+    }, 1);
+
+    cost[currencyId] = Math.max(1, Math.floor(Number(baseAmount) * Math.pow(growth, owned) * multiplier));
   });
 
+  return cost;
+}
+
+export function calculateDerivedState(content, state) {
+  const purchasedPolicies = getPurchasedPolicies(content, state);
+  const effects = purchasedPolicies.flatMap((policy) =>
+    (policy.effects || []).map((effect) => ({
+      ...effect,
+      policyId: policy.id,
+      policyName: policy.name,
+      areaId: effect.areaId || policy.areaId
+    }))
+  );
+  const activeAreaIds = new Set(state.areas?.unlockedAreaIds || [content.defaultAreaId]);
+  const passiveCurrencyIds = content.indexes.allCurrencyIds.filter((currencyId) => {
+    return currencyId !== "districts" && !isPopulationCurrency(content, currencyId);
+  });
   const grossPerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
   const maintenancePerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
   const passivePerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
-  const globalIncomeMultipliers = Object.fromEntries(
-    passiveCurrencyIds.map((currencyId) => [
-      currencyId,
-      getGlobalIncomeMultiplier(content, state, currencyId, effects, uniqueDistricts)
-    ])
-  );
+  const populationByArea = Object.fromEntries(content.areas.map((area) => [area.id, 0]));
+  const populationByBuilding = {};
   const perBuilding = {};
+  const synergyStateByBuilding = {};
+  const rawBuildingStates = [];
+  const maintenanceDemandPerSecond = Object.fromEntries(passiveCurrencyIds.map((currencyId) => [currencyId, 0]));
 
   content.buildings.forEach((building) => {
-    const count = Number(state.ownedBuildings[building.id] || 0);
+    const area = getAreaById(content, building.areaId);
+    const populationCurrencyId = area.populationCurrencyId;
+    const count = Number(state.ownedBuildings?.[building.id] || 0);
+    const synergyState = getBuildingSynergyState(content, state, building);
+    const basePopulation = Number(building.statsPerOwned?.[populationCurrencyId] || 0);
+    const populationMultiplier =
+      getStatMultiplier(building, populationCurrencyId, effects) *
+      getTargetMultiplier(synergyState.statMultipliers, populationCurrencyId);
+    const totalPopulation = Math.round(count * basePopulation * populationMultiplier);
+
+    synergyStateByBuilding[building.id] = synergyState;
+    populationByBuilding[building.id] = totalPopulation;
+    populationByArea[building.areaId] += totalPopulation;
+  });
+
+  content.buildings.forEach((building) => {
+    const count = Number(state.ownedBuildings?.[building.id] || 0);
     const synergyState = synergyStateByBuilding[building.id] || createEmptySynergyState();
-    const outputs = {};
-    const maintenance = {};
+    const rawOutputs = {};
+    const rawMaintenance = {};
 
     Object.entries(building.outputPerSecond || {}).forEach(([currencyId, baseAmount]) => {
       const amountPerBuilding =
         Number(baseAmount) *
-        globalIncomeMultipliers[currencyId] *
-        getBuildingOutputMultiplier(building.id, currencyId, effects) *
+        getIncomeMultiplier(content, state, effects, building, currencyId) *
         getTargetMultiplier(synergyState.outputMultipliers, currencyId);
-      outputs[currencyId] = amountPerBuilding;
-      grossPerSecond[currencyId] += amountPerBuilding * count;
-      passivePerSecond[currencyId] += amountPerBuilding * count;
+      rawOutputs[currencyId] = amountPerBuilding;
     });
 
     Object.entries(building.maintenancePerSecond || {}).forEach(([currencyId, baseAmount]) => {
       const amountPerBuilding =
         Number(baseAmount) *
-        getBuildingMaintenanceMultiplier(building.id, currencyId, effects) *
+        getMaintenanceMultiplier(effects, building, currencyId) *
         getTargetMultiplier(synergyState.maintenanceMultipliers, currencyId);
-      maintenance[currencyId] = amountPerBuilding;
-      maintenancePerSecond[currencyId] += amountPerBuilding * count;
-      passivePerSecond[currencyId] -= amountPerBuilding * count;
+      rawMaintenance[currencyId] = amountPerBuilding;
+      if (activeAreaIds.has(building.areaId)) {
+        maintenanceDemandPerSecond[currencyId] += amountPerBuilding * count;
+      }
+    });
+
+    rawBuildingStates.push({
+      building,
+      count,
+      rawOutputs,
+      rawMaintenance,
+      population: Number(populationByBuilding[building.id] || 0),
+      synergies: synergyState.activeBonuses
+    });
+  });
+
+  const activeShortages = getActiveShortages(content, state, maintenanceDemandPerSecond);
+
+  rawBuildingStates.forEach(({ building, count, rawOutputs, rawMaintenance, population, synergies }) => {
+    const shortageState = getBuildingShortageState(activeShortages, rawMaintenance);
+    const operatingMultiplier = shortageState.outputMultiplier;
+    const outputs = {};
+    const maintenance = {};
+
+    Object.entries(rawOutputs).forEach(([currencyId, amountPerBuilding]) => {
+      const scaledAmount = Number(amountPerBuilding) * operatingMultiplier;
+      outputs[currencyId] = scaledAmount;
+      if (activeAreaIds.has(building.areaId)) {
+        grossPerSecond[currencyId] += scaledAmount * count;
+        passivePerSecond[currencyId] += scaledAmount * count;
+      }
+    });
+
+    Object.entries(rawMaintenance).forEach(([currencyId, amountPerBuilding]) => {
+      const scaledAmount = Number(amountPerBuilding) * operatingMultiplier;
+      maintenance[currencyId] = scaledAmount;
+      if (activeAreaIds.has(building.areaId)) {
+        maintenancePerSecond[currencyId] += scaledAmount * count;
+        passivePerSecond[currencyId] -= scaledAmount * count;
+      }
     });
 
     perBuilding[building.id] = {
+      areaId: building.areaId,
       count,
       outputs,
       maintenance,
-      residents: residentsByBuilding[building.id],
-      synergies: synergyState.activeBonuses
+      population,
+      synergies,
+      operatingMultiplier,
+      shortages: shortageState.reasons
     };
   });
 
-  const manualActions = (content.manualActions || []).map((action) => {
-    const unlocked = !action.unlockUpgradeId || purchasedUpgradeIds.has(action.unlockUpgradeId);
-    const amount = calculateManualActionYield({
-      state,
-      effects,
-      residents,
-      globalIncomeMultipliers,
-      action
-    });
-
-    return {
+  const manualActionsByArea = {};
+  content.areas.forEach((area) => {
+    const actions = (area.manualActions || []).map((action) => ({
       ...action,
-      unlocked,
-      amount
-    };
+      unlocked: isManualActionUnlocked(state, action),
+      amount: calculateManualActionYield({
+        content,
+        state,
+        effects,
+        areaId: area.id,
+        action,
+        population: populationByArea[area.id]
+      })
+    }));
+    manualActionsByArea[area.id] = actions;
   });
 
   return {
-    purchasedUpgrades,
+    purchasedPolicies,
     effects,
-    residents,
-    perBuilding,
+    passivePerSecond,
     grossPerSecond,
     maintenancePerSecond,
-    passivePerSecond,
-    globalIncomeMultipliers,
-    manualActions,
-    uniqueDistricts
+    activeShortages,
+    populationByArea,
+    perBuilding,
+    manualActionsByArea
   };
 }
 
-export function canAfford(state, cost) {
-  return Object.entries(cost).every(([currencyId, amount]) => {
-    return Number(state.currencies[currencyId] || 0) >= Number(amount);
+function getActiveShortages(content, state, maintenanceDemandPerSecond) {
+  const shortageRules = content.systems?.shortages || {};
+  const activeShortages = {};
+
+  Object.entries(shortageRules).forEach(([currencyId, rule]) => {
+    const demand = Number(maintenanceDemandPerSecond[currencyId] || 0);
+    if (demand <= 0) {
+      return;
+    }
+
+    const threshold = Number(rule.threshold || 0);
+    const amount = getCurrencyAmount(content, state, null, currencyId);
+    if (amount > threshold) {
+      return;
+    }
+
+    activeShortages[currencyId] = {
+      currencyId,
+      label: String(rule.label || `${titleCaseLabel(currencyId)} shortage`),
+      outputMultiplier: clampShortageMultiplier(rule.outputMultiplier)
+    };
   });
+
+  return activeShortages;
 }
 
-export function getBuildingCost(content, state, derived, building) {
-  const owned = Number(state.ownedBuildings[building.id] || 0);
-  const purchasedEffects = derived
-    ? derived.effects
-    : getPurchasedUpgrades(content, state).flatMap((upgrade) => upgrade.effects || []);
-  const growth = Number(content.formulas.buildingCostGrowth || 1.15);
-  const costs = {};
+function getBuildingShortageState(activeShortages, maintenance) {
+  const reasons = [];
+  let outputMultiplier = 1;
 
-  Object.entries(building.baseCost || {}).forEach(([currencyId, baseCost]) => {
-    let multiplier = 1;
-    purchasedEffects.forEach((effect) => {
-      if (
-        effect.type === "buildingCostMultiplier" &&
-        effect.currency === currencyId &&
-        (effect.targets === "all" ||
-          (Array.isArray(effect.buildingIds) && effect.buildingIds.includes(building.id)))
-      ) {
-        multiplier *= Number(effect.multiplier || 1);
-      }
-    });
-    costs[currencyId] = Math.max(1, Math.floor(Number(baseCost) * Math.pow(growth, owned) * multiplier));
+  Object.entries(maintenance || {}).forEach(([currencyId, amount]) => {
+    if (Number(amount || 0) <= 0 || !activeShortages[currencyId]) {
+      return;
+    }
+    const shortage = activeShortages[currencyId];
+    outputMultiplier = Math.min(outputMultiplier, shortage.outputMultiplier);
+    reasons.push(shortage);
   });
 
-  return costs;
+  return {
+    outputMultiplier,
+    reasons
+  };
 }
 
-export function spendCost(state, cost) {
-  Object.entries(cost).forEach(([currencyId, amount]) => {
-    state.currencies[currencyId] = Math.max(0, Number(state.currencies[currencyId] || 0) - Number(amount));
+function clampShortageMultiplier(value) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return 0;
+  }
+  return Math.max(0, Math.min(1, numericValue));
+}
+
+function titleCaseLabel(currencyId) {
+  return String(currencyId)
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function isManualActionUnlocked(state, action) {
+  if (action.unlockPolicyId && !(state.purchasedPolicies || []).includes(action.unlockPolicyId)) {
+    return false;
+  }
+  const requiredBuildingCount = Number(action.unlockBuildingCount || (action.unlockBuildingId ? 1 : 0));
+  if (
+    action.unlockBuildingId &&
+    Number(state.ownedBuildings?.[action.unlockBuildingId] || 0) < requiredBuildingCount
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function calculateManualActionYield({ content, state, effects, areaId, action, population }) {
+  let amount = Number(action.baseAmount || 0);
+
+  if (action.populationScaling?.perPopulation) {
+    amount +=
+      Math.floor(Number(population || 0) / Number(action.populationScaling.perPopulation || 1)) *
+      Number(action.populationScaling.amount || 0);
+  }
+
+  (action.buildingScaling || []).forEach((scaling) => {
+    const owned = Number(state.ownedBuildings?.[scaling.buildingId] || 0);
+    amount += owned * Number(scaling.amountPerOwned || 0);
   });
+
+  amount += getClickBonus(effects, areaId, action.currency, action.id);
+
+  if (action.applyIncomeMultiplier) {
+    amount *= getIncomeMultiplierForAction(content, state, effects, areaId, action.currency);
+  }
+
+  return amount;
+}
+
+function getClickBonus(effects, areaId, currencyId, actionId) {
+  return effects.reduce((total, effect) => {
+    if (effect.type !== "clickBonus" || effect.areaId !== areaId) {
+      return total;
+    }
+    if ((effect.currency && effect.currency === currencyId) || (effect.actionId && effect.actionId === actionId)) {
+      return total + Number(effect.amount || 0);
+    }
+    return total;
+  }, 0);
+}
+
+function getIncomeMultiplierForAction(content, state, effects, areaId, currencyId) {
+  const buildingStub = {
+    id: `manual-${areaId}-${currencyId}`,
+    areaId
+  };
+  return getIncomeMultiplier(content, state, effects, buildingStub, currencyId, true);
+}
+
+function getIncomeMultiplier(content, state, effects, building, currencyId) {
+  let multiplier = 1 + getPrestigeMultiplier(content, state, currencyId);
+
+  effects.forEach((effect) => {
+    if (effect.type !== "incomeMultiplier") {
+      return;
+    }
+    if (effect.areaId && effect.areaId !== building.areaId) {
+      return;
+    }
+    if (Array.isArray(effect.currencies) && !effect.currencies.includes(currencyId)) {
+      return;
+    }
+    if (Array.isArray(effect.buildingIds) && !effect.buildingIds.includes(building.id)) {
+      return;
+    }
+    multiplier *= Number(effect.multiplier || 1);
+  });
+
+  return multiplier;
+}
+
+function getPrestigeMultiplier(content, state, currencyId) {
+  const districts = Number(state.sharedCurrencies?.districts || 0);
+  return (content.systems.annexation?.permanentBonuses || []).reduce((total, bonus) => {
+    if (bonus.type !== "incomeMultiplierPerPrestige" || bonus.currency !== currencyId) {
+      return total;
+    }
+    return total + districts * Number(bonus.multiplierPerPoint || 0);
+  }, 0);
+}
+
+function getMaintenanceMultiplier(effects, building, currencyId) {
+  return effects.reduce((multiplier, effect) => {
+    if (effect.type !== "maintenanceMultiplier" || effect.areaId !== building.areaId) {
+      return multiplier;
+    }
+    if (effect.currency !== currencyId) {
+      return multiplier;
+    }
+    if (Array.isArray(effect.buildingIds) && !effect.buildingIds.includes(building.id)) {
+      return multiplier;
+    }
+    return multiplier * Number(effect.multiplier || 1);
+  }, 1);
+}
+
+function getStatMultiplier(building, statId, effects) {
+  return effects.reduce((multiplier, effect) => {
+    if (effect.type !== "statMultiplier" || effect.areaId !== building.areaId) {
+      return multiplier;
+    }
+    if (effect.stat !== statId) {
+      return multiplier;
+    }
+    if (Array.isArray(effect.buildingIds) && !effect.buildingIds.includes(building.id)) {
+      return multiplier;
+    }
+    return multiplier * Number(effect.multiplier || 1);
+  }, 1);
 }
 
 function createEmptySynergyState() {
@@ -151,55 +449,28 @@ function createEmptySynergyState() {
   };
 }
 
-function getBuildingMaintenanceMultiplier(buildingId, currencyId, effects) {
-  return effects.reduce((multiplier, effect) => {
-    if (
-      effect.type === "maintenanceMultiplier" &&
-      effect.currency === currencyId &&
-      (effect.targets === "all" ||
-        (Array.isArray(effect.buildingIds) && effect.buildingIds.includes(buildingId)))
-    ) {
-      return multiplier * Number(effect.multiplier || 1);
-    }
-
-    return multiplier;
-  }, 1);
+function getTargetMultiplier(bucket, target) {
+  return Number(bucket[target] || 1);
 }
 
-function getBuildingOutputMultiplier(buildingId, currencyId, effects) {
-  return effects.reduce((multiplier, effect) => {
-    if (
-      effect.type === "incomeMultiplier" &&
-      Array.isArray(effect.currencies) &&
-      effect.currencies.includes(currencyId) &&
-      Array.isArray(effect.buildingIds) &&
-      effect.buildingIds.includes(buildingId)
-    ) {
-      return multiplier * Number(effect.multiplier || 1);
-    }
-
-    if (
-      effect.type === "buildingOutputMultiplier" &&
-      Array.isArray(effect.buildingIds) &&
-      effect.buildingIds.includes(buildingId)
-    ) {
-      return multiplier * Number(effect.multiplier || 1);
-    }
-
-    return multiplier;
-  }, 1);
+function getSynergyBucket(state, targetType) {
+  if (targetType === "output") {
+    return state.outputMultipliers;
+  }
+  if (targetType === "maintenance") {
+    return state.maintenanceMultipliers;
+  }
+  return state.statMultipliers;
 }
 
 function getBuildingSynergyState(content, state, building) {
   const synergyState = createEmptySynergyState();
 
   (building.synergies || []).forEach((rule) => {
-    if (!rule || !rule.targetType || !rule.target) {
-      return;
-    }
-
     const triggerSize = Math.max(1, Number(rule.perOwned || 1));
-    const sourceCount = getSynergySourceCount(content, state, rule);
+    const sourceCount = (rule.sourceBuildingIds || []).reduce((total, buildingId) => {
+      return total + Number(state.ownedBuildings?.[buildingId] || 0);
+    }, 0);
     const steps = Math.floor(sourceCount / triggerSize);
 
     if (steps <= 0) {
@@ -226,140 +497,4 @@ function getBuildingSynergyState(content, state, building) {
   });
 
   return synergyState;
-}
-
-function calculateManualActionYield({ state, effects, residents, globalIncomeMultipliers, action }) {
-  let amount = Number(action.baseAmount || 0);
-
-  if (action.residentScaling && Number(action.residentScaling.perResidents || 0) > 0) {
-    amount +=
-      Math.floor(residents / Number(action.residentScaling.perResidents || 1)) *
-      Number(action.residentScaling.amount || 0);
-  }
-
-  (action.buildingScaling || []).forEach((scaling) => {
-    const owned = Number(state.ownedBuildings[scaling.buildingId] || 0);
-    amount += owned * Number(scaling.amountPerOwned || 0);
-  });
-
-  amount += getClickBonus(effects, action.currency, action.id);
-
-  if (action.applyGlobalMultiplier) {
-    amount *= Number(globalIncomeMultipliers[action.currency] || 1);
-  }
-
-  return amount;
-}
-
-function getClickBonus(effects, currencyId, actionId) {
-  return effects.reduce((total, effect) => {
-    if (
-      effect.type === "clickBonus" &&
-      ((effect.currency && effect.currency === currencyId) ||
-        (effect.actionId && effect.actionId === actionId))
-    ) {
-      return total + Number(effect.amount || 0);
-    }
-    return total;
-  }, 0);
-}
-
-function getGlobalIncomeMultiplier(content, state, currencyId, effects, uniqueDistricts) {
-  let multiplier = 1;
-
-  effects.forEach((effect) => {
-    if (
-      effect.type === "incomeMultiplier" &&
-      Array.isArray(effect.currencies) &&
-      effect.currencies.includes(currencyId) &&
-      effect.targets === "all" &&
-      !effect.buildingIds
-    ) {
-      multiplier *= Number(effect.multiplier || 1);
-    }
-
-    if (
-      (effect.type === "appealToIncomeBonus" || effect.type === "resourceToIncomeBonus") &&
-      effect.targetCurrency === currencyId
-    ) {
-      multiplier *= 1 + Number(state.currencies[effect.sourceCurrency] || 0) * Number(effect.ratePerPoint || 0);
-    }
-
-    if (effect.type === "uniqueBuildingIncomeBonus") {
-      const bonus = Math.min(
-        Number(effect.ratePerUniqueOwned || 0) * uniqueDistricts,
-        Number(effect.cap || 0)
-      );
-      multiplier *= 1 + bonus;
-    }
-  });
-
-  multiplier *= getPrestigeIncomeMultiplier(content, state, currencyId);
-  return multiplier;
-}
-
-function getPrestigeIncomeMultiplier(content, state, currencyId) {
-  const system = content.systems.annexation;
-  const prestigeCurrencyId = getPrestigeCurrencyId(content);
-  const prestigeCount = Number(state.currencies[prestigeCurrencyId] || 0);
-
-  if (!system || prestigeCount <= 0) {
-    return 1;
-  }
-
-  return (system.permanentBonuses || []).reduce((multiplier, bonus) => {
-    if (bonus.type === "incomeMultiplierPerPrestige" && bonus.currency === currencyId) {
-      return multiplier * (1 + prestigeCount * Number(bonus.multiplierPerPoint || 0));
-    }
-    return multiplier;
-  }, 1);
-}
-
-function getPurchasedUpgrades(content, state) {
-  const purchasedSet = new Set(state.purchasedUpgrades);
-  return content.globalUpgrades.filter((upgrade) => purchasedSet.has(upgrade.id));
-}
-
-function getResidentMultiplier(buildingId, effects) {
-  return effects.reduce((multiplier, effect) => {
-    if (
-      effect.type === "statMultiplier" &&
-      effect.stat === "residents" &&
-      Array.isArray(effect.buildingIds) &&
-      effect.buildingIds.includes(buildingId)
-    ) {
-      return multiplier * Number(effect.multiplier || 1);
-    }
-    return multiplier;
-  }, 1);
-}
-
-function getSynergyBucket(synergyState, targetType) {
-  if (targetType === "stat") {
-    return synergyState.statMultipliers;
-  }
-  if (targetType === "maintenance") {
-    return synergyState.maintenanceMultipliers;
-  }
-  return synergyState.outputMultipliers;
-}
-
-function getSynergySourceCount(content, state, rule) {
-  const sourceIds = new Set(Array.isArray(rule.sourceBuildingIds) ? rule.sourceBuildingIds : []);
-
-  if (Array.isArray(rule.sourceCategories)) {
-    content.buildings.forEach((building) => {
-      if (rule.sourceCategories.includes(building.category)) {
-        sourceIds.add(building.id);
-      }
-    });
-  }
-
-  return Array.from(sourceIds).reduce((sum, buildingId) => {
-    return sum + Number(state.ownedBuildings[buildingId] || 0);
-  }, 0);
-}
-
-function getTargetMultiplier(targetMap, targetId) {
-  return Number(targetMap[targetId] || 1);
 }

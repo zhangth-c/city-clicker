@@ -1,0 +1,21 @@
+{
+  "kitId": "port-city-current",
+  "sources": [
+    "./public/art/house-kits/port-city/library/harbor-front-source.png",
+    "./public/art/house-kits/port-city/library/deepwater-source.png"
+  ],
+  "assets": [
+    "fisher-huts",
+    "driftwood-yard",
+    "salt-smokehouse",
+    "timber-pier",
+    "barge-masons",
+    "chandlery-market",
+    "dredger-works",
+    "chart-house",
+    "bonded-warehouse",
+    "customs-tower",
+    "regatta-quay",
+    "grand-terminal"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "source": "/Users/tianhao/Documents/New project/gemini-art-lab/output/collections/port-city-harbor-operations-tree/port-city-harbor-operations-tree-v2.png",
+  "rows": 2,
+  "columns": 3,
+  "insetX": 150,
+  "insetY": 220,
+  "width": 2400,
+  "height": 1792,
+  "cellWidth": 800,
+  "cellHeight": 896,
+  "manifest": [
+    {
+      "name": "dock-ledgers",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/policies-v2/dock-ledgers.png",
+      "offsetX": 150,
+      "offsetY": 220,
+      "cropWidth": 500,
+      "cropHeight": 456
+    },
+    {
+      "name": "fish-auctions",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/policies-v2/fish-auctions.png",
+      "offsetX": 950,
+      "offsetY": 220,
+      "cropWidth": 500,
+      "cropHeight": 456
+    },
+    {
+      "name": "longshift-piers",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/policies-v2/longshift-piers.png",
+      "offsetX": 1750,
+      "offsetY": 220,
+      "cropWidth": 500,
+      "cropHeight": 456
+    },
+    {
+      "name": "bonded-logistics",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/policies-v2/bonded-logistics.png",
+      "offsetX": 150,
+      "offsetY": 1116,
+      "cropWidth": 500,
+      "cropHeight": 456
+    },
+    {
+      "name": "signal-towers",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/policies-v2/signal-towers.png",
+      "offsetX": 950,
+      "offsetY": 1116,
+      "cropWidth": 500,
+      "cropHeight": 456
+    },
+    {
+      "name": "freeport-authority",
+      "outputPath": "/Users/tianhao/Documents/New project/city-clicker/public/art/icon-kits/policies-v2/freeport-authority.png",
+      "offsetX": 1750,
+      "offsetY": 1116,
+      "cropWidth": 500,
+      "cropHeight": 456
+    }
+  ]
+}
